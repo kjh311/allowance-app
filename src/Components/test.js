@@ -1,11 +1,9 @@
-// import "./App.css";
+import "../Styles/Test.scss";
 
 function Test() {
   return (
-    <div className="Test">
-      <header className="Test-header">
-        <h1>Test!!!</h1>
-      </header>
+    <div className="test">
+      <h1>Test!!!</h1>
     </div>
   );
 }

@@ -1,12 +1,10 @@
-import "./App.css";
+import "./Styles/App.scss";
+// import "./Styles/Test.scss";
 import Test from "./Components/Test";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Hello!!!</h1>
-      </header>
       <Test />
     </div>
   );
