@@ -1,9 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom"; // Import react-dom as a default import
-
+// import dotenv from "dotenv";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+
+// dotenv.config();
 
 // console.log(process.env.REACT_APP_API_KEY);
 // console.log(process.env.REACT_APP_AUTH_DOMAIN);
