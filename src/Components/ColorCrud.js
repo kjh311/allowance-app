@@ -23,18 +23,14 @@ function ColorCrud() {
   //variable that points to database collection
   const colorsCollectionRef = collection(db, "color");
 
-  //useEffect loads data when page loads
   useEffect(() => {
     const getColors = async () => {
       const data = await getDocs(colorsCollectionRef);
       setColors(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-
-      //temp to make sure data is loading correctly
-      console.log(data);
     };
 
     getColors();
-  }, []);
+  }, [colorsCollectionRef]); // Ensure that the colorsCollectionRef is in the dependency array, this causes the changes to be auto rendered on update
 
   //create color in database. Send value from input to useState variables to this function:
   const createColor = async () => {
