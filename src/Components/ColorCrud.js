@@ -5,7 +5,9 @@ import {
   getDocs,
   addDoc,
   updateDoc,
+  deleteDoc,
   doc,
+  onSnapshot,
 } from "firebase/firestore";
 
 function ColorCrud() {
@@ -23,14 +25,25 @@ function ColorCrud() {
   //variable that points to database collection
   const colorsCollectionRef = collection(db, "color");
 
-  useEffect(() => {
-    const getColors = async () => {
-      const data = await getDocs(colorsCollectionRef);
-      setColors(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
+  //useEffect makes the data render when the page loads
+  // useEffect(() => {
+  //   const getColors = async () => {
+  //     const data = await getDocs(colorsCollectionRef);
+  //     setColors(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  //   };
 
-    getColors();
-  }, [colorsCollectionRef]); // Ensure that the colorsCollectionRef is in the dependency array, this causes the changes to be auto rendered on update
+  //   getColors();
+  //   // Ensure that the colorsCollectionRef is in the dependency array,
+  //   // this causes the changes to be auto rendered on update
+  // }, [colorsCollectionRef]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(colorsCollectionRef, (snapshot) => {
+      setColors(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    });
+
+    return () => unsubscribe(); // Cleanup the listener when the component unmounts
+  }, [colorsCollectionRef]);
 
   //create color in database. Send value from input to useState variables to this function:
   const createColor = async () => {
@@ -39,10 +52,18 @@ function ColorCrud() {
 
   //update color and value
   const updateColor = async (id) => {
+    //"doc" helps get a specific color along with the id
     const colorDoc = doc(db, "color", id);
-    console.log(updatedColor, updatedValue);
+    // console.log(updatedColor, updatedValue);
     const newFields = { name: updatedColor, value: updatedValue };
     await updateDoc(colorDoc, newFields);
+  };
+
+  //delete color function
+  const deleteColor = async (id) => {
+    //"doc" helps get a specific color along with the id
+    const colorDoc = doc(db, "color", id);
+    await deleteDoc(colorDoc);
   };
 
   return (
@@ -80,22 +101,29 @@ function ColorCrud() {
             <h1 style={{ backgroundColor: color.value }}>
               {color.name} {color.value}
             </h1>
-
             <input
               placeholder="Update Color Name..."
               onChange={(event) => {
                 updateColorFromInput(event.target.value);
               }}
             />
-
             <input
               placeholder="Update Value..."
               onChange={(event) => {
                 updateValueFromInput(event.target.value);
               }}
             />
-
+            {/* update button */}
             <button onClick={() => updateColor(color.id)}>Edit:</button>
+            <br />
+            {/* delete button */}
+            <button
+              onClick={() => {
+                deleteColor(color.id);
+              }}
+            >
+              Delete Color
+            </button>
           </div>
         );
       })}
