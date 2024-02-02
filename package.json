@@ -19,6 +19,7 @@
     "react-modal": "^3.16.1",
     "react-scripts": "^5.0.1",
     "sass": "^1.69.7",
+    "tailwindcss": "^3.4.1",
     "web-vitals": "^3.5.1"
   },
   "keywords": [],

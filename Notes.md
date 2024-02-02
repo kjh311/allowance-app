@@ -23,5 +23,6 @@ NOTES:
 FIREBASE CONSOLE: https://console.firebase.google.com/u/0/
 FIREBASE TUTORIAL: https://codedamn.com/news/reactjs/react-firebase-complete-tutorial
 Firebase authentication tutorial: https://www.youtube.com/watch?v=WpIDez53SK4
+Github repo for authenticatino: https://github.com/Nitij/react-firebase-auth-boilerplate/tree/main
 YOUTUBE CRUD: https://www.youtube.com/watch?v=jCY6DH8F4oc&list=PLpPqplz6dKxUfvM22GXRvYA4s-mvJE0XF
 ADDING SASS STYLESHEET: https://create-react-app.dev/docs/adding-a-sass-stylesheet/
