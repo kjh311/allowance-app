@@ -8,7 +8,6 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
-  query,
 } from "firebase/firestore";
 
 function ColorCrud() {
@@ -32,38 +31,6 @@ function ColorCrud() {
   };
 
   // useEffect makes the data render when the page loads
-  // useEffect(() => {
-  //   const getColors = async () => {
-  //     const data = await getDocs(colorsCollectionRef);
-  //     setColors(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  //   };
-
-  //   getColors();
-  //   // Ensure that the colorsCollectionRef is in the dependency array,
-  //   // this causes the changes to be auto rendered on update
-  // }, [colorsCollectionRef]);
-
-  // useEffect for initial data load
-  // useEffect(() => {
-  //   const getColors = async () => {
-  //     try {
-  //       // Log before the read
-  //       logReadEvent("getDocs", "color");
-
-  //       const data = await getDocs(collection(db, "color"));
-
-  //       // Log after the read
-  //       logReadEvent("getDocsSuccess", "color");
-
-  //       setColors(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-
-  //   getColors();
-  // }, [colorsCollectionRef]);
-
   useEffect(() => {
     const getColors = async () => {
       try {
@@ -83,36 +50,6 @@ function ColorCrud() {
 
     getColors();
   }, []); // Empty dependency array, runs only once when the component mounts
-
-  //   Limit Real-time Updates to Specific Documents:
-  // If you only need real-time updates for specific documents,
-  // you can set up listeners for those documents individually
-  // rather than the entire collection. This way, changes to other
-  // documents won't trigger unnecessary reads.
-  // useEffect(() => {
-  //   const unsubscribeListeners = colors.map((color) => {
-  //     const colorDocRef = doc(db, "color", color.id);
-  //     return onSnapshot(colorDocRef, (snapshot) => {
-  //       setColors((prevColors) => {
-  //         const updatedColors = [...prevColors];
-  //         const updatedColorIndex = updatedColors.findIndex(
-  //           (c) => c.id === color.id
-  //         );
-  //         if (updatedColorIndex !== -1) {
-  //           updatedColors[updatedColorIndex] = {
-  //             ...snapshot.data(),
-  //             id: snapshot.id,
-  //           };
-  //         }
-  //         return updatedColors;
-  //       });
-  //     });
-  //   });
-
-  //   return () => {
-  //     unsubscribeListeners.forEach((unsubscribe) => unsubscribe());
-  //   };
-  // }, [colors]);
 
   useEffect(() => {
     const unsubscribeListeners = colors.map((color) => {
@@ -143,30 +80,6 @@ function ColorCrud() {
     };
   }, []); // Empty dependency array, runs only once when the component mounts
 
-  // useEffect(() => {
-  //   const unsubscribe = onSnapshot(colorsCollectionRef, (snapshot) => {
-  //     setColors(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  //   });
-
-  //   return () => unsubscribe(); // Cleanup the listener when the component unmounts
-  // }, [colorsCollectionRef]);
-
-  //create color in database. Send value from input to useState variables to this function:
-  // const createColor = async () => {
-  //   await addDoc(colorsCollectionRef, { name: newColor, value: newValue });
-  // };
-
-  // const createColor = async () => {
-  //   console.log("Creating color started");
-
-  //   try {
-  //     await addDoc(colorsCollectionRef, { name: newColor, value: newValue });
-  //     console.log("Creating color completed successfully");
-  //   } catch (error) {
-  //     console.error("Error creating color:", error);
-  //   }
-  // };
-
   //hopefully this will automatically render the newly created color
   const createColor = async () => {
     try {
@@ -192,15 +105,6 @@ function ColorCrud() {
     }
   };
 
-  // //update color and value
-  // const updateColor = async (id) => {
-  //   //"doc" helps get a specific color along with the id
-  //   const colorDoc = doc(db, "color", id);
-  //   // console.log(updatedColor, updatedValue);
-  //   const newFields = { name: updatedColor, value: updatedValue };
-  //   await updateDoc(colorDoc, newFields);
-  // };
-
   //update color and value
   const updateColor = async (id) => {
     console.log(`Updating color with id ${id} started`);
@@ -209,18 +113,21 @@ function ColorCrud() {
       const colorDoc = doc(db, "color", id);
       const newFields = { name: updatedColor, value: updatedValue };
       await updateDoc(colorDoc, newFields);
+
+      // Update the local state by mapping over the existing colors and replacing the updated one
+      setColors((prevColors) =>
+        prevColors.map((color) =>
+          color.id === id
+            ? { ...color, name: updatedColor, value: updatedValue }
+            : color
+        )
+      );
+
       console.log(`Updating color with id ${id} completed successfully`);
     } catch (error) {
       console.error(`Error updating color with id ${id}:`, error);
     }
   };
-
-  // //delete color function
-  // const deleteColor = async (id) => {
-  //   //"doc" helps get a specific color along with the id
-  //   const colorDoc = doc(db, "color", id);
-  //   await deleteDoc(colorDoc);
-  // };
 
   //delete color function
   const deleteColor = async (id) => {
@@ -229,6 +136,10 @@ function ColorCrud() {
     try {
       const colorDoc = doc(db, "color", id);
       await deleteDoc(colorDoc);
+
+      // Update the local state by filtering out the deleted color
+      setColors((prevColors) => prevColors.filter((color) => color.id !== id));
+
       console.log(`Deleting color with id ${id} completed successfully`);
     } catch (error) {
       console.error(`Error deleting color with id ${id}:`, error);
