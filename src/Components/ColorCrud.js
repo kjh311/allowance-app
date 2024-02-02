@@ -1,4 +1,4 @@
-import { db } from "../firebase";
+import { db } from "../firebase/firebase";
 import { useState, useEffect } from "react";
 import {
   collection,
@@ -25,25 +25,55 @@ function ColorCrud() {
   //variable that points to database collection
   const colorsCollectionRef = collection(db, "color");
 
-  //useEffect makes the data render when the page loads
-  // useEffect(() => {
-  //   const getColors = async () => {
-  //     const data = await getDocs(colorsCollectionRef);
-  //     setColors(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  //   };
-
-  //   getColors();
-  //   // Ensure that the colorsCollectionRef is in the dependency array,
-  //   // this causes the changes to be auto rendered on update
-  // }, [colorsCollectionRef]);
-
+  // useEffect makes the data render when the page loads
   useEffect(() => {
-    const unsubscribe = onSnapshot(colorsCollectionRef, (snapshot) => {
-      setColors(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    const getColors = async () => {
+      const data = await getDocs(colorsCollectionRef);
+      setColors(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
+    getColors();
+    // Ensure that the colorsCollectionRef is in the dependency array,
+    // this causes the changes to be auto rendered on update
+  }, [colorsCollectionRef]);
+
+  //   Limit Real-time Updates to Specific Documents:
+  // If you only need real-time updates for specific documents,
+  // you can set up listeners for those documents individually
+  // rather than the entire collection. This way, changes to other
+  // documents won't trigger unnecessary reads.
+  useEffect(() => {
+    const unsubscribeListeners = colors.map((color) => {
+      const colorDocRef = doc(db, "color", color.id);
+      return onSnapshot(colorDocRef, (snapshot) => {
+        setColors((prevColors) => {
+          const updatedColors = [...prevColors];
+          const updatedColorIndex = updatedColors.findIndex(
+            (c) => c.id === color.id
+          );
+          if (updatedColorIndex !== -1) {
+            updatedColors[updatedColorIndex] = {
+              ...snapshot.data(),
+              id: snapshot.id,
+            };
+          }
+          return updatedColors;
+        });
+      });
     });
 
-    return () => unsubscribe(); // Cleanup the listener when the component unmounts
-  }, [colorsCollectionRef]);
+    return () => {
+      unsubscribeListeners.forEach((unsubscribe) => unsubscribe());
+    };
+  }, [colors]);
+
+  // useEffect(() => {
+  //   const unsubscribe = onSnapshot(colorsCollectionRef, (snapshot) => {
+  //     setColors(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  //   });
+
+  //   return () => unsubscribe(); // Cleanup the listener when the component unmounts
+  // }, [colorsCollectionRef]);
 
   //create color in database. Send value from input to useState variables to this function:
   const createColor = async () => {
