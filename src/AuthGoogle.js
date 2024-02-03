@@ -5,9 +5,12 @@ import firebase from "firebase/compat/app";
 
 const AuthGoogle = () => {
   useEffect(() => {
+    // Get existing instance of AuthUI or create a new one
     const ui =
       firebaseui.auth.AuthUI.getInstance() ||
       new firebaseui.auth.AuthUI(firebase.auth());
+
+    // Start the FirebaseUI Auth instance with configuration
     ui.start(".firebase-auth-container", {
       signInOptions: [
         {
@@ -15,8 +18,8 @@ const AuthGoogle = () => {
           requireDisplayName: false,
         },
       ],
-      signInSuccessUrl: "/authenticated",
-      privacyPolicyUrl: "<your-privacy-policy-url>",
+      signInSuccessUrl: "/authenticated", // Redirect URL after successful sign-in
+      privacyPolicyUrl: "<your-privacy-policy-url>", // Privacy policy URL
     });
-  }, []);
+  }, []); // Empty dependency array, runs only once when the component mounts
 };

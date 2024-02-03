@@ -6,37 +6,49 @@ import {
 } from "../../../firebase/auth";
 import { useAuth } from "../../../contexts/authContext";
 
+// Login component
 const Login = () => {
+  // Retrieve userLoggedIn state from the AuthContext
   const { userLoggedIn } = useAuth();
 
+  // State variables for email, password, signing in status, error message
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Function to handle form submission
   const onSubmit = async (e) => {
     e.preventDefault();
+    // Check if not already signing in
     if (!isSigningIn) {
       setIsSigningIn(true);
+      // Call Firebase authentication function for email and password sign-in
       await doSignInWithEmailAndPassword(email, password);
-      // doSendEmailVerification()
     }
   };
 
+  // Function to handle Google sign-in
   const onGoogleSignIn = (e) => {
     e.preventDefault();
+    // Check if not already signing in
     if (!isSigningIn) {
       setIsSigningIn(true);
+      // Call Firebase authentication function for Google sign-in
       doSignInWithGoogle().catch((err) => {
         setIsSigningIn(false);
       });
     }
   };
 
+  // Redirect to home if the user is already logged in
+  if (userLoggedIn) {
+    return <Navigate to={"/home"} replace={true} />;
+  }
+
+  // JSX rendering of the login form
   return (
     <div>
-      {userLoggedIn && <Navigate to={"/home"} replace={true} />}
-
       <main className="w-full h-screen flex self-center place-content-center place-items-center">
         <div className="w-96 text-gray-600 space-y-5 p-4 shadow-xl border rounded-xl">
           <div className="text-center">
@@ -47,6 +59,7 @@ const Login = () => {
             </div>
           </div>
           <form onSubmit={onSubmit} className="space-y-5">
+            {/* Email input */}
             <div>
               <label className="text-sm text-gray-600 font-bold">Email</label>
               <input
@@ -54,13 +67,12 @@ const Login = () => {
                 autoComplete="email"
                 required
                 value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg transition duration-300"
               />
             </div>
 
+            {/* Password input */}
             <div>
               <label className="text-sm text-gray-600 font-bold">
                 Password
@@ -70,17 +82,17 @@ const Login = () => {
                 autoComplete="current-password"
                 required
                 value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg transition duration-300"
               />
             </div>
 
+            {/* Display error message if exists */}
             {errorMessage && (
               <span className="text-red-600 font-bold">{errorMessage}</span>
             )}
 
+            {/* Sign In button */}
             <button
               type="submit"
               disabled={isSigningIn}
@@ -93,12 +105,16 @@ const Login = () => {
               {isSigningIn ? "Signing In..." : "Sign In"}
             </button>
           </form>
+
+          {/* Sign up link */}
           <p className="text-center text-sm">
             Don't have an account?{" "}
             <Link to={"/register"} className="hover:underline font-bold">
               Sign up
             </Link>
           </p>
+
+          {/* Google Sign In button */}
           <div className="flex flex-row text-center w-full">
             <div className="border-b-2 mb-2.5 mr-2 w-full"></div>
             <div className="text-sm font-bold w-fit">OR</div>
@@ -115,6 +131,7 @@ const Login = () => {
                 : "hover:bg-gray-100 transition duration-300 active:bg-gray-100"
             }`}
           >
+            {/* Google icon */}
             <svg
               className="w-5 h-5"
               viewBox="0 0 48 48"
@@ -122,6 +139,7 @@ const Login = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <g clipPath="url(#clip0_17_40)">
+                {/* Google colors */}
                 <path
                   d="M47.532 24.5528C47.532 22.9214 47.3997 21.2811 47.1175 19.6761H24.48V28.9181H37.4434C36.9055 31.8988 35.177 34.5356 32.6461 36.2111V42.2078H40.3801C44.9217 38.0278 47.532 31.8547 47.532 24.5528Z"
                   fill="#4285F4"
@@ -131,7 +149,7 @@ const Login = () => {
                   fill="#34A853"
                 />
                 <path
-                  d="M11.0051 28.6006C9.99973 25.6199 9.99973 22.3922 11.0051 19.4115V13.2296H3.03298C-0.371021 20.0112 -0.371021 28.0009 3.03298 34.7825L11.0051 28.6006Z"
+                  d="M11.0051 28.6006C9.99973 25.6199 9.99973 22.3922 11.0051 19.4115V13.2296H3.03298C-0.371021 20.0112 -0.371021 28.0009 3.03298 34.7825L11.005 19.4115C12.901 13.7235 18.2187 9.49932 24.48 9.49932Z"
                   fill="#FBBC04"
                 />
                 <path
@@ -139,12 +157,14 @@ const Login = () => {
                   fill="#EA4335"
                 />
               </g>
+              {/* Clip path for SVG */}
               <defs>
                 <clipPath id="clip0_17_40">
                   <rect width="48" height="48" fill="white" />
                 </clipPath>
               </defs>
             </svg>
+            {/* Sign in with Google button text */}
             {isSigningIn ? "Signing In..." : "Continue with Google"}
           </button>
         </div>

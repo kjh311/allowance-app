@@ -3,28 +3,36 @@ import { Navigate, Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../contexts/authContext'
 import { doCreateUserWithEmailAndPassword } from '../../../firebase/auth'
 
+// Register component
 const Register = () => {
-
+    // Use navigate hook from react-router-dom
     const navigate = useNavigate()
 
+    // State variables for email, password, confirm password, registration status, and error message
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setconfirmPassword] = useState('')
     const [isRegistering, setIsRegistering] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
 
+    // Retrieve userLoggedIn state from AuthContext
     const { userLoggedIn } = useAuth()
 
+    // Function to handle form submission
     const onSubmit = async (e) => {
         e.preventDefault()
-        if(!isRegistering) {
+        // Check if not already registering
+        if (!isRegistering) {
             setIsRegistering(true)
+            // Call Firebase authentication function for user registration
             await doCreateUserWithEmailAndPassword(email, password)
         }
     }
 
+    // JSX rendering of the Register component
     return (
         <>
+            {/* Redirect to home if the user is already logged in */}
             {userLoggedIn && (<Navigate to={'/home'} replace={true} />)}
 
             <main className="w-full h-screen flex self-center place-content-center place-items-center">
@@ -33,12 +41,12 @@ const Register = () => {
                         <div className="mt-2">
                             <h3 className="text-gray-800 text-xl font-semibold sm:text-2xl">Create a New Account</h3>
                         </div>
-
                     </div>
                     <form
                         onSubmit={onSubmit}
                         className="space-y-4"
                     >
+                        {/* Email input */}
                         <div>
                             <label className="text-sm text-gray-600 font-bold">
                                 Email
@@ -52,6 +60,7 @@ const Register = () => {
                             />
                         </div>
 
+                        {/* Password input */}
                         <div>
                             <label className="text-sm text-gray-600 font-bold">
                                 Password
@@ -66,6 +75,7 @@ const Register = () => {
                             />
                         </div>
 
+                        {/* Confirm Password input */}
                         <div>
                             <label className="text-sm text-gray-600 font-bold">
                                 Confirm Password
@@ -80,10 +90,12 @@ const Register = () => {
                             />
                         </div>
 
+                        {/* Display error message if exists */}
                         {errorMessage && (
                             <span className='text-red-600 font-bold'>{errorMessage}</span>
                         )}
 
+                        {/* Sign Up button */}
                         <button
                             type="submit"
                             disabled={isRegistering}
@@ -91,6 +103,8 @@ const Register = () => {
                         >
                             {isRegistering ? 'Signing Up...' : 'Sign Up'}
                         </button>
+
+                        {/* Login link */}
                         <div className="text-sm text-center">
                             Already have an account? {'   '}
                             <Link to={'/login'} className="text-center text-sm hover:underline font-bold">Continue</Link>

@@ -30,57 +30,84 @@ function ColorCrud() {
     console.log(`Read event: ${eventType} in collection ${collectionPath}`);
   };
 
-  // useEffect makes the data render when the page loads
+  //READ
   useEffect(() => {
+    // Define an asynchronous function to fetch colors data
     const getColors = async () => {
       try {
-        // Log before the read
+        // Log before the read operation
         logReadEvent("getDocs", "color");
 
+        // Fetch data from the "color" collection in the database
         const data = await getDocs(collection(db, "color"));
 
-        // Log after the read
+        // Log after the read operation is successful
         logReadEvent("getDocsSuccess", "color");
 
+        // Update the local state with the fetched data, mapping over each document
         setColors(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       } catch (error) {
+        // Log an error message if there's an issue fetching data
         console.error("Error fetching data:", error);
       }
     };
 
+    // Call the getColors function when the component mounts (runs once)
     getColors();
   }, []); // Empty dependency array, runs only once when the component mounts
 
+  //used to help with the update
+  // This useEffect sets up real-time listeners for each color in the colors state.
+  // For each color, it subscribes to the onSnapshot event, triggering when the color document is updated in Firestore.
+  // It logs a read event when the snapshot event starts and completes.
+  // When a snapshot is received, it updates the local state (colors) with the new data.
+  // The returned cleanup function unsubscribes all listeners when the component unmounts or when the colors state changes.
+  // These useEffect functions work together to fetch initial data on mount and set up real-time listeners for continuous updates.
+  // useEffect hook to set up listeners for color document changes
   useEffect(() => {
+    // Map over the colors array and set up listeners for each color document
     const unsubscribeListeners = colors.map((color) => {
+      // Create a reference to the specific color document in the database
       const colorDocRef = doc(db, "color", color.id);
+
+      // Set up a listener for changes to the color document
       return onSnapshot(colorDocRef, (snapshot) => {
+        // Log that the read event for the color has started
         console.log(`Read event for color ${color.id} started`);
 
+        // Update the local state by creating a new array with the updated color
         setColors((prevColors) => {
           const updatedColors = [...prevColors];
+
+          // Find the index of the updated color in the array
           const updatedColorIndex = updatedColors.findIndex(
             (c) => c.id === color.id
           );
+
+          // If the color is found, update it with the latest data from the snapshot
           if (updatedColorIndex !== -1) {
             updatedColors[updatedColorIndex] = {
               ...snapshot.data(),
               id: snapshot.id,
             };
           }
+
+          // Return the updated array of colors
           return updatedColors;
         });
 
+        // Log that the read event for the color has completed
         console.log(`Read event for color ${color.id} completed`);
       });
     });
 
+    // Clean up: Unsubscribe from all the color document listeners when the component unmounts
     return () => {
       unsubscribeListeners.forEach((unsubscribe) => unsubscribe());
     };
   }, []); // Empty dependency array, runs only once when the component mounts
 
-  //hopefully this will automatically render the newly created color
+  //CREATE
   const createColor = async () => {
     try {
       // Add the new color to the Firestore database
@@ -105,13 +132,19 @@ function ColorCrud() {
     }
   };
 
-  //update color and value
+  // Function to UPDATE color and value in Firestore and local state
   const updateColor = async (id) => {
+    // Log a message indicating the start of the update process
     console.log(`Updating color with id ${id} started`);
 
     try {
+      // Get a reference to the specific color document in Firestore
       const colorDoc = doc(db, "color", id);
+
+      // Create an object with the new fields (name and value) to be updated
       const newFields = { name: updatedColor, value: updatedValue };
+
+      // Update the color document in Firestore with the new fields
       await updateDoc(colorDoc, newFields);
 
       // Update the local state by mapping over the existing colors and replacing the updated one
@@ -123,25 +156,33 @@ function ColorCrud() {
         )
       );
 
+      // Log a message indicating the successful completion of the update
       console.log(`Updating color with id ${id} completed successfully`);
     } catch (error) {
+      // Log an error message if there is an error during the update process
       console.error(`Error updating color with id ${id}:`, error);
     }
   };
 
-  //delete color function
+  //DELETE color function
   const deleteColor = async (id) => {
+    // Log a message indicating the start of the delete process
     console.log(`Deleting color with id ${id} started`);
 
     try {
+      // Get a reference to the specific color document in Firestore
       const colorDoc = doc(db, "color", id);
+
+      // Delete the color document in Firestore
       await deleteDoc(colorDoc);
 
       // Update the local state by filtering out the deleted color
       setColors((prevColors) => prevColors.filter((color) => color.id !== id));
 
+      // Log a message indicating the successful completion of the delete
       console.log(`Deleting color with id ${id} completed successfully`);
     } catch (error) {
+      // Log an error message if there is an error during the delete process
       console.error(`Error deleting color with id ${id}:`, error);
     }
   };
