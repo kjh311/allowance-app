@@ -9,6 +9,7 @@ const Home = () => {
             <div className='text-2xl font-bold pt-14'>
                 <h1>Hello {currentUser.displayName ? currentUser.displayName : currentUser.email}, you are now logged in.</h1>
             </div>
+            <br/>
             <ColorCrud />
         </div>
     )

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom"; // Importing Link component
 import {
   doSignInWithEmailAndPassword,
   doSignInWithGoogle,
 } from "../../../firebase/auth";
 import { useAuth } from "../../../contexts/authContext";
+import PasswordResetForm from "./PasswordResetForm"; // Importing PasswordResetForm component
+import EmailVerificationForm from "./EmailVerificationForm"; // Importing EmailVerificationForm component
 
 // Login component
 const Login = () => {
@@ -113,6 +115,12 @@ const Login = () => {
               Sign up
             </Link>
           </p>
+
+          {/* Password reset form */}
+          <PasswordResetForm />
+
+          {/* Email verification form */}
+          <EmailVerificationForm />
 
           {/* Google Sign In button */}
           <div className="flex flex-row text-center w-full">

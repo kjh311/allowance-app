@@ -132,7 +132,7 @@ function ColorCrud() {
     }
   };
 
-  // Function to UPDATE color and value in Firestore and local state
+  // UPDATE color and value in Firestore and local state
   const updateColor = async (id) => {
     // Log a message indicating the start of the update process
     console.log(`Updating color with id ${id} started`);
@@ -189,28 +189,35 @@ function ColorCrud() {
 
   return (
     <div className="color-service-div">
-      <div className="add-color-form">
-        <label htmlFor="colorInput">Add New Color:</label>
-        <br />
-        <input
-          id="colorInput"
-          placeholder="Color..."
-          onChange={(event) => {
-            setNewColor(event.target.value);
-          }}
-        />
+      <div className="add-color-form rounded-lg border border-gray-300 p-4">
+        <label htmlFor="colorInput" className="block mb-2">
+          Add New Color:
+        </label>
+        <div className="mb-2">
+          <input
+            id="colorInput"
+            placeholder="Color..."
+            onChange={(event) => {
+              setNewColor(event.target.value);
+            }}
+            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+          />
+        </div>
 
-        <br />
+        <div className="mb-2">
+          <input
+            placeholder="Value..."
+            onChange={(event) => {
+              setNewValue(event.target.value);
+            }}
+            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+          />
+        </div>
 
-        <input
-          placeholder="Value..."
-          onChange={(event) => {
-            setNewValue(event.target.value);
-          }}
-        />
-        <br />
-
-        <button onClick={createColor} className="add-button">
+        <button
+          onClick={createColor}
+          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md"
+        >
           Add Color
         </button>
       </div>
@@ -218,40 +225,54 @@ function ColorCrud() {
       {colors.map((color, id) => {
         // Use a unique identifier for the key, for example, the index or color.id
         return (
-          <div key={color.id}>
-            <h1 style={{ backgroundColor: color.value }}>
+          <div
+            key={color.id}
+            className="border border-gray-300 p-4 mb-4 rounded-md"
+          >
+            <h1
+              className="text-white py-2 px-4 rounded-md"
+              style={{ backgroundColor: color.value }}
+            >
               {color.name} {color.value}
             </h1>
-            <input
-              placeholder="Update Color Name..."
-              onChange={(event) => {
-                console.log(
-                  `Updating color name input for color with id ${color.id}`
-                );
-                updateColorFromInput(event.target.value);
-              }}
-            />
-            <input
-              placeholder="Update Value..."
-              onChange={(event) => {
-                console.log(
-                  `Updating color value input for color with id ${color.id}`
-                );
-                updateValueFromInput(event.target.value);
-              }}
-            />
-            {/* update button */}
-            <button
-              onClick={() => {
-                console.log(
-                  `Update button clicked for color with id ${color.id}`
-                );
-                updateColor(color.id);
-              }}
-            >
-              Edit
-            </button>
-            <br />
+            <div className="flex mb-2">
+              <div className="flex-1 mr-2">
+                <input
+                  placeholder="Update Color Name..."
+                  onChange={(event) => {
+                    console.log(
+                      `Updating color name input for color with id ${color.id}`
+                    );
+                    updateColorFromInput(event.target.value);
+                  }}
+                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 w-full"
+                />
+              </div>
+              <div className="flex-1">
+                <input
+                  placeholder="Update Value..."
+                  onChange={(event) => {
+                    console.log(
+                      `Updating color value input for color with id ${color.id}`
+                    );
+                    updateValueFromInput(event.target.value);
+                  }}
+                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 w-full"
+                />
+              </div>
+              {/* update button */}
+              <button
+                onClick={() => {
+                  console.log(
+                    `Update button clicked for color with id ${color.id}`
+                  );
+                  updateColor(color.id);
+                }}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md ml-2"
+              >
+                Edit
+              </button>
+            </div>
             {/* delete button */}
             <button
               onClick={() => {
@@ -260,6 +281,7 @@ function ColorCrud() {
                 );
                 deleteColor(color.id);
               }}
+              className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md"
             >
               Delete Color
             </button>
