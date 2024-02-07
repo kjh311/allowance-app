@@ -5,9 +5,11 @@ import ColorCrud from "../ColorCrud.js";
 const Home = () => {
     const { currentUser } = useAuth()
     return (
-        <div className='text-2xl font-bold pt-14'>Hello {currentUser.displayName ? currentUser.displayName : currentUser.email}, you are now logged in.
-        
-        <ColorCrud />
+        <div>
+            <div className='text-2xl font-bold pt-14'>
+                <h1>Hello {currentUser.displayName ? currentUser.displayName : currentUser.email}, you are now logged in.</h1>
+            </div>
+            <ColorCrud />
         </div>
     )
 }
