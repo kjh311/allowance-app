@@ -29,6 +29,7 @@ const PasswordResetForm = () => {
   // Rendering the component UI
   return (
     <div>
+      {/* Heading for the password reset section */}
       <h2>Reset Password</h2>
       {/* Conditional rendering based on the resetSent state */}
       {resetSent ? (

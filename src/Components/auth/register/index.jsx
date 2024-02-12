@@ -1,33 +1,47 @@
-import React, { useState } from 'react'
-import { Navigate, Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../../../contexts/authContext'
-import { doCreateUserWithEmailAndPassword } from '../../../firebase/auth'
+import React, { useState } from 'react';
+import { Navigate, Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../contexts/authContext';
+import { doCreateUserWithEmailAndPassword } from '../../../firebase/auth';
 
 // Register component
 const Register = () => {
     // Use navigate hook from react-router-dom
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     // State variables for email, password, confirm password, registration status, and error message
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setconfirmPassword] = useState('')
-    const [isRegistering, setIsRegistering] = useState(false)
-    const [errorMessage, setErrorMessage] = useState('')
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setconfirmPassword] = useState('');
+    const [isRegistering, setIsRegistering] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     // Retrieve userLoggedIn state from AuthContext
-    const { userLoggedIn } = useAuth()
+    const { userLoggedIn } = useAuth();
 
     // Function to handle form submission
     const onSubmit = async (e) => {
-        e.preventDefault()
-        // Check if not already registering
-        if (!isRegistering) {
-            setIsRegistering(true)
-            // Call Firebase authentication function for user registration
-            await doCreateUserWithEmailAndPassword(email, password)
+        e.preventDefault();
+
+        // Check if not already registering and passwords match
+        if (!isRegistering && password === confirmPassword) {
+            setIsRegistering(true);
+
+            try {
+                // Call Firebase authentication function for user registration
+                await doCreateUserWithEmailAndPassword(email, password);
+
+                // If registration is successful, navigate to the home page
+                navigate('/home');
+            } catch (error) {
+                // If there's an error during registration, display the error message
+                setErrorMessage(error.message);
+                setIsRegistering(false);
+            }
+        } else {
+            // If passwords don't match, display an error message
+            setErrorMessage("Passwords don't match");
         }
-    }
+    };
 
     // JSX rendering of the Register component
     return (
@@ -113,7 +127,7 @@ const Register = () => {
                 </div>
             </main>
         </>
-    )
-}
+    );
+};
 
-export default Register
+export default Register;

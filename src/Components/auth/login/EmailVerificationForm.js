@@ -24,6 +24,7 @@ const EmailVerificationForm = () => {
   // Rendering the component UI
   return (
     <div>
+      {/* Heading for email verification section */}
       <h2>Email Verification</h2>
       {/* Displaying a message indicating that a verification email has been sent */}
       <p>A verification email has been sent to your inbox.</p>
