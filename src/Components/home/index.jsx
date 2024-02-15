@@ -1,6 +1,7 @@
 import React from 'react'
 import { useAuth } from '../../contexts/authContext'
 import ColorCrud from "../ColorCrud.js";
+import ToDoCrud from "../ToDoCrud.jsx";
 
 const Home = () => {
     const { currentUser } = useAuth()
@@ -11,7 +12,8 @@ const Home = () => {
 </div>
 
             <br/>
-            <ColorCrud />
+            {/* <ColorCrud /> */}
+            <ToDoCrud />
         </div>
     )
 }

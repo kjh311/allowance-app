@@ -1,5 +1,5 @@
 // Importing necessary modules from Firebase
-import { auth } from "./firebase";
+import { auth, db } from "./firebase";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -9,6 +9,7 @@ import {
   signInWithPopup,
   updatePassword,
 } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 // Function to create a new user with email and password
 export const doCreateUserWithEmailAndPassword = async (email, password) => {
@@ -52,4 +53,10 @@ export const doSendEmailConfirmation = () => {
     // Include the verification URL in the email
     url: `${window.location.origin}/home`,
   });
+};
+
+// Function to add user data to Firestore upon registration
+export const addUserToFirestore = async (uid, userData) => {
+  const userRef = doc(firestore, "users", uid);
+  await setDoc(userRef, userData);
 };
