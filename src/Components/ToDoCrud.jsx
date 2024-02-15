@@ -15,8 +15,8 @@ function TodoCrud() {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
   const [newDescription, setNewDescription] = useState("");
-  const [newMoney, setNewMoney] = useState(0);
-  const [newPoints, setNewPoints] = useState(0);
+  const [newMoney, setNewMoney] = useState('');
+  const [newPoints, setNewPoints] = useState('');
 
   const todosCollectionRef = collection(db, "todos");
 
@@ -44,31 +44,32 @@ function TodoCrud() {
       const docRef = await addDoc(todosCollectionRef, {
         name: newTodo,
         description: newDescription || "",
-        money: newMoney || 0,
-        points: newPoints || 0,
+        money: newMoney === "" ? 0 : newMoney, // Set to 0 if empty string
+        points: newPoints === "" ? 0 : newPoints, // Set to 0 if empty string
         userId: currentUser.uid,
       });
-
+  
       setTodos((prevTodos) => [
         ...prevTodos,
         {
           name: newTodo,
           description: newDescription || "",
-          money: newMoney || 0,
-          points: newPoints || 0,
+          money: newMoney === "" ? 0 : newMoney, // Set to 0 if empty string
+          points: newPoints === "" ? 0 : newPoints, // Set to 0 if empty string
           id: docRef.id,
         },
       ]);
-
+  
       setNewTodo("");
       setNewDescription("");
-      setNewMoney(0);
-      setNewPoints(0);
+      setNewMoney(""); // Set to empty string after creation
+      setNewPoints(""); // Set to empty string after creation
       console.log("Todo created successfully");
     } catch (error) {
       console.error("Error creating todo:", error);
     }
   };
+  
 
   const updateTodo = async (id, newName, newDescription, newMoney, newPoints) => {
     try {
@@ -152,13 +153,13 @@ const editTodo = async (id, newName, newDescription, newMoney, newPoints) => {
           />
         </div>
         <div className="mb-2">
-          <input
-            placeholder="Money..."
-            value={newMoney}
-            onChange={(event) => setNewMoney(event.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        </div>
+  <input
+    placeholder="Money..."
+    value={newMoney}
+    onChange={(event) => setNewMoney(event.target.value)}
+    className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+  />
+</div>
         <div className="mb-2">
           <input
             placeholder="Points..."
