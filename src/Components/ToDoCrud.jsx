@@ -128,47 +128,48 @@ function TodoCrud() {
 
   return (
     <div className="todo-service-div">
-      <div className="add-todo-form rounded-lg border border-gray-300 p-4 flex flex-col items-center">
+      <div className="add-todo-form rounded-lg border border-gray-300 p-4 mb-4 flex flex-col items-center">
+        <h1>Create new TODO</h1>
         <label htmlFor="todoNameInput" className="block mb-2">
-          Add New Todo:
+          Todo Name:
         </label>
-        <div className="mb-2">
-          <input
-            id="todoNameInput"
-            placeholder="Name..."
-            value={newTodoName}
-            onChange={(event) => setNewTodoName(event.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-2">
-          <input
-            id="todoDescriptionInput"
-            placeholder="Description..."
-            value={newTodoDescription}
-            onChange={(event) => setNewTodoDescription(event.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-
-        <div className="mb-2">
-          <input
-            id="todoMoneyInput"
-            placeholder="Money..."
-            value={newTodoMoney}
-            onChange={(event) => setNewTodoMoney(event.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-2">
-          <input
-            id="todoPointsInput"
-            placeholder="Points..."
-            value={newTodoPoints}
-            onChange={(event) => setNewTodoPoints(event.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        </div>
+        <input
+          id="todoNameInput"
+          placeholder="Enter todo name"
+          value={newTodoName}
+          onChange={(event) => setNewTodoName(event.target.value)}
+          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
+        />
+        <label htmlFor="todoDescriptionInput" className="block mb-2">
+          Description:
+        </label>
+        <input
+          id="todoDescriptionInput"
+          placeholder="Enter description"
+          value={newTodoDescription}
+          onChange={(event) => setNewTodoDescription(event.target.value)}
+          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
+        />
+        <label htmlFor="todoMoneyInput" className="block mb-2">
+          Money:
+        </label>
+        <input
+          id="todoMoneyInput"
+          placeholder="Enter amount of money"
+          value={newTodoMoney}
+          onChange={(event) => setNewTodoMoney(event.target.value)}
+          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
+        />
+        <label htmlFor="todoPointsInput" className="block mb-2">
+          Points:
+        </label>
+        <input
+          id="todoPointsInput"
+          placeholder="Enter amount of points"
+          value={newTodoPoints}
+          onChange={(event) => setNewTodoPoints(event.target.value)}
+          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
+        />
         <button
           onClick={createTodo}
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md"
@@ -178,55 +179,39 @@ function TodoCrud() {
       </div>
 
       {todos.map((todo) => (
-        <div key={todo.id} className="border border-gray-300 p-4 mb-4 rounded-md">
+        <div key={todo.id} className="todo-item border border-gray-300 p-4 mb-4 rounded-md">
           <div className="flex items-center">
             <div>
               {editingTodoId === todo.id ? (
                 <>
-                  <div>
-                    <label htmlFor="editNameInput">Name:</label>
-                    <input
-                      type="text"
-                      id="editNameInput"
-                      placeholder={todo.name}
-                      value={editTodoName}
-                      onChange={(event) => setEditTodoName(event.target.value)}
-                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="editDescriptionInput">Description:</label>
-                    <input
-                      type="text"
-                      id="editDescriptionInput"
-                      placeholder={todo.description}
-                      value={editTodoDescription}
-                      onChange={(event) => setEditTodoDescription(event.target.value)}
-                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="editMoneyInput">Money:</label>
-                    <input
-                      type="number"
-                      id="editMoneyInput"
-                      placeholder={todo.money}
-                      value={editTodoMoney}
-                      onChange={(event) => setEditTodoMoney(event.target.value)}
-                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="editPointsInput">Points:</label>
-                    <input
-                      type="number"
-                      id="editPointsInput"
-                      placeholder={todo.points}
-                      value={editTodoPoints}
-                      onChange={(event) => setEditTodoPoints(event.target.value)}
-                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    placeholder="Enter todo name"
+                    value={editTodoName}
+                    onChange={(event) => setEditTodoName(event.target.value)}
+                    className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Enter description"
+                    value={editTodoDescription}
+                    onChange={(event) => setEditTodoDescription(event.target.value)}
+                    className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Enter amount of money"
+                    value={editTodoMoney}
+                    onChange={(event) => setEditTodoMoney(event.target.value)}
+                    className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Enter amount of points"
+                    value={editTodoPoints}
+                    onChange={(event) => setEditTodoPoints(event.target.value)}
+                    className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
+                  />
                   <button
                     onClick={() => submitEdit(todo.id)}
                     className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md mr-2"
