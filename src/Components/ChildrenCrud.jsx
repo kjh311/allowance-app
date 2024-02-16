@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { db } from "../firebase/firebase";
 import { collection, addDoc, updateDoc, deleteDoc, onSnapshot, doc } from "firebase/firestore";
 import { useAuth } from "../contexts/authContext";
+import '../Styles/ChildCrud.scss'; // Import the CSS file
 
 function ChildCrud() {
   const { currentUser } = useAuth();

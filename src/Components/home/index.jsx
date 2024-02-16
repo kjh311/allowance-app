@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/authContext'
 // import ColorCrud from "../ColorCrud.js";
 import ToDoCrud from "../ToDoCrud.jsx";
 import ChildrenCrud from "../ChildrenCrud.jsx";
+import StickyFooter from '../footer/StickyFooter';
 
 const Home = () => {
     const { currentUser } = useAuth()
@@ -24,6 +25,7 @@ const Home = () => {
                 <div className="flex justify-center">
                 <ToDoCrud />
             </div>
+            <StickyFooter />
         </div>
     )
 }

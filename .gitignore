@@ -26,7 +26,6 @@ yarn-error.log*
 # Ignore config variables file
 config.js
 
-# Ignore firebase.js
-# firebase.js
 
+# ignore service account key
 serviceAccountKey.json
