@@ -7,7 +7,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: firebaseConfig.REACT_APP_STORAGE_BUCKET,
 });
-
+// asd
 // Set CORS configuration
 const bucket = admin.storage().bucket();
 const corsConfiguration = [
