@@ -66,6 +66,7 @@ function ChildCrud() {
   };
 
   useEffect(() => {
+    console.log("Reading children data from database...");
     const unsubscribe = onSnapshot(childrenCollectionRef, (querySnapshot) => {
       const loadedChildren = [];
       querySnapshot.forEach((doc) => {
@@ -73,9 +74,10 @@ function ChildCrud() {
       });
       setChildren(loadedChildren);
     });
-
+  
     return () => unsubscribe();
-  }, [childrenCollectionRef]);
+  }, []); // Empty dependency array ensures the effect runs only once when the component mounts
+  
 
   return (
     <div className="child-service-div">
