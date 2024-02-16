@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { db } from "../firebase/firebase";
+import { db } from "../../firebase/firebase";
 import { collection, addDoc, updateDoc, deleteDoc, onSnapshot, doc } from "firebase/firestore";
-import { useAuth } from "../contexts/authContext";
-import '../Styles/ChildCrud.scss'; // Import the CSS file
+import { useAuth } from "../../contexts/authContext";
+import { Link } from 'react-router-dom';
 
 function ChildCrud() {
   const { currentUser } = useAuth();
@@ -77,13 +77,12 @@ function ChildCrud() {
     });
   
     return () => unsubscribe();
-  }, []); // Empty dependency array ensures the effect runs only once when the component mounts
-  
+  }, []);
 
   return (
     <div className="child-service-div">
       <div className="add-child-form rounded-lg border border-gray-300 p-4 mb-4 flex flex-col items-center">
-      <h1>Create new Child</h1>
+        <h1>Create new Child</h1>
         <label htmlFor="childNameInput" className="block mb-2">
           Child Name:
         </label>
@@ -115,7 +114,6 @@ function ChildCrud() {
       {children.map((child) => (
         <div key={child.id} className="child-item border border-gray-300 p-4 mb-4 rounded-md">
           <div className="flex items-center">
-            
             <div>
               {editingChildId === child.id ? (
                 <>
@@ -150,6 +148,7 @@ function ChildCrud() {
                 <>
                   <p>Name: {child.name}</p>
                   <p>Owed: ${child.owed}</p>
+                  <Link to={`/child/${child.id}`} className="text-blue-500 hover:underline mr-2">View Details</Link>
                   <button
                     onClick={() => editChild(child.id, child.name, child.owed)}
                     className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md mr-2"

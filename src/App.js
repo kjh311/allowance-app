@@ -9,6 +9,7 @@ import Home from "./components/home";
 import ToDos from "./components/todos";
 import UserProfile from "./components/userProfile";
 import { AuthProvider } from "./contexts/authContext";
+import ChildPage from "./components/children/ChildPage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/todos" element={<ToDos />} />
               <Route path="/profile" element={<UserProfile />} />
+              <Route path="/child/:id" component={ChildPage} />
             </Routes>
           </div>
         </Router>

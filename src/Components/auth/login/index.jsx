@@ -59,6 +59,9 @@ const Login = () => {
         return <Navigate to={"/home"} replace={true} />;
     }
 
+     // Redirect to login if the user is not logged in
+
+
     // JSX rendering of the login form
     return (
         <div>
