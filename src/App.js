@@ -6,6 +6,8 @@ import Login from "./components/auth/login";
 import Register from "./components/auth/register";
 import Header from "./components/header";
 import Home from "./components/home";
+import ToDos from "./components/todos";
+import UserProfile from "./components/userProfile";
 import { AuthProvider } from "./contexts/authContext";
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/home" element={<Home />} />
+              <Route path="/todos" element={<ToDos />} />
+              <Route path="/profile" element={<UserProfile />} />
             </Routes>
           </div>
         </Router>

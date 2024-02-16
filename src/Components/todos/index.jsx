@@ -1,11 +1,9 @@
 import React from 'react'
 import { useAuth } from '../../contexts/authContext'
-// import ColorCrud from "../ColorCrud.js";
 import ToDoCrud from "../todos/ToDoCrud.jsx";
-import ChildrenCrud from "../ChildrenCrud.jsx";
 import StickyFooter from '../footer/StickyFooter';
 
-const Home = () => {
+const ToDos = () => {
     const { currentUser } = useAuth()
     return (
         <div>
@@ -13,16 +11,14 @@ const Home = () => {
 
             <br/>
             <br/>
-            <br/>
-
-            <div className="flex justify-center">
-                Home Page
-                </div>
-               
-               
+          
+                <br/>
+                <div className="flex justify-center">
+                <ToDoCrud />
+            </div>
             <StickyFooter />
         </div>
     )
 }
 
-export default Home
+export default ToDos
