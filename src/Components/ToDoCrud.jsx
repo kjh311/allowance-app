@@ -12,19 +12,20 @@ function TodoCrud() {
   const [newTodoPoints, setNewTodoPoints] = useState("");
   const [editingTodoId, setEditingTodoId] = useState(null);
 
-  const [editName, setEditName] = useState("");
-  const [editDescription, setEditDescription] = useState("");
-  const [editMoney, setEditMoney] = useState("");
-  const [editPoints, setEditPoints] = useState("");
+  // State variables for edit inputs
+  const [editTodoName, setEditTodoName] = useState("");
+  const [editTodoDescription, setEditTodoDescription] = useState("");
+  const [editTodoMoney, setEditTodoMoney] = useState("");
+  const [editTodoPoints, setEditTodoPoints] = useState("");
 
   const todosCollectionRef = collection(db, "todos");
 
   const editTodo = (id, name, description, money, points) => {
     setEditingTodoId(id);
-    setEditName(name);
-    setEditDescription(description);
-    setEditMoney(money);
-    setEditPoints(points);
+    setEditTodoName(name);
+    setEditTodoDescription(description);
+    setEditTodoMoney(money);
+    setEditTodoPoints(points);
   };
 
   const cancelEdit = () => {
@@ -34,12 +35,12 @@ function TodoCrud() {
   const submitEdit = async (id) => {
     try {
       const todoToUpdate = {
-        name: editName,
-        description: editDescription,
-        money: parseFloat(editMoney),
-        points: parseInt(editPoints),
+        name: editTodoName || "",
+        description: editTodoDescription || "",
+        money: parseFloat(editTodoMoney) || 0,
+        points: parseInt(editTodoPoints) || 0,
       };
-      
+
       await updateTodo(id, todoToUpdate);
       console.log(`Todo with ID ${id} updated successfully`);
 
@@ -72,13 +73,13 @@ function TodoCrud() {
       const todoToAdd = {
         name: newTodoName,
         description: newTodoDescription,
-        money: parseFloat(newTodoMoney),
-        points: parseInt(newTodoPoints),
+        money: newTodoMoney === "" ? 0 : parseFloat(newTodoMoney),
+        points: newTodoPoints === "" ? 0 : parseInt(newTodoPoints),
         userId: currentUser.uid,
       };
-  
+
       const docRef = await addDoc(todosCollectionRef, todoToAdd);
-  
+
       setTodos((prevTodos) => [
         ...prevTodos,
         {
@@ -86,7 +87,7 @@ function TodoCrud() {
           id: docRef.id,
         },
       ]);
-  
+
       setNewTodoName("");
       setNewTodoDescription("");
       setNewTodoMoney("");
@@ -128,13 +129,13 @@ function TodoCrud() {
   return (
     <div className="todo-service-div">
       <div className="add-todo-form rounded-lg border border-gray-300 p-4 flex flex-col items-center">
-        <label htmlFor="todoInput" className="block mb-2">
+        <label htmlFor="todoNameInput" className="block mb-2">
           Add New Todo:
         </label>
         <div className="mb-2">
           <input
-            id="todoInput"
-            placeholder="Todo..."
+            id="todoNameInput"
+            placeholder="Name..."
             value={newTodoName}
             onChange={(event) => setNewTodoName(event.target.value)}
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
@@ -142,15 +143,17 @@ function TodoCrud() {
         </div>
         <div className="mb-2">
           <input
+            id="todoDescriptionInput"
             placeholder="Description..."
             value={newTodoDescription}
             onChange={(event) => setNewTodoDescription(event.target.value)}
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
           />
         </div>
-  
+
         <div className="mb-2">
           <input
+            id="todoMoneyInput"
             placeholder="Money..."
             value={newTodoMoney}
             onChange={(event) => setNewTodoMoney(event.target.value)}
@@ -159,6 +162,7 @@ function TodoCrud() {
         </div>
         <div className="mb-2">
           <input
+            id="todoPointsInput"
             placeholder="Points..."
             value={newTodoPoints}
             onChange={(event) => setNewTodoPoints(event.target.value)}
@@ -177,58 +181,66 @@ function TodoCrud() {
         <div key={todo.id} className="border border-gray-300 p-4 mb-4 rounded-md">
           <div className="flex items-center">
             <div>
-            {editingTodoId === todo.id ? (
-    <div>
-        <div className="mb-2">
-            <input
-                type="text"
-                placeholder={editName}
-                value={editName}
-                onChange={(event) => setEditName(event.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-            />
-        </div>
-        <div className="mb-2">
-            <input
-                type="text"
-                placeholder={editDescription}
-                value={editDescription}
-                onChange={(event) => setEditDescription(event.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-            />
-        </div>
-        <div className="mb-2">
-            <input
-                type="number"
-                placeholder={editMoney}
-                value={editMoney}
-                onChange={(event) => setEditMoney(event.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-            />
-        </div>
-        <div className="mb-2">
-            <input
-                type="number"
-                placeholder={editPoints}
-                value={editPoints}
-                onChange={(event) => setEditPoints(event.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-            />
-        </div>
-        <button
-            onClick={() => submitEdit(todo.id)}
-            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md mr-2"
-        >
-            Submit
-        </button>
-        <button
-            onClick={cancelEdit}
-            className="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-md"
-        >
-            Cancel
-        </button>
-    </div>
-) : (
+              {editingTodoId === todo.id ? (
+                <>
+                  <div>
+                    <label htmlFor="editNameInput">Name:</label>
+                    <input
+                      type="text"
+                      id="editNameInput"
+                      placeholder={todo.name}
+                      value={editTodoName}
+                      onChange={(event) => setEditTodoName(event.target.value)}
+                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="editDescriptionInput">Description:</label>
+                    <input
+                      type="text"
+                      id="editDescriptionInput"
+                      placeholder={todo.description}
+                      value={editTodoDescription}
+                      onChange={(event) => setEditTodoDescription(event.target.value)}
+                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="editMoneyInput">Money:</label>
+                    <input
+                      type="number"
+                      id="editMoneyInput"
+                      placeholder={todo.money}
+                      value={editTodoMoney}
+                      onChange={(event) => setEditTodoMoney(event.target.value)}
+                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="editPointsInput">Points:</label>
+                    <input
+                      type="number"
+                      id="editPointsInput"
+                      placeholder={todo.points}
+                      value={editTodoPoints}
+                      onChange={(event) => setEditTodoPoints(event.target.value)}
+                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <button
+                    onClick={() => submitEdit(todo.id)}
+                    className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md mr-2"
+                  >
+                    Submit
+                  </button>
+                  <button
+                    onClick={cancelEdit}
+                    className="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-md"
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
                 <>
                   <p>Name: {todo.name}</p>
                   <p>Description: {todo.description}</p>
