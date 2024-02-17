@@ -107,12 +107,14 @@ function ChildCrud() {
           onChange={(event) => setNewChildOwed(event.target.value)}
           className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
         />
-        <button
-          onClick={createChild}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full flex items-center"
-        >
-          <FaPlus className="mr-2" /> 
-        </button>
+      <button
+  onClick={createChild}
+  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-full flex items-center justify-center"
+  style={{ width: "40px", height: "40px" }}
+>
+  <FaPlus />
+</button>
+
 
       </div>
 
@@ -157,28 +159,27 @@ function ChildCrud() {
     </button>
   </>
 ) : (
-  <>
-    <p>Name: {child.name}</p>
-    <p>Owed: ${child.owed}</p>
-    <div>
+<>
+  <p>Name: {child.name}</p>
+  <p>Owed: ${child.owed}</p>
+  <div className="flex">
     <Link to={`/child/${child.id}`} className="text-blue-500 hover:underline mr-2">View Details</Link>
-    </div>
     {/* Buttons with icons */}
     <button
       onClick={() => editChild(child.id, child.name, child.owed)}
-      className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md mr-2"
+      className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md mr-2 flex items-center justify-center"
     >
-      <FaEdit className="mr-2" /> {/* Edit icon */}
-     
+      <FaEdit />
     </button>
     <button
       onClick={() => deleteChild(child.id)}
-      className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md"
+      className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md flex items-center justify-center"
     >
-      <FaTrash className="mr-2" /> {/* Delete icon */}
-      
+      <FaTrash />
     </button>
-  </>
+  </div>
+</>
+
 )}
 
             </div>

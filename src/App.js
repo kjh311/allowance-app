@@ -11,6 +11,7 @@ import ToDos from "./components/todos";
 import UserProfile from "./components/userProfile";
 import { AuthProvider } from "./contexts/authContext";
 import ChildPage from "./components/children/ChildPage";
+import Children from "./components/children";
 
 function App() {
   return (
@@ -30,7 +31,8 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/todos" element={<ToDos />} />
               <Route path="/profile" element={<UserProfile />} />
-              <Route path="/child/:id" component={ChildPage} />
+              <Route path="/child/:id" element={<ChildPage />} />
+              <Route path="/children" element={<Children />} />
             </Routes>
           </div>
           <StickyFooter />

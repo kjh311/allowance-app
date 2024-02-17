@@ -33,6 +33,7 @@ const Header = () => {
             <div className="flex items-center mr-4">
                 <Link to='/todos' className='text-sm hover:underline ml-4'>ToDos</Link>
                 <Link to='/profile' className='text-sm hover:underline ml-4'>Profile</Link>
+                <Link to='/children' className='text-sm hover:underline ml-4'>Children</Link>
                 {userLoggedIn ? (
                     <button onClick={handleLogout} className='text-sm underline ml-4'>Logout</button>
                 ) : (

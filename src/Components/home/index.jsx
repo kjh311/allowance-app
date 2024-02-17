@@ -1,6 +1,6 @@
 import React from 'react'
 import { useAuth } from '../../contexts/authContext'
-import ChildrenCrud from "../children/ChildrenCrud.jsx";
+// import ChildrenCrud from "../children/ChildrenCrud.jsx";
 
 const Home = () => {
     const { currentUser } = useAuth()
@@ -16,7 +16,7 @@ const Home = () => {
                 Home Page
                 
                 </div>
-                <div className="flex justify-center"><ChildrenCrud /></div>
+                {/* <div className="flex justify-center"><ChildrenCrud /></div> */}
                 
                
                
