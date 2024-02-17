@@ -5,6 +5,7 @@ import "./Styles/App.scss";
 import Login from "./components/auth/login";
 import Register from "./components/auth/register";
 import Header from "./components/header";
+import StickyFooter from "./components/footer/StickyFooter";
 import Home from "./components/home";
 import ToDos from "./components/todos";
 import UserProfile from "./components/userProfile";
@@ -32,6 +33,7 @@ function App() {
               <Route path="/child/:id" component={ChildPage} />
             </Routes>
           </div>
+          <StickyFooter />
         </Router>
       </AuthProvider>
     </div>

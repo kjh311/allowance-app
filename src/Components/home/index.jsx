@@ -1,9 +1,6 @@
 import React from 'react'
 import { useAuth } from '../../contexts/authContext'
-// import ColorCrud from "../ColorCrud.js";
-import ToDoCrud from "../todos/ToDoCrud.jsx";
 import ChildrenCrud from "../children/ChildrenCrud.jsx";
-import StickyFooter from '../footer/StickyFooter';
 
 const Home = () => {
     const { currentUser } = useAuth()
@@ -21,7 +18,6 @@ const Home = () => {
                 </div>
                
                
-            <StickyFooter />
         </div>
     )
 }

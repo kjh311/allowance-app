@@ -6,6 +6,16 @@ import { doSignOut } from '../../firebase/auth';
 const Header = () => {
     const { currentUser, userLoggedIn } = useAuth();
 
+    const handleLogout = async () => {
+        try {
+            await doSignOut();
+            // Redirect to login page after successful logout
+            window.location.href = '/login';
+        } catch (error) {
+            console.error('Error signing out:', error);
+        }
+    };
+
     return (
         <nav className='flex flex-row justify-between items-center w-full z-20 fixed top-0 left-0 h-12 border-b bg-blue-500 text-white'>
             <Link to="/home" className="text-sm ml-4 hover:underline">Allowance App</Link>
@@ -23,7 +33,7 @@ const Header = () => {
                 <Link to='/todos' className='text-sm hover:underline ml-4'>ToDos</Link>
                 <Link to='/profile' className='text-sm hover:underline ml-4'>Profile</Link>
                 {userLoggedIn ? (
-                    <button onClick={() => doSignOut()} className='text-sm underline ml-4'>Logout</button>
+                    <button onClick={handleLogout} className='text-sm underline ml-4'>Logout</button>
                 ) : (
                     <>
                         <Link className='text-sm underline ml-4' to={'/login'}>Login</Link>
