@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Container, Button, Form, Card } from "react-bootstrap";
 import { db } from "../../firebase/firebase";
 import { collection, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { Link } from "react-router-dom";
-// import { FaEdit, FaTrash } from 'react-icons/fa';
 
 function ChildViewing() {
   const [children, setChildren] = useState([]);
@@ -59,82 +59,58 @@ function ChildViewing() {
   };
 
   return (
-    <div className="child-service-div">
+    <Container>
       {children.map((child) => (
-        <div key={child.id} className="child-item border border-gray-300 p-4 mb-4 rounded-md">
-          <p>Name: {child.name}</p>
-          <p>Owed: ${child.owed}</p>
-          <div className="flex flex-col"> {/* Ensure inputs are displayed vertically */}
+        <Card key={child.id} className="border border-gray-300 mb-4 d-flex align-items-center flex-column">
+          <Card.Body className="d-flex flex-column align-items-center justify-content-center">
+            <Card.Title className="text-center">Name: {child.name}</Card.Title>
+            <Card.Text className="text-center">Owed: ${child.owed}</Card.Text>
+            <Link to={`/child/${child.id}`} className="btn btn-primary">
+              View Details
+            </Link>
+          </Card.Body>
+          <Card.Footer className="d-flex flex-column align-items-center justify-content-center">
             {editingChildId === child.id ? (
-              <>
-                <div className="mb-2">
-                  <input
+              <Form className="d-flex flex-column align-items-center">
+                <Form.Group controlId="editChildName" className="mb-2">
+                  <Form.Control
                     type="text"
                     placeholder="Enter child's name"
                     value={editChildName}
                     onChange={(event) => setEditChildName(event.target.value)}
-                    className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                   />
-                </div>
-                <div className="mb-2">
-                  <input
+                </Form.Group>
+                <Form.Group controlId="editChildOwed" className="mb-2">
+                  <Form.Control
                     type="number"
                     placeholder="Enter amount owed"
                     value={editChildOwed}
                     onChange={(event) => setEditChildOwed(event.target.value)}
-                    className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                   />
-                </div>
-                <div className="flex"> {/* Button container */}
-                  <button
-                    onClick={() => submitEdit(child.id)}
-                    className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-md mr-2"
-                  >
-                    <FaEdit className="mr-2" />
-                    Submit
-                  </button>
-                  <button
-                    onClick={cancelEdit}
-                    className="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-md"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </>
+                </Form.Group>
+                <Button variant="success" onClick={() => submitEdit(child.id)} className="mb-2">
+                  <FaEdit className="mr-2" />
+                  Submit
+                </Button>
+                <Button variant="secondary" onClick={cancelEdit}>
+                  Cancel
+                </Button>
+              </Form>
             ) : (
-              <>
-              <br/>
-              <div className="flex">
-  <button
-    onClick={() => editChild(child.id, child.name, child.owed)}
-    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-full w-12 h-12 flex items-center justify-center mr-2"
-  >
-    <FaEdit />
-  </button>
-  <button
-    onClick={() => deleteChild(child.id)}
-    className="bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full w-12 h-12 flex items-center justify-center"
-  >
-    <FaTrash />
-  </button>
-  </div>
-  <br/>
-  <div className="flex justify-center">
-    
-  <Link to={`/child/${child.id}`} className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-full px-4 py-2 flex items-center justify-center mr-2">
-    View Details
-  </Link>
-</div>
-
-
-              </>
+              <div className="d-flex flex-column align-items-center">
+                <Button variant="primary" onClick={() => editChild(child.id, child.name, child.owed)} className="mb-2">
+                  <FaEdit />
+                </Button>
+                <Button variant="danger" onClick={() => deleteChild(child.id)} className="mb-2">
+                  <FaTrash />
+                </Button>
+              </div>
             )}
-          </div>
-        </div>
+          </Card.Footer>
+        </Card>
       ))}
-    </div>
+    </Container>
   );
-  
 }
 
 export default ChildViewing;

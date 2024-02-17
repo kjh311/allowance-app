@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { db } from "../../firebase/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { useAuth } from "../../contexts/authContext";
@@ -16,9 +17,9 @@ function ChildCreation() {
       const childToAdd = {
         name: newChildName,
         owed: owed,
-        userId: currentUser.uid
+        userId: currentUser.uid,
       };
-  
+
       await addDoc(childrenCollectionRef, childToAdd);
       console.log("Child created successfully");
       setNewChildName("");
@@ -29,37 +30,42 @@ function ChildCreation() {
   };
 
   return (
-    <div className="add-child-form rounded-lg border border-gray-300 p-4 mb-4 flex flex-col items-center" style={{
-      marginTop: '20px',
-  }}>
-      <h1>Create new Child</h1>
-      <label htmlFor="childNameInput" className="block mb-2">
-        Child Name:
-      </label>
-      <input
-        id="childNameInput"
-        placeholder="Enter child's name"
-        value={newChildName}
-        onChange={(event) => setNewChildName(event.target.value)}
-        className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
-      />
-      <label htmlFor="childOwedInput" className="block mb-2">
-        Amount Owed:
-      </label>
-      <input
-        id="childOwedInput"
-        placeholder="Enter amount owed"
-        value={newChildOwed}
-        onChange={(event) => setNewChildOwed(event.target.value)}
-        className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
-      />
-      <button
-        onClick={createChild}
-        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md px-4 py-2"
-      >
-        Create Child
-      </button>
-    </div>
+    <Container>
+      <Row className="justify-content-center">
+        <Col md={10}>
+          <div className="add-child-form rounded-lg border border-gray-300 p-4 mb-4">
+            <h1>Create new Child</h1>
+            <Form>
+              <Form.Group controlId="childNameInput">
+                <Form.Label>Child Name:</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter child's name"
+                  value={newChildName}
+                  onChange={(event) => setNewChildName(event.target.value)}
+                />
+              </Form.Group>
+              <Form.Group controlId="childOwedInput">
+                <Form.Label>Amount Owed:</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter amount owed"
+                  value={newChildOwed}
+                  onChange={(event) => setNewChildOwed(event.target.value)}
+                />
+              </Form.Group>
+              <Button
+                variant="primary"
+                onClick={createChild}
+                style={{ marginTop: '10px' }} // Add margin to the button
+              >
+                Create Child
+              </Button>
+            </Form>
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

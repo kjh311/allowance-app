@@ -1,4 +1,5 @@
 import React from 'react';
+import { Navbar, Nav, Button } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 import { doSignOut } from '../../firebase/auth';
@@ -18,32 +19,35 @@ const Header = () => {
     };
 
     return (
-        <nav className='flex flex-row justify-between items-center w-full z-20 fixed top-0 left-0 h-12 border-b bg-blue-500 text-white'>
-            <Link to="/home" className="text-sm ml-4 hover:underline">Allowance App</Link>
-            <div className="text-sm flex items-center">
-                {userLoggedIn && currentUser && ( // Check if user is logged in and currentUser exists
-                    <>
-                        <span>{currentUser.displayName ? currentUser.displayName : currentUser.email}</span>
-                        {currentUser.photoURL && (
-                            <img src={currentUser.photoURL} alt="User Profile" className="w-6 h-6 rounded-full ml-2" />
-                        )}
-                    </>
-                )}
-            </div>
-            <div className="flex items-center mr-4">
-                <Link to='/todos' className='text-sm hover:underline ml-4'>ToDos</Link>
-                <Link to='/profile' className='text-sm hover:underline ml-4'>Profile</Link>
-                <Link to='/children' className='text-sm hover:underline ml-4'>Children</Link>
-                {userLoggedIn ? (
-                    <button onClick={handleLogout} className='text-sm underline ml-4'>Logout</button>
-                ) : (
-                    <>
-                        {location.pathname !== '/login' && <Link className='text-sm underline ml-4' to={'/login'}>Login</Link>}
-                        {location.pathname !== '/register' && <Link className='text-sm underline ml-4' to={'/register'}>Register New Account</Link>}
-                    </>
-                )}
-            </div>
-        </nav>
+        <Navbar bg="primary" variant="dark" expand="lg" className="fixed-top">
+            <Navbar.Brand as={Link} to="/home">Allowance App</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="mr-auto">
+                    <Nav.Link as={Link} to="/todos">ToDos</Nav.Link>
+                    <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
+                    <Nav.Link as={Link} to="/children">Children</Nav.Link>
+                </Nav>
+                <Nav className="ml-auto align-items-center justify-content-end"> {/* Update this line */}
+                    {userLoggedIn && currentUser && (
+                        <>
+                            <span className="mr-2">{currentUser.displayName ? currentUser.displayName : currentUser.email}</span>
+                            {currentUser.photoURL && (
+                                <img src={currentUser.photoURL} alt="User Profile" className="rounded-circle" style={{ width: '32px', height: '32px' }} />
+                            )}
+                        </>
+                    )}
+                    {userLoggedIn ? (
+                        <Button variant="light" onClick={handleLogout} className="ml-3">Logout</Button>
+                    ) : (
+                        <>
+                            {location.pathname !== '/login' && <Nav.Link as={Link} to="/login">Login</Nav.Link>}
+                            {location.pathname !== '/register' && <Nav.Link as={Link} to="/register">Register New Account</Nav.Link>}
+                        </>
+                    )}
+                </Nav>
+            </Navbar.Collapse>
+        </Navbar>
     );
 };
 
