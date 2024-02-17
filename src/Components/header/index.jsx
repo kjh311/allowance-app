@@ -1,10 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 import { doSignOut } from '../../firebase/auth';
 
 const Header = () => {
     const { currentUser, userLoggedIn } = useAuth();
+    const location = useLocation();
 
     const handleLogout = async () => {
         try {
@@ -20,7 +21,7 @@ const Header = () => {
         <nav className='flex flex-row justify-between items-center w-full z-20 fixed top-0 left-0 h-12 border-b bg-blue-500 text-white'>
             <Link to="/home" className="text-sm ml-4 hover:underline">Allowance App</Link>
             <div className="text-sm flex items-center">
-                {userLoggedIn && (
+                {userLoggedIn && currentUser && ( // Check if user is logged in and currentUser exists
                     <>
                         <span>{currentUser.displayName ? currentUser.displayName : currentUser.email}</span>
                         {currentUser.photoURL && (
@@ -36,8 +37,8 @@ const Header = () => {
                     <button onClick={handleLogout} className='text-sm underline ml-4'>Logout</button>
                 ) : (
                     <>
-                        <Link className='text-sm underline ml-4' to={'/login'}>Login</Link>
-                        <Link className='text-sm underline ml-4' to={'/register'}>Register New Account</Link>
+                        {location.pathname !== '/login' && <Link className='text-sm underline ml-4' to={'/login'}>Login</Link>}
+                        {location.pathname !== '/register' && <Link className='text-sm underline ml-4' to={'/register'}>Register New Account</Link>}
                     </>
                 )}
             </div>

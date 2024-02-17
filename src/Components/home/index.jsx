@@ -14,8 +14,10 @@ const Home = () => {
 
             <div className="flex justify-center">
                 Home Page
-                <ChildrenCrud />
+                
                 </div>
+                <div className="flex justify-center"><ChildrenCrud /></div>
+                
                
                
         </div>

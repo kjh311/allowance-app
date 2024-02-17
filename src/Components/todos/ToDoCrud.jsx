@@ -1,7 +1,8 @@
-import { db } from "../../firebase/firebase";
 import { useState, useEffect } from "react";
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { useAuth } from "../../contexts/authContext";
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import { db } from "../../firebase/firebase";
 
 function TodoCrud() {
   const { currentUser } = useAuth();
@@ -11,8 +12,6 @@ function TodoCrud() {
   const [newTodoMoney, setNewTodoMoney] = useState("");
   const [newTodoPoints, setNewTodoPoints] = useState("");
   const [editingTodoId, setEditingTodoId] = useState(null);
-
-  // State variables for edit inputs
   const [editTodoName, setEditTodoName] = useState("");
   const [editTodoDescription, setEditTodoDescription] = useState("");
   const [editTodoMoney, setEditTodoMoney] = useState("");
@@ -132,7 +131,7 @@ function TodoCrud() {
         <div className="add-todo-form rounded-lg border border-gray-300 p-4 mb-4">
           <h1>Create new TODO</h1>
           <label htmlFor="todoNameInput" className="block mb-2">
-            Todo Name:
+            
           </label>
           <input
             id="todoNameInput"
@@ -142,7 +141,7 @@ function TodoCrud() {
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
           />
           <label htmlFor="todoDescriptionInput" className="block mb-2">
-            Description:
+            
           </label>
           <input
             id="todoDescriptionInput"
@@ -152,7 +151,7 @@ function TodoCrud() {
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
           />
           <label htmlFor="todoMoneyInput" className="block mb-2">
-            Money:
+            
           </label>
           <input
             id="todoMoneyInput"
@@ -162,7 +161,7 @@ function TodoCrud() {
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
           />
           <label htmlFor="todoPointsInput" className="block mb-2">
-            Points:
+            
           </label>
           <input
             id="todoPointsInput"
@@ -171,6 +170,7 @@ function TodoCrud() {
             onChange={(event) => setNewTodoPoints(event.target.value)}
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
           />
+          <br/>
           <button
             onClick={createTodo}
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md"
@@ -182,75 +182,92 @@ function TodoCrud() {
 
       <div className="todo-list-container">
         {todos.map((todo) => (
-          <div key={todo.id} className="todo-item border border-gray-300 p-4 mb-4 rounded-md">
-            <div className="flex items-center">
-              <div>
-                {editingTodoId === todo.id ? (
-                  <>
-                    <input
-                      type="text"
-                      placeholder="Enter todo name"
-                      value={editTodoName}
-                      onChange={(event) => setEditTodoName(event.target.value)}
-                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Enter description"
-                      value={editTodoDescription}
-                      onChange={(event) => setEditTodoDescription(event.target.value)}
-                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
-                    />
-                    <input
-                      type="number"
-                      placeholder="Enter amount of money"
-                      value={editTodoMoney}
-                      onChange={(event) => setEditTodoMoney(event.target.value)}
-                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
-                    />
-                    <input
-                      type="number"
-                      placeholder="Enter amount of points"
-                      value={editTodoPoints}
-                      onChange={(event) => setEditTodoPoints(event.target.value)}
-                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
-                    />
-                    <button
-                      onClick={() => submitEdit(todo.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md mr-2"
-                    >
-                      Submit
-                    </button>
-                    <button
-                      onClick={cancelEdit}
-                      className="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-md"
-                    >
-                      Cancel
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <p>Name: {todo.name}</p>
-                    <p>Description: {todo.description}</p>
-                    <p>Money: ${todo.money}</p>
-                    <p>Points: {todo.points}</p>
-                    <button
-                      onClick={() => editTodo(todo.id, todo.name, todo.description, todo.money, todo.points)}
-                      className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md mr-2"
-                    >
-                      Edit Todo
-                    </button>
-                    <button
-                      onClick={() => deleteTodo(todo.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md"
-                    >
-                      Delete Todo
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
+          // Inside the mapping of todos
+<div key={todo.id} className="todo-item border border-gray-300 p-4 mb-4 rounded-md">
+  <div className="flex items-center">
+    <div>
+      {editingTodoId === todo.id ? (
+        <>
+          {/* Edit input fields */}
+          <div className="mb-2">
+            <input
+              type="text"
+              placeholder="Enter todo name"
+              value={editTodoName}
+              onChange={(event) => setEditTodoName(event.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+            />
           </div>
+          <div className="mb-2">
+            <input
+              type="text"
+              placeholder="Enter description"
+              value={editTodoDescription}
+              onChange={(event) => setEditTodoDescription(event.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div className="mb-2">
+            <input
+              type="number"
+              placeholder="Enter amount of money"
+              value={editTodoMoney}
+              onChange={(event) => setEditTodoMoney(event.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div className="mb-2">
+            <input
+              type="number"
+              placeholder="Enter amount of points"
+              value={editTodoPoints}
+              onChange={(event) => setEditTodoPoints(event.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          {/* Buttons with icons */}
+          <button
+            onClick={() => submitEdit(todo.id)}
+            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md mr-2"
+          >
+            <FaEdit className="mr-2" /> {/* Edit icon */}
+            Submit
+          </button>
+          <button
+            onClick={cancelEdit}
+            className="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-md"
+          >
+            Cancel
+          </button>
+        </>
+      ) : (
+        <>
+          {/* Display todo details */}
+          <p>Name: {todo.name}</p>
+          <p>Description: {todo.description}</p>
+          <p>Money: ${todo.money}</p>
+          <p>Points: {todo.points}</p>
+          {/* Buttons with icons */}
+          <button
+            onClick={() => editTodo(todo.id, todo.name, todo.description, todo.money, todo.points)}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md mr-2"
+          >
+            <FaEdit className="mr-2" /> {/* Edit icon */}
+            
+          </button>
+          <button
+            onClick={() => deleteTodo(todo.id)}
+            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md"
+          >
+            <FaTrash className="mr-2" /> {/* Delete icon */}
+            
+          </button>
+        </>
+      )}
+    </div>
+  </div>
+</div>
+
         ))}
       </div>
     </div>
