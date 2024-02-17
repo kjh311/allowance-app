@@ -101,18 +101,20 @@ function ChildViewing() {
               </>
             ) : (
               <>
-              <button
-  onClick={() => editChild(child.id, child.name, child.owed)}
-  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full flex items-center justify-center mr-2"
->
-  <FaEdit />
-</button>
-<button
-  onClick={() => deleteChild(child.id)}
-  className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-full flex items-center justify-center"
->
-  <FaTrash />
-</button>
+              <div className="flex">
+  <button
+    onClick={() => editChild(child.id, child.name, child.owed)}
+    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-full w-12 h-12 flex items-center justify-center mr-2"
+  >
+    <FaEdit />
+  </button>
+  <button
+    onClick={() => deleteChild(child.id)}
+    className="bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full w-12 h-12 flex items-center justify-center"
+  >
+    <FaTrash />
+  </button>
+</div>
 
               </>
             )}
