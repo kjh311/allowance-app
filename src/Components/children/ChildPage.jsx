@@ -6,7 +6,7 @@ import { doc, getDoc } from 'firebase/firestore';
 
 function ChildPage() {
   const { id } = useParams();
-  console.log("ID:", id);
+  // console.log("ID:", id);
   const [child, setChild] = useState(null);
   // console.log(db)
 
@@ -20,7 +20,7 @@ function ChildPage() {
         const docSnap = await getDoc(childDocRef);
         if (docSnap.exists()) {
           const childData = docSnap.data();
-          console.log('Retrieved Child Data:', childData);
+          // console.log('Retrieved Child Data:', childData);
           setChild({ id: docSnap.id, ...childData });
         } else {
           console.log('No such document found for ID:', id);
