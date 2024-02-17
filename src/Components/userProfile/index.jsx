@@ -7,7 +7,9 @@ const UserProfile = () => {
     const { currentUser } = useAuth();
 
     return (
-        <div className="h-screen flex flex-col items-center justify-center">
+        <div className="h-screen flex flex-col items-center justify-center"style={{
+            marginTop: '30px',
+        }}>
             <div className="w-96 px-6 py-6 text-center bg-gray-800 rounded-lg lg:mt-0 xl:px-10">
                 <div className="space-y-4 xl:space-y-6">
                     <img className="mx-auto rounded-full h-36 w-36" src={currentUser.photoURL} alt="author avatar" />

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { db } from "../../firebase/firebase";
 import { collection, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { Link } from "react-router-dom";
+// import { FaEdit, FaTrash } from 'react-icons/fa';
 
 function ChildViewing() {
   const [children, setChildren] = useState([]);
@@ -101,6 +103,7 @@ function ChildViewing() {
               </>
             ) : (
               <>
+              <br/>
               <div className="flex">
   <button
     onClick={() => editChild(child.id, child.name, child.owed)}
@@ -114,7 +117,15 @@ function ChildViewing() {
   >
     <FaTrash />
   </button>
+  </div>
+  <br/>
+  <div className="flex justify-center">
+    
+  <Link to={`/child/${child.id}`} className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-full px-4 py-2 flex items-center justify-center mr-2">
+    View Details
+  </Link>
 </div>
+
 
               </>
             )}

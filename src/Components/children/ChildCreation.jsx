@@ -29,7 +29,9 @@ function ChildCreation() {
   };
 
   return (
-    <div className="add-child-form rounded-lg border border-gray-300 p-4 mb-4 flex flex-col items-center">
+    <div className="add-child-form rounded-lg border border-gray-300 p-4 mb-4 flex flex-col items-center" style={{
+      marginTop: '20px',
+  }}>
       <h1>Create new Child</h1>
       <label htmlFor="childNameInput" className="block mb-2">
         Child Name:
