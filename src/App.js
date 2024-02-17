@@ -12,6 +12,7 @@ import UserProfile from "./components/userProfile";
 import { AuthProvider } from "./contexts/authContext";
 import ChildPage from "./components/children/ChildPage";
 import Children from "./components/children";
+import { db } from "./firebase/firebase";
 
 function App() {
   return (
