@@ -44,11 +44,23 @@ function ChildPage() {
   }
 
   return (
-    <div>
-      <h2>Child Details</h2>
-      <p>Name: {child.name}</p>
-      <p>Owed: ${child.owed}</p>
-      {/* <p>User ID: {child.userId}</p> */}
+    <div className="flex justify-center items-center h-screen">
+      <div className="w-96 px-6 py-6 text-center bg-gray-800 rounded-lg lg:mt-0 xl:px-10">
+        <div className="space-y-4 xl:space-y-6">
+          <img className="mx-auto rounded-full h-36 w-36" src={child.photoURL} alt="child avatar" />
+          <div className="space-y-2">
+            <div className="flex justify-center items-center flex-col space-y-3 text-lg font-medium leading-6">
+              <h3 className="text-white">{child.name}</h3>
+            
+            </div>
+          </div>
+          <div className="text-left text-white">
+            <h2 className="text-lg font-bold">Child Details</h2>
+            <p className="mb-2">Name: {child.name}</p>
+            <p className="mb-2">Owed: ${child.owed}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
