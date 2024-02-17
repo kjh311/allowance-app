@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 
 function TodoCounter() {
@@ -8,6 +8,7 @@ function TodoCounter() {
     useEffect(() => {
         const fetchTodoCount = async () => {
             try {
+                console.log('Reading todos count from database...');
                 const todosSnapshot = await getDocs(collection(db, 'todos'));
                 setTodoCount(todosSnapshot.size); // Get the size of the snapshot
             } catch (error) {
@@ -16,6 +17,12 @@ function TodoCounter() {
         };
 
         fetchTodoCount();
+
+        const unsubscribe = onSnapshot(collection(db, 'todos'), () => {
+            fetchTodoCount();
+        });
+
+        return () => unsubscribe();
     }, []);
 
     return (
@@ -35,7 +42,6 @@ function TodoCounter() {
                 fontWeight: 'bold', // Make the number bold
                 marginTop: '10px' // Add margin to create space between the header and the number
             }}>{todoCount}</div>
-            
         </div>
     );
 }

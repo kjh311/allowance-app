@@ -1,6 +1,8 @@
 import React from 'react'
 import { useAuth } from '../../contexts/authContext'
 import ToDoCrud from "../todos/ToDoCrud.jsx";
+import TodoCreation from "../todos/TodoCreation.jsx";
+import TodoViewing from "../todos/TodoViewing.jsx";
 import TodoCounter from "../todos/TodoCounter.jsx";
 
 
@@ -15,7 +17,10 @@ const ToDos = () => {
           
                 <br/>
                 <div className="flex justify-center">
-                <ToDoCrud />
+                <TodoCreation />
+            </div>
+            <div className="flex justify-center">
+                <TodoViewing />
             </div>
             <div className="flex justify-center">
                 <TodoCounter />

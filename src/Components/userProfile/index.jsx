@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/authContext';
 import ChildCreation from "../children/ChildCreation.jsx";
 import TodoCounter from "../todos/TodoCounter.jsx";
 
+
 const UserProfile = () => {
     const { currentUser } = useAuth();
 
