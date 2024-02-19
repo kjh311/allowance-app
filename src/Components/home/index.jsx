@@ -1,27 +1,17 @@
-import React from 'react'
-import { useAuth } from '../../contexts/authContext'
-// import ChildrenCrud from "../children/ChildrenCrud.jsx";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
-    const { currentUser } = useAuth()
     return (
-        <div>
-      
-
-            <br/>
-            <br/>
-            <br/>
-
-            <div className="flex justify-center">
-                Home Page
-                
-                </div>
-                {/* <div className="flex justify-center"><ChildrenCrud /></div> */}
-                
-               
-               
+        <div className="text-center mt-5">
+            <h1>Welcome to the Allowance App</h1>
+            <p>Please login or register to continue.</p>
+            <div className="mt-3">
+                <Link to="/login" className="btn btn-primary mr-2">Login</Link>
+                <Link to="/register" className="btn btn-secondary">Register</Link>
+            </div>
         </div>
-    )
-}
+    );
+};
 
-export default Home
+export default Home;

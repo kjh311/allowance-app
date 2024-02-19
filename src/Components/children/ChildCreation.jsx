@@ -18,6 +18,7 @@ function ChildCreation() {
         name: newChildName,
         owed: owed,
         userId: currentUser.uid,
+        todos: [] // Initialize todos field as an empty array
       };
 
       await addDoc(childrenCollectionRef, childToAdd);

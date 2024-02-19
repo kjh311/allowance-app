@@ -56,7 +56,7 @@ const Login = () => {
 
     // Redirect to home if the user is already logged in
     if (userLoggedIn) {
-        return <Navigate to={"/home"} replace={true} />;
+        return <Navigate to={"/profile"} replace={true} />;
     }
 
      // Redirect to login if the user is not logged in

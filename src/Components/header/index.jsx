@@ -12,7 +12,7 @@ const Header = () => {
         try {
             await doSignOut();
             // Redirect to login page after successful logout
-            window.location.href = '/login';
+            window.location.href = '/home';
         } catch (error) {
             console.error('Error signing out:', error);
         }
