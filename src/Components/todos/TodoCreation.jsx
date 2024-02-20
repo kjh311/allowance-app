@@ -7,8 +7,9 @@ function TodoCreation() {
   const [newTodoDescription, setNewTodoDescription] = useState('');
   const [newTodoMoney, setNewTodoMoney] = useState('');
   const [newTodoPoints, setNewTodoPoints] = useState('');
-  const [selectedChildId, setSelectedChildId] = useState(''); // New state for selected child ID
+  const [selectedAssignee, setSelectedAssignee] = useState(''); // New state for selected assignee
   const [children, setChildren] = useState([]);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const fetchChildren = async () => {
@@ -18,21 +19,31 @@ function TodoCreation() {
       setChildren(childrenData);
     };
     fetchChildren();
+
+    const fetchUsers = async () => {
+      const usersQuery = query(collection(db, 'users'));
+      const usersSnapshot = await getDocs(usersQuery);
+      const usersData = usersSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setUsers(usersData);
+    };
+    fetchUsers();
   }, []);
 
-  const updateChildrenState = async () => {
-    try {
-      const childrenQuery = query(collection(db, 'children'));
-      const childrenSnapshot = await getDocs(childrenQuery);
-      const childrenData = childrenSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setChildren(childrenData);
-    } catch (error) {
-      console.error('Error updating children state:', error);
-    }
-  };
-
-  // Expose updateChildrenState function to the global scope
-  window.todoCreationUpdateChildren = updateChildrenState;
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const usersQuery = query(collection(db, 'users'));
+        const usersSnapshot = await getDocs(usersQuery);
+        const usersData = usersSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setUsers(usersData);
+        console.log(usersData)
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+    fetchUsers();
+  }, []);
+  
 
   const createTodo = async () => {
     try {
@@ -41,21 +52,21 @@ function TodoCreation() {
         description: newTodoDescription,
         money: newTodoMoney === '' ? 0 : parseFloat(newTodoMoney),
         points: newTodoPoints === '' ? 0 : parseInt(newTodoPoints),
-        assignedTo: selectedChildId // Set the assignedTo field to the ID of the selected child
+        assignedTo: selectedAssignee // Set the assignedTo field to the ID of the selected assignee
       };
   
-      if (selectedChildId) {
+      if (selectedAssignee) {
         // Add the todo to the todos collection
         const newTodoRef = await addDoc(collection(db, 'todos'), todoToAdd);
         const newTodoId = newTodoRef.id;
   
-        // Update the child document to include a reference to the new todo
-        const childDocRef = doc(db, 'children', selectedChildId);
-        await updateDoc(childDocRef, {
+        // Update the assignee document to include a reference to the new todo
+        const assigneeDocRef = doc(db, 'users', selectedAssignee);
+        await updateDoc(assigneeDocRef, {
           todos: arrayUnion(newTodoId) // Add the new todo ID to the todos array
         });
       } else {
-        // Add the todo directly to the todos collection without updating any child document
+        // Add the todo directly to the todos collection without updating any assignee document
         await addDoc(collection(db, 'todos'), todoToAdd);
       }
   
@@ -70,12 +81,8 @@ function TodoCreation() {
   };
 
   const handleDropdownChange = (event) => {
-    setSelectedChildId(event.target.value); // Update selected child ID
+    setSelectedAssignee(event.target.value); // Update selected assignee ID
   };
-
-  useEffect(() => {
-    console.log('Selected child ID:', selectedChildId);
-  }, [selectedChildId]);
 
   return (
     <div className="create-todo-container">
@@ -113,11 +120,11 @@ function TodoCreation() {
           onChange={(event) => setNewTodoPoints(event.target.value)}
           className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
         />
-        {/* Dropdown menu for assigning todos to a child */}
-        <label htmlFor="childDropdown" className="block mb-2">Assign to child:</label>
+        {/* Dropdown menu for assigning todos to a child or user */}
+        <label htmlFor="assigneeDropdown" className="block mb-2">Assign to:</label>
         <select
-          id="childDropdown"
-          value={selectedChildId}
+          id="assigneeDropdown"
+          value={selectedAssignee}
           onChange={handleDropdownChange} // Call handleDropdownChange when selection changes
           className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
         >
@@ -125,6 +132,11 @@ function TodoCreation() {
           {children.map(child => (
             <option key={child.id} value={child.id}>{child.name}</option>
           ))}
+          <optgroup label="Users">
+            {users.map(user => (
+              <option key={user.id} value={user.id}>{user.name}</option>
+            ))}
+          </optgroup>
         </select>
         <br/>
         <button

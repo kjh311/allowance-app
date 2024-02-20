@@ -57,6 +57,6 @@ export const doSendEmailConfirmation = () => {
 
 // Function to add user data to Firestore upon registration
 export const addUserToFirestore = async (uid, userData) => {
-  const userRef = doc(firestore, "users", uid);
+  const userRef = doc(db, "users", uid);
   await setDoc(userRef, userData);
 };
