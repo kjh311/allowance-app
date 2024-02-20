@@ -1,71 +1,80 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, query, getDoc, updateDoc, arrayUnion, getDocs, doc } from 'firebase/firestore';
-
 import { db } from '../../firebase/firebase';
 
 function TodoCreation() {
-  const [newTodoName, setNewTodoName] = useState("");
-  const [newTodoDescription, setNewTodoDescription] = useState("");
-  const [newTodoMoney, setNewTodoMoney] = useState("");
-  const [newTodoPoints, setNewTodoPoints] = useState("");
-  const [selectedChildId, setSelectedChildId] = useState(""); // New state for selected child ID
-
-  // Fetch children data from Firestore
+  const [newTodoName, setNewTodoName] = useState('');
+  const [newTodoDescription, setNewTodoDescription] = useState('');
+  const [newTodoMoney, setNewTodoMoney] = useState('');
+  const [newTodoPoints, setNewTodoPoints] = useState('');
+  const [selectedChildId, setSelectedChildId] = useState(''); // New state for selected child ID
   const [children, setChildren] = useState([]);
+
   useEffect(() => {
     const fetchChildren = async () => {
-      const childrenQuery = query(collection(db, "children"));
+      const childrenQuery = query(collection(db, 'children'));
       const childrenSnapshot = await getDocs(childrenQuery);
-      const childrenData = childrenSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const childrenData = childrenSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setChildren(childrenData);
     };
     fetchChildren();
   }, []);
+
+  const updateChildrenState = async () => {
+    try {
+      const childrenQuery = query(collection(db, 'children'));
+      const childrenSnapshot = await getDocs(childrenQuery);
+      const childrenData = childrenSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setChildren(childrenData);
+    } catch (error) {
+      console.error('Error updating children state:', error);
+    }
+  };
+
+  // Expose updateChildrenState function to the global scope
+  window.todoCreationUpdateChildren = updateChildrenState;
 
   const createTodo = async () => {
     try {
       const todoToAdd = {
         name: newTodoName,
         description: newTodoDescription,
-        money: newTodoMoney === "" ? 0 : parseFloat(newTodoMoney),
-        points: newTodoPoints === "" ? 0 : parseInt(newTodoPoints),
+        money: newTodoMoney === '' ? 0 : parseFloat(newTodoMoney),
+        points: newTodoPoints === '' ? 0 : parseInt(newTodoPoints),
         assignedTo: selectedChildId // Set the assignedTo field to the ID of the selected child
       };
   
       if (selectedChildId) {
         // Add the todo to the todos collection
-        const newTodoRef = await addDoc(collection(db, "todos"), todoToAdd);
+        const newTodoRef = await addDoc(collection(db, 'todos'), todoToAdd);
         const newTodoId = newTodoRef.id;
   
         // Update the child document to include a reference to the new todo
-        const childDocRef = doc(db, "children", selectedChildId);
+        const childDocRef = doc(db, 'children', selectedChildId);
         await updateDoc(childDocRef, {
           todos: arrayUnion(newTodoId) // Add the new todo ID to the todos array
         });
       } else {
         // Add the todo directly to the todos collection without updating any child document
-        await addDoc(collection(db, "todos"), todoToAdd);
+        await addDoc(collection(db, 'todos'), todoToAdd);
       }
   
-      setNewTodoName("");
-      setNewTodoDescription("");
-      setNewTodoMoney("");
-      setNewTodoPoints("");
-      console.log("Todo created successfully");
+      setNewTodoName('');
+      setNewTodoDescription('');
+      setNewTodoMoney('');
+      setNewTodoPoints('');
+      console.log('Todo created successfully');
     } catch (error) {
-      console.error("Error creating todo:", error);
+      console.error('Error creating todo:', error);
     }
   };
-  
 
-  // Function to handle dropdown selection
   const handleDropdownChange = (event) => {
     setSelectedChildId(event.target.value); // Update selected child ID
   };
 
-  // useEffect to log selectedChildId
   useEffect(() => {
-    console.log("Selected child ID:", selectedChildId);
+    console.log('Selected child ID:', selectedChildId);
   }, [selectedChildId]);
 
   return (

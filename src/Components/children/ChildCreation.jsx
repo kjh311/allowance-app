@@ -1,32 +1,36 @@
-import React, { useState } from "react";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
-import { db } from "../../firebase/firebase";
-import { collection, addDoc } from "firebase/firestore";
-import { useAuth } from "../../contexts/authContext";
+import React, { useState, useEffect } from 'react';
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { db } from '../../firebase/firebase';
+import { collection, addDoc } from 'firebase/firestore';
+import { useAuth } from '../../contexts/authContext';
 
 function ChildCreation() {
   const { currentUser } = useAuth();
-  const [newChildName, setNewChildName] = useState("");
-  const [newChildOwed, setNewChildOwed] = useState("");
+  const [newChildName, setNewChildName] = useState('');
+  const [newChildOwed, setNewChildOwed] = useState('');
 
-  const childrenCollectionRef = collection(db, "children");
+  const childrenCollectionRef = collection(db, 'children');
 
   const createChild = async () => {
     try {
-      const owed = newChildOwed === "" ? 0 : parseFloat(newChildOwed); // Set default to 0 if empty
+      const owed = newChildOwed === '' ? 0 : parseFloat(newChildOwed); // Set default to 0 if empty
       const childToAdd = {
         name: newChildName,
         owed: owed,
         userId: currentUser.uid,
-        todos: [] // Initialize todos field as an empty array
+        todos: [], // Initialize todos field as an empty array
       };
 
       await addDoc(childrenCollectionRef, childToAdd);
-      console.log("Child created successfully");
-      setNewChildName("");
-      setNewChildOwed("");
+      console.log('Child created successfully');
+      setNewChildName('');
+      setNewChildOwed('');
+      // Trigger update to children state in TodoCreation component
+      if (window.todoCreationUpdateChildren) {
+        window.todoCreationUpdateChildren();
+      }
     } catch (error) {
-      console.error("Error creating child:", error);
+      console.error('Error creating child:', error);
     }
   };
 
@@ -55,11 +59,7 @@ function ChildCreation() {
                   onChange={(event) => setNewChildOwed(event.target.value)}
                 />
               </Form.Group>
-              <Button
-                variant="primary"
-                onClick={createChild}
-                style={{ marginTop: '10px' }} // Add margin to the button
-              >
+              <Button variant="primary" onClick={createChild} style={{ marginTop: '10px' }}>
                 Create Child
               </Button>
             </Form>

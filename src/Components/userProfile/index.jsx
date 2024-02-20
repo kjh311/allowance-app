@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/authContext';
 import { Container, Row, Col } from 'react-bootstrap';
 import ChildCreation from "../children/ChildCreation.jsx";
 import TodoCounter from "../todos/TodoCounter.jsx";
 import ChildCounter from "../children/ChildCounter.jsx";
 import TodoCreation from "../todos/TodoCreation.jsx";
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from '../../firebase/firebase';
 
 const UserProfile = () => {
     const { currentUser } = useAuth();
+    const [childrenOptions, setChildrenOptions] = useState([]);
+
+    useEffect(() => {
+        const unsubscribe = onSnapshot(collection(db, 'children'), (snapshot) => {
+            const childrenData = snapshot.docs.map(doc => ({ value: doc.id, label: doc.data().name }));
+            setChildrenOptions(childrenData);
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     return (
         <Container className="mt-5 mb-5">
@@ -36,16 +48,15 @@ const UserProfile = () => {
                     </div>
                 </Col>
                 <Col md={10} lg={6} xl={3}>
-                <ChildCreation style={{ width: '80%' }} />
-    </Col>
-
+                    <ChildCreation style={{ width: '80%' }} childrenOptions={childrenOptions} />
+                </Col>
                 <Col md={6} lg={4} xl={3}>
                     <ChildCounter />
                 </Col>
             </Row>
             <Row className="justify-content-center">
                 <Col md={6} lg={4} xl={3}>
-                    <TodoCreation />
+                    <TodoCreation childrenOptions={childrenOptions} />
                 </Col>
                 <Col md={6} lg={4} xl={3}>
                     <TodoCounter />

@@ -6,6 +6,7 @@ import { Button } from 'react-bootstrap';
 
 function TodoViewing() {
   const [todos, setTodos] = useState([]);
+  const [children, setChildren] = useState([]);
   const [editingTodoId, setEditingTodoId] = useState(null);
   const [editedTodoName, setEditedTodoName] = useState("");
   const [editedTodoDescription, setEditedTodoDescription] = useState("");
@@ -13,12 +14,20 @@ function TodoViewing() {
   const [editedTodoPoints, setEditedTodoPoints] = useState("");
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'todos'), (snapshot) => {
+    const unsubscribeTodos = onSnapshot(collection(db, 'todos'), (snapshot) => {
       const todosData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setTodos(todosData);
     });
 
-    return () => unsubscribe();
+    const unsubscribeChildren = onSnapshot(collection(db, 'children'), (snapshot) => {
+      const childrenData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setChildren(childrenData);
+    });
+
+    return () => {
+      unsubscribeTodos();
+      unsubscribeChildren();
+    };
   }, []);
 
   const deleteTodo = async (id) => {
