@@ -8,19 +8,19 @@ function TodoViewing() {
   const [todos, setTodos] = useState([]);
   const [children, setChildren] = useState([]);
   const [editingTodoId, setEditingTodoId] = useState(null);
-  const [editedTodoName, setEditedTodoName] = useState("");
-  const [editedTodoDescription, setEditedTodoDescription] = useState("");
-  const [editedTodoMoney, setEditedTodoMoney] = useState("");
-  const [editedTodoPoints, setEditedTodoPoints] = useState("");
+  const [editedTodoName, setEditedTodoName] = useState('');
+  const [editedTodoDescription, setEditedTodoDescription] = useState('');
+  const [editedTodoMoney, setEditedTodoMoney] = useState('');
+  const [editedTodoPoints, setEditedTodoPoints] = useState('');
 
   useEffect(() => {
     const unsubscribeTodos = onSnapshot(collection(db, 'todos'), (snapshot) => {
-      const todosData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const todosData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setTodos(todosData);
     });
 
     const unsubscribeChildren = onSnapshot(collection(db, 'children'), (snapshot) => {
-      const childrenData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const childrenData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setChildren(childrenData);
     });
 
@@ -49,10 +49,10 @@ function TodoViewing() {
 
   const cancelEditing = () => {
     setEditingTodoId(null);
-    setEditedTodoName("");
-    setEditedTodoDescription("");
-    setEditedTodoMoney("");
-    setEditedTodoPoints("");
+    setEditedTodoName('');
+    setEditedTodoDescription('');
+    setEditedTodoMoney('');
+    setEditedTodoPoints('');
   };
 
   const saveEditing = async () => {
@@ -70,9 +70,14 @@ function TodoViewing() {
     }
   };
 
+  const getChildName = (childId) => {
+    const child = children.find((child) => child.id === childId);
+    return child ? child.name : 'Unassigned';
+  };
+
   return (
     <div className="todo-list-container">
-      {todos.map(todo => (
+      {todos.map((todo) => (
         <div key={todo.id} className="todo-item border border-gray-300 p-4 mb-4 rounded-md">
           {editingTodoId === todo.id ? (
             <>
@@ -123,6 +128,7 @@ function TodoViewing() {
               <p>Description: {todo.description}</p>
               <p>Money: ${todo.money}</p>
               <p>Points: {todo.points}</p>
+              <p>Assigned To: {getChildName(todo.assignedTo)}</p>
               <div className="flex">
                 <Button onClick={() => startEditing(todo.id, todo.name, todo.description, todo.money, todo.points)} variant="primary" style={{ marginRight: '5px', backgroundColor: '#007bff', borderColor: '#007bff' }}>
                   <FaEdit className="mr-2" /> {/* Edit icon */}
