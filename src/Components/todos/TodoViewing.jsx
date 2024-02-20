@@ -12,6 +12,7 @@ function TodoViewing() {
   const [editedTodoDescription, setEditedTodoDescription] = useState('');
   const [editedTodoMoney, setEditedTodoMoney] = useState('');
   const [editedTodoPoints, setEditedTodoPoints] = useState('');
+  const [selectedChildId, setSelectedChildId] = useState('');
 
   useEffect(() => {
     const unsubscribeTodos = onSnapshot(collection(db, 'todos'), (snapshot) => {
@@ -39,12 +40,13 @@ function TodoViewing() {
     }
   };
 
-  const startEditing = (id, name, description, money, points) => {
+  const startEditing = (id, name, description, money, points, assignedTo) => {
     setEditingTodoId(id);
     setEditedTodoName(name);
     setEditedTodoDescription(description);
     setEditedTodoMoney(money);
     setEditedTodoPoints(points);
+    setSelectedChildId(assignedTo);
   };
 
   const cancelEditing = () => {
@@ -53,6 +55,7 @@ function TodoViewing() {
     setEditedTodoDescription('');
     setEditedTodoMoney('');
     setEditedTodoPoints('');
+    setSelectedChildId('');
   };
 
   const saveEditing = async () => {
@@ -61,7 +64,8 @@ function TodoViewing() {
         name: editedTodoName,
         description: editedTodoDescription,
         money: parseFloat(editedTodoMoney),
-        points: parseInt(editedTodoPoints)
+        points: parseInt(editedTodoPoints),
+        assignedTo: selectedChildId
       });
       console.log(`Todo with ID ${editingTodoId} updated successfully`);
       setEditingTodoId(null); // Reset editing state after saving
@@ -86,7 +90,7 @@ function TodoViewing() {
                   type="text"
                   value={editedTodoName}
                   onChange={(e) => setEditedTodoName(e.target.value)}
-                  style={{ marginBottom: '10px' }}
+                  style={{ marginBottom: '10px', border: '1px solid #ced4da', borderRadius: '4px', padding: '6px' }}
                 />
               </div>
               <div>
@@ -94,7 +98,7 @@ function TodoViewing() {
                   type="text"
                   value={editedTodoDescription}
                   onChange={(e) => setEditedTodoDescription(e.target.value)}
-                  style={{ marginBottom: '10px' }}
+                  style={{ marginBottom: '10px', border: '1px solid #ced4da', borderRadius: '4px', padding: '6px' }}
                 />
               </div>
               <div>
@@ -102,7 +106,7 @@ function TodoViewing() {
                   type="text"
                   value={editedTodoMoney}
                   onChange={(e) => setEditedTodoMoney(e.target.value)}
-                  style={{ marginBottom: '10px' }}
+                  style={{ marginBottom: '10px', border: '1px solid #ced4da', borderRadius: '4px', padding: '6px' }}
                 />
               </div>
               <div>
@@ -110,8 +114,22 @@ function TodoViewing() {
                   type="text"
                   value={editedTodoPoints}
                   onChange={(e) => setEditedTodoPoints(e.target.value)}
-                  style={{ marginBottom: '10px' }}
+                  style={{ marginBottom: '10px', border: '1px solid #ced4da', borderRadius: '4px', padding: '6px' }}
                 />
+              </div>
+              <div>
+                <select
+                  value={selectedChildId}
+                  onChange={(e) => setSelectedChildId(e.target.value)}
+                  style={{ marginBottom: '10px', border: '1px solid #ced4da', borderRadius: '4px', padding: '6px' }}
+                >
+                  <option value="">Unassigned</option>
+                  {children.map((child) => (
+                    <option key={child.id} value={child.id}>
+                      {child.name}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <Button onClick={saveEditing} variant="primary" style={{ marginRight: '5px', backgroundColor: '#007bff', borderColor: '#007bff' }}>
@@ -130,13 +148,11 @@ function TodoViewing() {
               <p>Points: {todo.points}</p>
               <p>Assigned To: {getChildName(todo.assignedTo)}</p>
               <div className="flex">
-                <Button onClick={() => startEditing(todo.id, todo.name, todo.description, todo.money, todo.points)} variant="primary" style={{ marginRight: '5px', backgroundColor: '#007bff', borderColor: '#007bff' }}>
+                <Button onClick={() => startEditing(todo.id, todo.name, todo.description, todo.money, todo.points, todo.assignedTo)} variant="primary" style={{ marginRight: '5px', backgroundColor: '#007bff', borderColor: '#007bff' }}>
                   <FaEdit className="mr-2" /> {/* Edit icon */}
-                  Edit
                 </Button>
                 <Button onClick={() => deleteTodo(todo.id)} variant="danger" style={{ backgroundColor: '#dc3545', borderColor: '#dc3545' }}>
                   <FaTrash className="mr-2" /> {/* Delete icon */}
-                  Delete
                 </Button>
               </div>
             </>
