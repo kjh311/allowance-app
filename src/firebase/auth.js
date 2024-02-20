@@ -1,5 +1,6 @@
 // Importing necessary modules from Firebase
 import { auth, db } from "./firebase";
+
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -8,7 +9,8 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   updatePassword,
-} from "firebase/auth";
+} from "firebase/auth"; // Update import statement to import from "firebase/auth" instead of "firebase/compat/auth"
+
 import { doc, setDoc } from "firebase/firestore";
 
 // Function to create a new user with email and password
@@ -21,15 +23,26 @@ export const doSignInWithEmailAndPassword = (email, password) => {
   return signInWithEmailAndPassword(auth, email, password);
 };
 
-// Function to sign in with Google using OAuth popup
+// Function to sign in with Google
 export const doSignInWithGoogle = async () => {
-  // Create a new instance of GoogleAuthProvider
-  const provider = new GoogleAuthProvider();
-  // Sign in with Google using OAuth popup
-  const result = signInWithPopup(auth, provider);
-
-  // Return the result, which includes user information
-  return result;
+  try {
+    // Create a GoogleAuthProvider instance
+    const provider = new GoogleAuthProvider(); // Remove 'firebase.auth.' prefix
+    // Sign in with Google pop-up window
+    const result = await signInWithPopup(auth, provider); // Update to use signInWithPopup from firebase.auth
+    // If sign-in is successful, add user data to Firestore
+    if (result.user) {
+      const userRef = doc(db, `users/${result.user.uid}`); // Update to use 'doc' from firestore instead of 'firestore.doc'
+      await setDoc(userRef, {
+        displayName: result.user.displayName,
+        email: result.user.email,
+        // Add other user data as needed
+      });
+    }
+    return result;
+  } catch (error) {
+    throw new Error("Error signing in with Google: " + error.message);
+  }
 };
 
 // Function to sign out the current user

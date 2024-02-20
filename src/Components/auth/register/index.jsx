@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Navigate, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../contexts/authContext';
-import { doCreateUserWithEmailAndPassword } from '../../../firebase/auth';
-import { addUserToFirestore } from '../../../firebase/auth'; // Function to add user data to Firestore
+import { doCreateUserWithEmailAndPassword, doSignInWithGoogle } from '../../../firebase/auth'; // Import Google sign-in function
+import { addUserToFirestore } from '../../../firebase/auth';
 
 // Register component
 const Register = () => {
@@ -12,6 +12,7 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [displayName, setDisplayName] = useState(''); // State for user's display name
     const [isRegistering, setIsRegistering] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -26,7 +27,7 @@ const Register = () => {
                 const userCredential = await doCreateUserWithEmailAndPassword(email, password);
 
                 // Add user data to Firestore after successful registration
-                await addUserToFirestore(userCredential.user.uid, { email });
+                await addUserToFirestore(userCredential.user.uid, { email, displayName });
 
                 // If registration is successful, navigate to the home page
                 navigate('/home');
@@ -36,6 +37,16 @@ const Register = () => {
             }
         } else {
             setErrorMessage(password !== confirmPassword ? "Passwords don't match" : '');
+        }
+    };
+
+    const signInWithGoogle = async () => {
+        try {
+            await doSignInWithGoogle();
+            // Redirect to the home page after successful Google sign-in
+            navigate('/home');
+        } catch (error) {
+            console.error('Error signing in with Google:', error.message);
         }
     };
 
@@ -56,6 +67,13 @@ const Register = () => {
                             <input type="email" autoComplete='email' required
                                 value={email} onChange={(e) => setEmail(e.target.value)}
                                 className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300" />
+                        </div>
+
+                        <div>
+                            <label className="text-sm text-gray-600 font-bold">Display Name</label>
+                            <input type="text" autoComplete='name' required
+                                value={displayName} onChange={(e) => setDisplayName(e.target.value)}
+                                className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg transition duration-300" />
                         </div>
 
                         <div>
@@ -81,6 +99,11 @@ const Register = () => {
                         <div className="text-sm text-center">
                             Already have an account? {'   '}
                             <Link to={'/login'} className="text-center text-sm hover:underline font-bold">Continue</Link>
+                        </div>
+
+                        <div className="text-sm text-center mt-4">
+                            Or register with Google
+                            <button onClick={signInWithGoogle} className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg mt-2">Sign Up with Google</button>
                         </div>
                     </form>
                 </div>
