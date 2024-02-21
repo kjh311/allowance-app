@@ -70,7 +70,7 @@ function ChildViewing() {
         <Card key={child.id} className="border border-gray-300 mb-4 d-flex align-items-center flex-column">
           <Card.Body className="d-flex flex-column align-items-center justify-content-center">
             <Card.Title className="text-center">Name: {child.name}</Card.Title>
-            <Card.Text className="text-center">Owed: ${child.owed}</Card.Text>
+            <Card.Text className="text-center">Owed: ${child.money}</Card.Text>
             <Card.Text className="text-center">Points: {child.points}</Card.Text> {/* Show points */}
             <Link to={`/child/${child.id}`} className="btn btn-primary">
               View Details
@@ -113,7 +113,7 @@ function ChildViewing() {
               </Form>
             ) : (
               <div className="d-flex flex-column align-items-center">
-                <Button variant="primary" onClick={() => editChild(child.id, child.name, child.owed, child.points)} className="mb-2">
+                <Button variant="primary" onClick={() => editChild(child.id, child.name, child.money, child.points)} className="mb-2">
                   <FaEdit />
                 </Button>
                 <Button variant="danger" onClick={() => deleteChild(child.id)} className="mb-2">
