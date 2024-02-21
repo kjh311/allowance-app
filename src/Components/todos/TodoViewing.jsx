@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, onSnapshot, deleteDoc, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { Button } from 'react-bootstrap';
 import { useAuth } from '../../contexts/authContext'; 
@@ -68,20 +68,65 @@ function TodoViewing() {
   const saveEditing = async () => {
     try {
       let assignedTo = selectedChildId !== undefined ? selectedChildId : ''; // Use selectedChildId if defined, otherwise use an empty string (for Unassigned)
-      await updateDoc(doc(db, 'todos', editingTodoId), {
+      const todoRef = doc(db, 'todos', editingTodoId);
+      const todoDoc = await getDoc(todoRef);
+      const todoData = todoDoc.data();
+  
+      // Check if the completion status changed
+      if (completed !== todoData.completed) {
+        if (completed && assignedTo) {
+          // Adding money and points if completed and assigned to a child
+          const childRef = doc(db, 'children', assignedTo);
+          const childDoc = await getDoc(childRef);
+          if (childDoc.exists()) {
+            const childData = childDoc.data();
+            const updatedMoney = childData.money + parseFloat(editedTodoMoney);
+            const updatedPoints = childData.points + parseInt(editedTodoPoints);
+            await updateDoc(childRef, {
+              money: updatedMoney,
+              points: updatedPoints
+            });
+            console.log(`Child with ID ${assignedTo} updated with money: ${updatedMoney} and points: ${updatedPoints}`);
+          } else {
+            console.error(`Child with ID ${assignedTo} not found`);
+          }
+        } else if (!completed && todoData.assignedTo) {
+          // Subtracting money and points if not completed and assigned to a child
+          const childRef = doc(db, 'children', todoData.assignedTo);
+          const childDoc = await getDoc(childRef);
+          if (childDoc.exists()) {
+            const childData = childDoc.data();
+            const updatedMoney = childData.money - parseFloat(todoData.money);
+            const updatedPoints = childData.points - parseInt(todoData.points);
+            await updateDoc(childRef, {
+              money: updatedMoney,
+              points: updatedPoints
+            });
+            console.log(`Child with ID ${todoData.assignedTo} updated with money: ${updatedMoney} and points: ${updatedPoints}`);
+          } else {
+            console.error(`Child with ID ${todoData.assignedTo} not found`);
+          }
+        }
+      }
+  
+      // Update todo
+      await updateDoc(todoRef, {
         name: editedTodoName,
         description: editedTodoDescription,
-        money: parseFloat(editedTodoMoney),
+        owed: parseFloat(editedTodoMoney),
         points: parseInt(editedTodoPoints),
         assignedTo: assignedTo,
-        completed: completed // Update completed
+        completed: completed
       });
+  
       console.log(`Todo with ID ${editingTodoId} updated successfully`);
       setEditingTodoId(null);
     } catch (error) {
       console.error(`Error updating todo with ID ${editingTodoId}:`, error.message);
     }
   };
+  
+  
 
   const getChildName = (childId) => {
     if (childId === currentUser.uid) {
