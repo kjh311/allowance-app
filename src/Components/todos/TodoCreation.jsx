@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, query, getDoc, updateDoc, arrayUnion, getDocs, doc } from 'firebase/firestore';
+import { collection, addDoc, query, getDoc, updateDoc, arrayUnion, getDocs, doc, where } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 import { useAuth } from '../../contexts/authContext';
 
@@ -14,13 +14,21 @@ function TodoCreation() {
 
   useEffect(() => {
     const fetchChildren = async () => {
-      const childrenQuery = query(collection(db, 'children'));
-      const childrenSnapshot = await getDocs(childrenQuery);
-      const childrenData = childrenSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setChildren(childrenData);
+      try {
+        if (!currentUser) return; // If no user is logged in, return early
+  
+        const childrenQuery = query(collection(db, 'children'), where('assignedTo', '==', currentUser.uid));
+        const childrenSnapshot = await getDocs(childrenQuery);
+        const childrenData = childrenSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setChildren(childrenData);
+      } catch (error) {
+        console.error('Error fetching children:', error);
+      }
     };
     fetchChildren();
-  }, []);
+  }, [currentUser]); // Re-run effect when currentUser changes
+  
+  
 
   const createTodo = async () => {
     try {
@@ -29,7 +37,8 @@ function TodoCreation() {
         description: newTodoDescription,
         money: newTodoMoney === '' ? 0 : parseFloat(newTodoMoney),
         points: newTodoPoints === '' ? 0 : parseInt(newTodoPoints),
-        assignedTo: selectedAssignee
+        assignedTo: selectedAssignee,
+        CreatedBy: currentUser.uid // Add the CreatedBy field with the current user's ID
       };
   
       if (selectedAssignee) {
@@ -53,6 +62,7 @@ function TodoCreation() {
       console.error('Error creating todo:', error);
     }
   };
+  
 
   const handleDropdownChange = event => {
     setSelectedAssignee(event.target.value);
