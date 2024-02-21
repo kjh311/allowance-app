@@ -62,7 +62,7 @@ function TodoViewing() {
 
   const saveEditing = async () => {
     try {
-      let assignedTo = selectedChildId || currentUser.uid; // Use selectedChildId if not empty, otherwise use currentUser.uid
+      let assignedTo = selectedChildId !== undefined ? selectedChildId : ''; // Use selectedChildId if defined, otherwise use an empty string (for Unassigned)
       await updateDoc(doc(db, 'todos', editingTodoId), {
         name: editedTodoName,
         description: editedTodoDescription,
@@ -76,6 +76,7 @@ function TodoViewing() {
       console.error(`Error updating todo with ID ${editingTodoId}:`, error.message);
     }
   };
+  
 
   const getChildName = (childId) => {
     if (childId === currentUser.uid) {
@@ -86,18 +87,28 @@ function TodoViewing() {
     }
   };
 
-  const handleDropdownChange = (event) => {
-    const selectedChildId = event.target.value;
-    console.log('Selected Child ID:', selectedChildId);
-    console.log('Current User ID:', currentUser.uid);
+const handleDropdownChange = (event) => {
+  const selectedChildId = event.target.value;
+  console.log('Selected Child ID:', selectedChildId);
+  console.log('Current User ID:', currentUser.uid);
+
+  // Check if the selected child is unassigned
+  if (!selectedChildId) {
+    setSelectedChildId('');
+  } else if (selectedChildId === currentUser.uid) {
+    setSelectedChildId(selectedChildId);
+  } else {
     // Find the selected child in the children list
-    const selectedChild = children.find((child) => child.userId === currentUser.uid && child.id === selectedChildId); // Adjusted field name
+    const selectedChild = children.find((child) => child.userId === currentUser.uid && child.id === selectedChildId);
     console.log('Selected Child:', selectedChild);
     // Check if the selected child belongs to the current user
     if (selectedChild) {
       setSelectedChildId(selectedChildId);
     }
-  };
+  }
+};
+
+  
   
   
 
@@ -143,24 +154,28 @@ function TodoViewing() {
                 />
               </div>
               <div>
-                <select
-                  id="assigneeDropdown"
-                  value={selectedChildId}
-                  onChange={handleDropdownChange}
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
-                >
-                  <option value="">Unassigned</option>
-                  {children.map((child) => (
-                    <option key={child.id} value={child.id}>
-                      {child.name}
-                    </option>
-                  ))}
-                  {currentUser && (
-                    <option key={currentUser.uid} value={currentUser.uid}>
-                      {currentUser.displayName || 'Current User'}
-                    </option>
-                  )}
-                </select>
+              <select
+  id="assigneeDropdown"
+  value={selectedChildId}
+  onChange={handleDropdownChange}
+  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
+>
+  <option value="">Unassigned</option>
+  {children
+    .filter((child) => child.userId === currentUser.uid) // Filter children based on userId
+    .map((child) => (
+      <option key={child.id} value={child.id}>
+        {child.name}
+      </option>
+    ))}
+  {/* Add an option for the current user */}
+  {currentUser && (
+    <option key={currentUser.uid} value={currentUser.uid}>
+      {currentUser.displayName || 'Current User'}
+    </option>
+  )}
+</select>
+
               </div>
               <div>
                 <Button onClick={saveEditing} variant="primary" style={{ marginRight: '5px', backgroundColor: '#007bff', borderColor: '#007bff' }}>
