@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Container, Button, Form, Card } from "react-bootstrap";
 import { db } from "../../firebase/firebase";
-import { collection, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, onSnapshot, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore";
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { Link } from "react-router-dom";
+import { useAuth } from '../../contexts/authContext';
 
 function ChildViewing() {
+  const { currentUser } = useAuth();
   const [children, setChildren] = useState([]);
   const [editingChildId, setEditingChildId] = useState(null);
   const [editChildName, setEditChildName] = useState("");
@@ -14,7 +16,8 @@ function ChildViewing() {
   useEffect(() => {
     console.log("Reading children data from database...");
     const childrenCollectionRef = collection(db, "children");
-    const unsubscribe = onSnapshot(childrenCollectionRef, (querySnapshot) => {
+    const q = query(childrenCollectionRef, where('userId', '==', currentUser.uid));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const loadedChildren = [];
       querySnapshot.forEach((doc) => {
         loadedChildren.push({ id: doc.id, ...doc.data() });
@@ -23,7 +26,7 @@ function ChildViewing() {
     });
   
     return () => unsubscribe();
-  }, []);
+  }, [currentUser]);
 
   const editChild = (id, name, owed) => {
     setEditingChildId(id);

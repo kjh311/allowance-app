@@ -1,29 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, onSnapshot } from 'firebase/firestore';
+import { collection, where, query, getDocs, onSnapshot } from 'firebase/firestore'; // Add query to the import statement
 import { db } from '../../firebase/firebase';
+import { useAuth } from '../../contexts/authContext';
 
 function ChildCounter() {
+    const { currentUser } = useAuth();
     const [childCount, setChildCount] = useState(0);
 
     useEffect(() => {
         const fetchChildCount = async () => {
             try {
                 console.log('Reading children count from database...');
-                const childrenSnapshot = await getDocs(collection(db, 'children'));
+                const q = query(collection(db, 'children'), where('userId', '==', currentUser.uid));
+                const childrenSnapshot = await getDocs(q);
                 setChildCount(childrenSnapshot.size); // Get the size of the snapshot
             } catch (error) {
                 console.error('Error fetching children:', error.message);
             }
         };
 
-        fetchChildCount();
-
-        const unsubscribe = onSnapshot(collection(db, 'children'), () => {
+        if(currentUser) {
             fetchChildCount();
-        });
 
-        return () => unsubscribe();
-    }, []);
+            const unsubscribe = onSnapshot(collection(db, 'children'), () => {
+                fetchChildCount();
+            });
+
+            return () => unsubscribe();
+        }
+    }, [currentUser]);
 
     return (
         <div style={{

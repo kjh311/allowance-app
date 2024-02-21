@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
+import { useAuth } from '../../contexts/authContext';
 import "./todo.scss";
 
-function UserTodosList({ currentUser }) {
+function UserTodosList() {
   const [userTodos, setUserTodos] = useState([]);
-  
+  const { currentUser } = useAuth();
 
   useEffect(() => {
-    console.log('currentUser:', currentUser); // Log currentUser to check if it's defined
-
     const fetchUserTodos = async () => {
       try {
         if (!currentUser || !currentUser.uid) {
           console.log('No currentUser found or currentUser uid is undefined');
           return;
         }
+
         const q = query(collection(db, 'todos'), where('assignedTo', '==', currentUser.uid));
-        console.log('Query:', q);
         const unsubscribe = onSnapshot(q, (snapshot) => {
           const todosData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           console.log('User Todos:', todosData);
@@ -29,7 +28,6 @@ function UserTodosList({ currentUser }) {
         console.error('Error fetching user todos:', error);
       }
     };
-    
 
     fetchUserTodos();
   }, [currentUser]);
@@ -49,7 +47,6 @@ function UserTodosList({ currentUser }) {
       ))}
     </div>
   );
-
 }
 
 export default UserTodosList;
