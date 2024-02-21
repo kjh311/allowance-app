@@ -116,11 +116,11 @@ function TodoViewing() {
   return (
     <div className="todo-list-container">
       {todos.map((todo) => (
-        <div key={todo.id} className="todo-item border border-gray-300 p-4 mb-4 rounded-md">
+        <div key={todo.id} className={`todo-item border border-gray-300 p-4 mb-4 rounded-md ${todo.completed ? 'completed-todo' : ''}`}>
           {editingTodoId === todo.id ? (
             <>
               <div>
-              <p>Name:</p>
+                <p>Name:</p>
                 <input
                   type="text"
                   value={editedTodoName}
@@ -129,7 +129,7 @@ function TodoViewing() {
                 />
               </div>
               <div>
-              <p>Description:</p>
+                <p>Description:</p>
                 <input
                   type="text"
                   value={editedTodoDescription}
@@ -138,7 +138,7 @@ function TodoViewing() {
                 />
               </div>
               <div>
-              <p>$$:</p>
+                <p>$$:</p>
                 <input
                   type="text"
                   value={editedTodoMoney}
@@ -147,7 +147,7 @@ function TodoViewing() {
                 />
               </div>
               <div>
-              <p>Points:</p>
+                <p>Points:</p>
                 <input
                   type="text"
                   value={editedTodoPoints}
@@ -156,7 +156,7 @@ function TodoViewing() {
                 />
               </div>
               <div>
-              <p>Completed:</p>
+                <p>Completed:</p>
                 <select
                   value={completed}
                   onChange={(e) => setCompleted(e.target.value === 'true')}
@@ -167,7 +167,7 @@ function TodoViewing() {
                 </select>
               </div>
               <div>
-              <p>Assigned to:</p>
+                <p>Assigned to:</p>
                 <select
                   id="assigneeDropdown"
                   value={selectedChildId}
