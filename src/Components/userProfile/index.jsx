@@ -59,9 +59,9 @@ const UserProfile = () => {
                 <Col md={6} lg={4} xl={3}>
                     <TodoCreation childrenOptions={childrenOptions} />
                 </Col>
-                <Col md={6} lg={4} xl={3}>
+                {/* <Col md={6} lg={4} xl={3}>
                     <TodoCounter />
-                </Col>
+                </Col> */}
                 <Col md={6} lg={4} xl={3}>
                 <UserTodosList currentUser={currentUser} />
 

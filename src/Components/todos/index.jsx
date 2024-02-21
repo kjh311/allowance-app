@@ -22,9 +22,9 @@ const ToDos = () => {
             <div className="flex justify-center">
                 <TodoViewing />
             </div>
-            <div className="flex justify-center">
+            {/* <div className="flex justify-center">
                 <TodoCounter />
-            </div>
+            </div> */}
         </div>
     )
 }
