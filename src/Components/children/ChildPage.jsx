@@ -66,6 +66,7 @@ function ChildPage() {
             <h2 className="text-lg font-bold">Child Details</h2>
             <p className="mb-2">Name: {child.name}</p>
             <p className="mb-2">Owed: ${child.owed}</p>
+            <p className="mb-2">Points: {child.points}</p>
           </div>
         </div>
       </div>

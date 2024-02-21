@@ -19,19 +19,22 @@ function TodoViewing() {
   useEffect(() => {
     const unsubscribeTodos = onSnapshot(collection(db, 'todos'), (snapshot) => {
       const todosData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setTodos(todosData.filter(todo => todo.CreatedBy === currentUser.uid));
+      // Filter todos based on createdBy or assignedTo
+      const filteredTodos = todosData.filter(todo => todo.createdBy === currentUser.uid || todo.assignedTo === currentUser.uid);
+      setTodos(filteredTodos);
     });
-
+  
     const unsubscribeChildren = onSnapshot(collection(db, 'children'), (snapshot) => {
       const childrenData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setChildren(childrenData);
     });
-
+  
     return () => {
       unsubscribeTodos();
       unsubscribeChildren();
     };
-  }, [currentUser]);
+  }, [currentUser]); // Re-run effect when currentUser changes
+  
 
   const deleteTodo = async (id) => {
     try {

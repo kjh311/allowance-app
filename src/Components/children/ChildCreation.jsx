@@ -1,31 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
-import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
 import { useAuth } from '../../contexts/authContext';
 
 function ChildCreation() {
   const { currentUser } = useAuth();
   const [newChildName, setNewChildName] = useState('');
   const [newChildOwed, setNewChildOwed] = useState('');
-
-  const childrenCollectionRef = collection(db, 'children');
+  const [newChildPoints, setNewChildPoints] = useState(''); // State for points
 
   const createChild = async () => {
     try {
       const owed = newChildOwed === '' ? 0 : parseFloat(newChildOwed); // Set default to 0 if empty
+      const points = newChildPoints === '' ? 0 : parseInt(newChildPoints); // Set default to 0 if empty
       const childToAdd = {
         id: doc(collection(db, 'children')).id, // Generate a unique ID for the child
         name: newChildName,
         owed: owed,
+        points: points, // Add the points field
         userId: currentUser.uid,
         todos: [], // Initialize todos field as an empty array
       };
-  
+
       await setDoc(doc(db, 'children', childToAdd.id), childToAdd); // Set the document with the generated ID
       console.log('Child created successfully');
       setNewChildName('');
       setNewChildOwed('');
+      setNewChildPoints('');
       // Trigger update to children state in TodoCreation component
       if (window.todoCreationUpdateChildren) {
         window.todoCreationUpdateChildren();
@@ -34,7 +36,6 @@ function ChildCreation() {
       console.error('Error creating child:', error);
     }
   };
-  
 
   return (
     <Container>
@@ -59,6 +60,15 @@ function ChildCreation() {
                   placeholder="Enter amount owed"
                   value={newChildOwed}
                   onChange={(event) => setNewChildOwed(event.target.value)}
+                />
+              </Form.Group>
+              <Form.Group controlId="childPointsInput"> {/* Input field for points */}
+                <Form.Label>Points:</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter points"
+                  value={newChildPoints}
+                  onChange={(event) => setNewChildPoints(event.target.value)}
                 />
               </Form.Group>
               <Button variant="primary" onClick={createChild} style={{ marginTop: '10px' }}>

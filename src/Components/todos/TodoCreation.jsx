@@ -32,40 +32,42 @@ function TodoCreation() {
 
   const createTodo = async () => {
     try {
-      const todoToAdd = {
-        name: newTodoName,
-        description: newTodoDescription,
-        money: newTodoMoney === '' ? 0 : parseFloat(newTodoMoney),
-        points: newTodoPoints === '' ? 0 : parseInt(newTodoPoints),
-        assignedTo: selectedAssignee,
-        CreatedBy: currentUser.uid // Add the CreatedBy field with the current user's ID
-      };
-  
-      if (selectedAssignee) {
-        const newTodoRef = await addDoc(collection(db, 'todos'), todoToAdd);
-        const newTodoId = newTodoRef.id;
-  
-        setNewTodoName('');
-        setNewTodoDescription('');
-        setNewTodoMoney('');
-        setNewTodoPoints('');
-        console.log('Todo created successfully');
-  
-        // Optionally, update the selectedAssignee's todo list here
-        // based on your application logic
-      } else {
-        await addDoc(collection(db, 'todos'), todoToAdd);
-  
-        setNewTodoName('');
-        setNewTodoDescription('');
-        setNewTodoMoney('');
-        setNewTodoPoints('');
-        console.log('Todo created successfully');
-      }
+        const todoToAdd = {
+            name: newTodoName,
+            description: newTodoDescription,
+            money: newTodoMoney === '' ? 0 : parseFloat(newTodoMoney),
+            points: newTodoPoints === '' ? 0 : parseInt(newTodoPoints),
+            assignedTo: selectedAssignee,
+            createdBy: currentUser.uid, // Add the createdBy field with the current user's ID
+            completed: false // Add the completed field and set it to false
+        };
+
+        if (selectedAssignee) {
+            const newTodoRef = await addDoc(collection(db, 'todos'), todoToAdd);
+            const newTodoId = newTodoRef.id;
+
+            setNewTodoName('');
+            setNewTodoDescription('');
+            setNewTodoMoney('');
+            setNewTodoPoints('');
+            console.log('Todo created successfully');
+
+            // Optionally, update the selectedAssignee's todo list here
+            // based on your application logic
+        } else {
+            await addDoc(collection(db, 'todos'), todoToAdd);
+
+            setNewTodoName('');
+            setNewTodoDescription('');
+            setNewTodoMoney('');
+            setNewTodoPoints('');
+            console.log('Todo created successfully');
+        }
     } catch (error) {
-      console.error('Error creating todo:', error);
+        console.error('Error creating todo:', error);
     }
-  };
+};
+
   
   
 

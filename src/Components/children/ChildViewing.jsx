@@ -12,6 +12,7 @@ function ChildViewing() {
   const [editingChildId, setEditingChildId] = useState(null);
   const [editChildName, setEditChildName] = useState("");
   const [editChildOwed, setEditChildOwed] = useState("");
+  const [editChildPoints, setEditChildPoints] = useState(""); // State for editing points
 
   useEffect(() => {
     console.log("Reading children data from database...");
@@ -28,10 +29,11 @@ function ChildViewing() {
     return () => unsubscribe();
   }, [currentUser]);
 
-  const editChild = (id, name, owed) => {
+  const editChild = (id, name, owed, points) => {
     setEditingChildId(id);
     setEditChildName(name);
     setEditChildOwed(owed);
+    setEditChildPoints(points); // Set initial value for points
   };
 
   const cancelEdit = () => {
@@ -43,7 +45,8 @@ function ChildViewing() {
       const childDocRef = doc(db, "children", id);
       await updateDoc(childDocRef, {
         name: editChildName,
-        owed: parseFloat(editChildOwed)
+        owed: parseFloat(editChildOwed),
+        points: parseInt(editChildPoints) // Update points
       });
       console.log(`Child with ID ${id} updated successfully`);
       setEditingChildId(null);
@@ -68,6 +71,7 @@ function ChildViewing() {
           <Card.Body className="d-flex flex-column align-items-center justify-content-center">
             <Card.Title className="text-center">Name: {child.name}</Card.Title>
             <Card.Text className="text-center">Owed: ${child.owed}</Card.Text>
+            <Card.Text className="text-center">Points: {child.points}</Card.Text> {/* Show points */}
             <Link to={`/child/${child.id}`} className="btn btn-primary">
               View Details
             </Link>
@@ -91,6 +95,14 @@ function ChildViewing() {
                     onChange={(event) => setEditChildOwed(event.target.value)}
                   />
                 </Form.Group>
+                <Form.Group controlId="editChildPoints" className="mb-2">
+                  <Form.Control
+                    type="number"
+                    placeholder="Enter points"
+                    value={editChildPoints}
+                    onChange={(event) => setEditChildPoints(event.target.value)}
+                  />
+                </Form.Group>
                 <Button variant="success" onClick={() => submitEdit(child.id)} className="mb-2">
                   <FaEdit className="mr-2" />
                   Submit
@@ -101,7 +113,7 @@ function ChildViewing() {
               </Form>
             ) : (
               <div className="d-flex flex-column align-items-center">
-                <Button variant="primary" onClick={() => editChild(child.id, child.name, child.owed)} className="mb-2">
+                <Button variant="primary" onClick={() => editChild(child.id, child.name, child.owed, child.points)} className="mb-2">
                   <FaEdit />
                 </Button>
                 <Button variant="danger" onClick={() => deleteChild(child.id)} className="mb-2">
