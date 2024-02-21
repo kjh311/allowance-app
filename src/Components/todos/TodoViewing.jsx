@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { collection, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import { db } from '../../firebase/firebase';
 import { Button } from 'react-bootstrap';
 import { useAuth } from '../../contexts/authContext'; 
+import { db } from '../../firebase/firebase';
 
 function TodoViewing() {
   const [todos, setTodos] = useState([]);
@@ -14,6 +14,7 @@ function TodoViewing() {
   const [editedTodoMoney, setEditedTodoMoney] = useState('');
   const [editedTodoPoints, setEditedTodoPoints] = useState('');
   const [selectedChildId, setSelectedChildId] = useState('');
+  const [completed, setCompleted] = useState(false); // New state for completed
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -35,7 +36,6 @@ function TodoViewing() {
     };
   }, [currentUser]); // Re-run effect when currentUser changes
   
-
   const deleteTodo = async (id) => {
     try {
       await deleteDoc(doc(db, 'todos', id));
@@ -45,13 +45,14 @@ function TodoViewing() {
     }
   };
 
-  const startEditing = (id, name, description, money, points, assignedTo) => {
+  const startEditing = (id, name, description, money, points, assignedTo, completed) => {
     setEditingTodoId(id);
     setEditedTodoName(name);
     setEditedTodoDescription(description);
     setEditedTodoMoney(money);
     setEditedTodoPoints(points);
     setSelectedChildId(assignedTo);
+    setCompleted(completed); // Set initial value for completed
   };
 
   const cancelEditing = () => {
@@ -61,6 +62,7 @@ function TodoViewing() {
     setEditedTodoMoney('');
     setEditedTodoPoints('');
     setSelectedChildId('');
+    setCompleted(false); // Reset completed to false
   };
 
   const saveEditing = async () => {
@@ -71,7 +73,8 @@ function TodoViewing() {
         description: editedTodoDescription,
         money: parseFloat(editedTodoMoney),
         points: parseInt(editedTodoPoints),
-        assignedTo: assignedTo
+        assignedTo: assignedTo,
+        completed: completed // Update completed
       });
       console.log(`Todo with ID ${editingTodoId} updated successfully`);
       setEditingTodoId(null);
@@ -79,7 +82,6 @@ function TodoViewing() {
       console.error(`Error updating todo with ID ${editingTodoId}:`, error.message);
     }
   };
-  
 
   const getChildName = (childId) => {
     if (childId === currentUser.uid) {
@@ -90,33 +92,26 @@ function TodoViewing() {
     }
   };
 
-const handleDropdownChange = (event) => {
-  const selectedChildId = event.target.value;
-  console.log('Selected Child ID:', selectedChildId);
-  console.log('Current User ID:', currentUser.uid);
+  const handleDropdownChange = (event) => {
+    const selectedChildId = event.target.value;
+    console.log('Selected Child ID:', selectedChildId);
+    console.log('Current User ID:', currentUser.uid);
 
-  // Check if the selected child is unassigned
-  if (!selectedChildId) {
-    setSelectedChildId('');
-  } else if (selectedChildId === currentUser.uid) {
-    setSelectedChildId(selectedChildId);
-  } else {
-    // Find the selected child in the children list
-    const selectedChild = children.find((child) => child.userId === currentUser.uid && child.id === selectedChildId);
-    console.log('Selected Child:', selectedChild);
-    // Check if the selected child belongs to the current user
-    if (selectedChild) {
+    // Check if the selected child is unassigned
+    if (!selectedChildId) {
+      setSelectedChildId('');
+    } else if (selectedChildId === currentUser.uid) {
       setSelectedChildId(selectedChildId);
+    } else {
+      // Find the selected child in the children list
+      const selectedChild = children.find((child) => child.userId === currentUser.uid && child.id === selectedChildId);
+      console.log('Selected Child:', selectedChild);
+      // Check if the selected child belongs to the current user
+      if (selectedChild) {
+        setSelectedChildId(selectedChildId);
+      }
     }
-  }
-};
-
-  
-  
-  
-
-  
-  
+  };
 
   return (
     <div className="todo-list-container">
@@ -125,6 +120,7 @@ const handleDropdownChange = (event) => {
           {editingTodoId === todo.id ? (
             <>
               <div>
+              <p>Name:</p>
                 <input
                   type="text"
                   value={editedTodoName}
@@ -133,6 +129,7 @@ const handleDropdownChange = (event) => {
                 />
               </div>
               <div>
+              <p>Description:</p>
                 <input
                   type="text"
                   value={editedTodoDescription}
@@ -141,6 +138,7 @@ const handleDropdownChange = (event) => {
                 />
               </div>
               <div>
+              <p>$$:</p>
                 <input
                   type="text"
                   value={editedTodoMoney}
@@ -149,6 +147,7 @@ const handleDropdownChange = (event) => {
                 />
               </div>
               <div>
+              <p>Points:</p>
                 <input
                   type="text"
                   value={editedTodoPoints}
@@ -157,28 +156,39 @@ const handleDropdownChange = (event) => {
                 />
               </div>
               <div>
-              <select
-  id="assigneeDropdown"
-  value={selectedChildId}
-  onChange={handleDropdownChange}
-  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
->
-  <option value="">Unassigned</option>
-  {children
-    .filter((child) => child.userId === currentUser.uid) // Filter children based on userId
-    .map((child) => (
-      <option key={child.id} value={child.id}>
-        {child.name}
-      </option>
-    ))}
-  {/* Add an option for the current user */}
-  {currentUser && (
-    <option key={currentUser.uid} value={currentUser.uid}>
-      {currentUser.displayName || 'Current User'}
-    </option>
-  )}
-</select>
-
+              <p>Completed:</p>
+                <select
+                  value={completed}
+                  onChange={(e) => setCompleted(e.target.value === 'true')}
+                  style={{ marginBottom: '10px', border: '1px solid #ced4da', borderRadius: '4px', padding: '6px' }}
+                >
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
+              <div>
+              <p>Assigned to:</p>
+                <select
+                  id="assigneeDropdown"
+                  value={selectedChildId}
+                  onChange={handleDropdownChange}
+                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
+                >
+                  <option value="">Unassigned</option>
+                  {children
+                    .filter((child) => child.userId === currentUser.uid) // Filter children based on userId
+                    .map((child) => (
+                      <option key={child.id} value={child.id}>
+                        {child.name}
+                      </option>
+                    ))}
+                  {/* Add an option for the current user */}
+                  {currentUser && (
+                    <option key={currentUser.uid} value={currentUser.uid}>
+                      {currentUser.displayName || 'Current User'}
+                    </option>
+                  )}
+                </select>
               </div>
               <div>
                 <Button onClick={saveEditing} variant="primary" style={{ marginRight: '5px', backgroundColor: '#007bff', borderColor: '#007bff' }}>
@@ -195,9 +205,10 @@ const handleDropdownChange = (event) => {
               <p>Description: {todo.description}</p>
               <p>Money: ${todo.money}</p>
               <p>Points: {todo.points}</p>
+              <p>Completed: {todo.completed ? 'Yes' : 'No'}</p> {/* Display completed status */}
               <p>Assigned To: {getChildName(todo.assignedTo)}</p>
               <div className="flex">
-                <Button onClick={() => startEditing(todo.id, todo.name, todo.description, todo.money, todo.points, todo.assignedTo)} variant="primary" style={{ marginRight: '5px', backgroundColor: '#007bff', borderColor: '#007bff' }}>
+                <Button onClick={() => startEditing(todo.id, todo.name, todo.description, todo.money, todo.points, todo.assignedTo, todo.completed)} variant="primary" style={{ marginRight: '5px', backgroundColor: '#007bff', borderColor: '#007bff' }}>
                   <FaEdit className="mr-2" />
                 </Button>
                 <Button onClick={() => deleteTodo(todo.id)} variant="danger" style={{ backgroundColor: '#dc3545', borderColor: '#dc3545' }}>
