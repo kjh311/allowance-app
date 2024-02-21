@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { db } from '../../firebase/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
 import { useAuth } from '../../contexts/authContext';
 
 function ChildCreation() {
@@ -15,13 +15,14 @@ function ChildCreation() {
     try {
       const owed = newChildOwed === '' ? 0 : parseFloat(newChildOwed); // Set default to 0 if empty
       const childToAdd = {
+        id: doc(collection(db, 'children')).id, // Generate a unique ID for the child
         name: newChildName,
         owed: owed,
         userId: currentUser.uid,
         todos: [], // Initialize todos field as an empty array
       };
-
-      await addDoc(childrenCollectionRef, childToAdd);
+  
+      await setDoc(doc(db, 'children', childToAdd.id), childToAdd); // Set the document with the generated ID
       console.log('Child created successfully');
       setNewChildName('');
       setNewChildOwed('');
@@ -33,6 +34,7 @@ function ChildCreation() {
       console.error('Error creating child:', error);
     }
   };
+  
 
   return (
     <Container>

@@ -87,8 +87,22 @@ function TodoViewing() {
   };
 
   const handleDropdownChange = (event) => {
-    setSelectedChildId(event.target.value);
+    const selectedChildId = event.target.value;
+    console.log('Selected Child ID:', selectedChildId);
+    console.log('Current User ID:', currentUser.uid);
+    // Find the selected child in the children list
+    const selectedChild = children.find((child) => child.userId === currentUser.uid && child.id === selectedChildId); // Adjusted field name
+    console.log('Selected Child:', selectedChild);
+    // Check if the selected child belongs to the current user
+    if (selectedChild) {
+      setSelectedChildId(selectedChildId);
+    }
   };
+  
+  
+
+  
+  
 
   return (
     <div className="todo-list-container">
