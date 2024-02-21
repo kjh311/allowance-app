@@ -3,6 +3,8 @@ import { collection, getDocs, deleteDoc, doc, onSnapshot, updateDoc } from 'fire
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { db } from '../../firebase/firebase';
 import { Button } from 'react-bootstrap';
+import { useAuth } from '../../contexts/authContext'; 
+
 
 function TodoViewing() {
   const [todos, setTodos] = useState([]);
@@ -13,6 +15,16 @@ function TodoViewing() {
   const [editedTodoMoney, setEditedTodoMoney] = useState('');
   const [editedTodoPoints, setEditedTodoPoints] = useState('');
   const [selectedChildId, setSelectedChildId] = useState('');
+  const { currentUser } = useAuth();
+
+    useEffect(() => {
+    console.log("Current User" + currentUser); // Log the currentUser object to check its contents
+  }, [currentUser]);
+
+    // Define handleDropdownChange to handle dropdown menu changes
+    const handleDropdownChange = (event) => {
+        setSelectedChildId(event.target.value); // Update the selected child ID
+      };
 
   useEffect(() => {
     const unsubscribeTodos = onSnapshot(collection(db, 'todos'), (snapshot) => {
@@ -60,24 +72,39 @@ function TodoViewing() {
 
   const saveEditing = async () => {
     try {
+      let assignedTo = selectedChildId || currentUser.uid; // Use selectedChildId if not empty, otherwise use currentUser.uid
+      console.log("Selected Child ID:", selectedChildId);
+      console.log("Current User ID:", currentUser.uid);
+      console.log("Assigned To:", assignedTo);
+  
+      // Just before updating the document, log the assignedTo value
+      console.log("Assigned To just before update:", assignedTo);
+  
       await updateDoc(doc(db, 'todos', editingTodoId), {
         name: editedTodoName,
         description: editedTodoDescription,
         money: parseFloat(editedTodoMoney),
         points: parseInt(editedTodoPoints),
-        assignedTo: selectedChildId
+        assignedTo: assignedTo
       });
       console.log(`Todo with ID ${editingTodoId} updated successfully`);
-      setEditingTodoId(null); // Reset editing state after saving
+      setEditingTodoId(null);
     } catch (error) {
       console.error(`Error updating todo with ID ${editingTodoId}:`, error.message);
     }
   };
+  
+  
 
   const getChildName = (childId) => {
-    const child = children.find((child) => child.id === childId);
-    return child ? child.name : 'Unassigned';
+    if (childId === currentUser.uid) {
+      return currentUser.displayName || 'Current User';
+    } else {
+      const child = children.find((child) => child.id === childId);
+      return child ? child.name : 'Unassigned';
+    }
   };
+  
 
   return (
     <div className="todo-list-container">
@@ -118,18 +145,26 @@ function TodoViewing() {
                 />
               </div>
               <div>
-                <select
-                  value={selectedChildId}
-                  onChange={(e) => setSelectedChildId(e.target.value)}
-                  style={{ marginBottom: '10px', border: '1px solid #ced4da', borderRadius: '4px', padding: '6px' }}
-                >
-                  <option value="">Unassigned</option>
-                  {children.map((child) => (
-                    <option key={child.id} value={child.id}>
-                      {child.name}
-                    </option>
-                  ))}
-                </select>
+              <select
+  id="assigneeDropdown"
+  value={selectedChildId}
+  onChange={handleDropdownChange}
+  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
+>
+  <option value="">Unassigned</option>
+  {children.map((child) => (
+    <option key={child.id} value={child.id}>
+      {child.name}
+    </option>
+  ))}
+  {/* Add an option for the current user */}
+  {currentUser && (
+    <option key={currentUser.uid} value={currentUser.uid}>
+      {currentUser.displayName || 'Current User'}
+    </option>
+  )}
+</select>
+
               </div>
               <div>
                 <Button onClick={saveEditing} variant="primary" style={{ marginRight: '5px', backgroundColor: '#007bff', borderColor: '#007bff' }}>

@@ -1,56 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, query, getDoc, updateDoc, arrayUnion, getDocs, doc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
+import { useAuth } from '../../contexts/authContext';
 
 function TodoCreation() {
   const [newTodoName, setNewTodoName] = useState('');
   const [newTodoDescription, setNewTodoDescription] = useState('');
   const [newTodoMoney, setNewTodoMoney] = useState('');
   const [newTodoPoints, setNewTodoPoints] = useState('');
-  const [selectedAssignee, setSelectedAssignee] = useState(''); // New state for selected assignee
+  const [selectedAssignee, setSelectedAssignee] = useState('');
   const [children, setChildren] = useState([]);
-  const [users, setUsers] = useState([]);
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     const fetchChildren = async () => {
       const childrenQuery = query(collection(db, 'children'));
       const childrenSnapshot = await getDocs(childrenQuery);
-      const childrenData = childrenSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const childrenData = childrenSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setChildren(childrenData);
     };
     fetchChildren();
-  
-    const fetchUsers = async () => {
-        try {
-          const usersQuery = query(collection(db, 'users'));
-          const usersSnapshot = await getDocs(usersQuery);
-          const usersData = usersSnapshot.docs.map((doc) => ({ id: doc.id, name: doc.data().displayName }));
-          console.log(usersData); // Log usersData to inspect its contents
-          setUsers(usersData);
-        } catch (error) {
-          console.error('Error fetching users:', error);
-        }
-      };
-      
-    fetchUsers(); // <-- Add this line
   }, []);
-  
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const usersQuery = query(collection(db, 'users'));
-        const usersSnapshot = await getDocs(usersQuery);
-        const usersData = usersSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setUsers(usersData);
-        console.log("Display name " + usersData)
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    };
-    fetchUsers();
-  }, []);
-  
 
   const createTodo = async () => {
     try {
@@ -59,21 +29,18 @@ function TodoCreation() {
         description: newTodoDescription,
         money: newTodoMoney === '' ? 0 : parseFloat(newTodoMoney),
         points: newTodoPoints === '' ? 0 : parseInt(newTodoPoints),
-        assignedTo: selectedAssignee // Set the assignedTo field to the ID of the selected assignee
+        assignedTo: selectedAssignee
       };
   
       if (selectedAssignee) {
-        // Add the todo to the todos collection
         const newTodoRef = await addDoc(collection(db, 'todos'), todoToAdd);
         const newTodoId = newTodoRef.id;
   
-        // Update the assignee document to include a reference to the new todo
         const assigneeDocRef = doc(db, 'users', selectedAssignee);
         await updateDoc(assigneeDocRef, {
-          todos: arrayUnion(newTodoId) // Add the new todo ID to the todos array
+          todos: arrayUnion(newTodoId)
         });
       } else {
-        // Add the todo directly to the todos collection without updating any assignee document
         await addDoc(collection(db, 'todos'), todoToAdd);
       }
   
@@ -87,8 +54,8 @@ function TodoCreation() {
     }
   };
 
-  const handleDropdownChange = (event) => {
-    setSelectedAssignee(event.target.value); // Update selected assignee ID
+  const handleDropdownChange = event => {
+    setSelectedAssignee(event.target.value);
   };
 
   return (
@@ -100,7 +67,7 @@ function TodoCreation() {
           id="todoNameInput"
           placeholder="Enter todo name"
           value={newTodoName}
-          onChange={(event) => setNewTodoName(event.target.value)}
+          onChange={event => setNewTodoName(event.target.value)}
           className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
         />
         <label htmlFor="todoDescriptionInput" className="block mb-2">Description:</label>
@@ -108,7 +75,7 @@ function TodoCreation() {
           id="todoDescriptionInput"
           placeholder="Enter description"
           value={newTodoDescription}
-          onChange={(event) => setNewTodoDescription(event.target.value)}
+          onChange={event => setNewTodoDescription(event.target.value)}
           className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
         />
         <label htmlFor="todoMoneyInput" className="block mb-2">Amount of Money:</label>
@@ -116,7 +83,7 @@ function TodoCreation() {
           id="todoMoneyInput"
           placeholder="Enter amount of money"
           value={newTodoMoney}
-          onChange={(event) => setNewTodoMoney(event.target.value)}
+          onChange={event => setNewTodoMoney(event.target.value)}
           className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
         />
         <label htmlFor="todoPointsInput" className="block mb-2">Amount of Points:</label>
@@ -124,29 +91,27 @@ function TodoCreation() {
           id="todoPointsInput"
           placeholder="Enter amount of points"
           value={newTodoPoints}
-          onChange={(event) => setNewTodoPoints(event.target.value)}
+          onChange={event => setNewTodoPoints(event.target.value)}
           className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
         />
-        {/* Dropdown menu for assigning todos to a child or user */}
+        {/* Dropdown menu */}
         <label htmlFor="assigneeDropdown" className="block mb-2">Assign to:</label>
         <select
-  id="assigneeDropdown"
-  value={selectedAssignee}
-  onChange={handleDropdownChange} // Call handleDropdownChange when selection changes
-  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
->
-  <option value="">Unassigned</option>
-  {children.map(child => (
-    <option key={child.id} value={child.id}>{child.name}</option>
-  ))}
-  <optgroup label="Users">
-  {users.map(user => (
-    <option key={user.id} value={user.id}>{user.displayName}</option>
-  ))}
-</optgroup>
-
-</select>
-
+          id="assigneeDropdown"
+          value={selectedAssignee}
+          onChange={handleDropdownChange}
+          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
+        >
+          <option value="">Unassigned</option>
+          {children.map(child => (
+            <option key={child.id} value={child.id}>{child.name}</option>
+          ))}
+          <optgroup label="Current User">
+            {currentUser && (
+              <option key={currentUser.uid} value={currentUser.uid}>{currentUser.displayName}</option>
+            )}
+          </optgroup>
+        </select>
         <br/>
         <button
           onClick={createTodo}
