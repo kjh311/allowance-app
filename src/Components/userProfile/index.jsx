@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/authContext';
 import { Container, Row, Col } from 'react-bootstrap';
 import ChildCreation from "../children/ChildCreation.jsx";
 import TodoCounter from "../todos/TodoCounter.jsx";
+import UserTodosList from "../todos/UserTodosList.jsx";
 import ChildCounter from "../children/ChildCounter.jsx";
 import TodoCreation from "../todos/TodoCreation.jsx";
 import { collection, onSnapshot } from 'firebase/firestore';
@@ -60,6 +61,10 @@ const UserProfile = () => {
                 </Col>
                 <Col md={6} lg={4} xl={3}>
                     <TodoCounter />
+                </Col>
+                <Col md={6} lg={4} xl={3}>
+                <UserTodosList currentUser={currentUser} />
+
                 </Col>
             </Row>
         </Container>
