@@ -19,15 +19,22 @@ function TodoCreation() {
       setChildren(childrenData);
     };
     fetchChildren();
-
+  
     const fetchUsers = async () => {
-      const usersQuery = query(collection(db, 'users'));
-      const usersSnapshot = await getDocs(usersQuery);
-      const usersData = usersSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setUsers(usersData);
-    };
-    fetchUsers();
+        try {
+          const usersQuery = query(collection(db, 'users'));
+          const usersSnapshot = await getDocs(usersQuery);
+          const usersData = usersSnapshot.docs.map((doc) => ({ id: doc.id, name: doc.data().displayName }));
+          console.log(usersData); // Log usersData to inspect its contents
+          setUsers(usersData);
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+      };
+      
+    fetchUsers(); // <-- Add this line
   }, []);
+  
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -36,7 +43,7 @@ function TodoCreation() {
         const usersSnapshot = await getDocs(usersQuery);
         const usersData = usersSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         setUsers(usersData);
-        console.log(usersData)
+        console.log("Display name " + usersData)
       } catch (error) {
         console.error('Error fetching users:', error);
       }
@@ -123,21 +130,23 @@ function TodoCreation() {
         {/* Dropdown menu for assigning todos to a child or user */}
         <label htmlFor="assigneeDropdown" className="block mb-2">Assign to:</label>
         <select
-          id="assigneeDropdown"
-          value={selectedAssignee}
-          onChange={handleDropdownChange} // Call handleDropdownChange when selection changes
-          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
-        >
-          <option value="">Unassigned</option>
-          {children.map(child => (
-            <option key={child.id} value={child.id}>{child.name}</option>
-          ))}
-          <optgroup label="Users">
-            {users.map(user => (
-              <option key={user.id} value={user.id}>{user.name}</option>
-            ))}
-          </optgroup>
-        </select>
+  id="assigneeDropdown"
+  value={selectedAssignee}
+  onChange={handleDropdownChange} // Call handleDropdownChange when selection changes
+  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
+>
+  <option value="">Unassigned</option>
+  {children.map(child => (
+    <option key={child.id} value={child.id}>{child.name}</option>
+  ))}
+  <optgroup label="Users">
+  {users.map(user => (
+    <option key={user.id} value={user.id}>{user.displayName}</option>
+  ))}
+</optgroup>
+
+</select>
+
         <br/>
         <button
           onClick={createTodo}
