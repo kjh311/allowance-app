@@ -17,7 +17,7 @@ function TodoCreation() {
       try {
         if (!currentUser) return; // If no user is logged in, return early
   
-        const childrenQuery = query(collection(db, 'children'), where('assignedTo', '==', currentUser.uid));
+        const childrenQuery = query(collection(db, 'children'), where('userId', '==', currentUser.uid));
         const childrenSnapshot = await getDocs(childrenQuery);
         const childrenData = childrenSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setChildren(childrenData);
@@ -45,23 +45,28 @@ function TodoCreation() {
         const newTodoRef = await addDoc(collection(db, 'todos'), todoToAdd);
         const newTodoId = newTodoRef.id;
   
-        const assigneeDocRef = doc(db, 'users', selectedAssignee);
-        await updateDoc(assigneeDocRef, {
-          todos: arrayUnion(newTodoId)
-        });
+        setNewTodoName('');
+        setNewTodoDescription('');
+        setNewTodoMoney('');
+        setNewTodoPoints('');
+        console.log('Todo created successfully');
+  
+        // Optionally, update the selectedAssignee's todo list here
+        // based on your application logic
       } else {
         await addDoc(collection(db, 'todos'), todoToAdd);
-      }
   
-      setNewTodoName('');
-      setNewTodoDescription('');
-      setNewTodoMoney('');
-      setNewTodoPoints('');
-      console.log('Todo created successfully');
+        setNewTodoName('');
+        setNewTodoDescription('');
+        setNewTodoMoney('');
+        setNewTodoPoints('');
+        console.log('Todo created successfully');
+      }
     } catch (error) {
       console.error('Error creating todo:', error);
     }
   };
+  
   
 
   const handleDropdownChange = event => {
