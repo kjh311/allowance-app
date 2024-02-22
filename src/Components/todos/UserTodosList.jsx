@@ -1,61 +1,142 @@
 import React, { useState, useEffect } from "react";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { db } from "../../firebase/firebase";
-import { useAuth } from "../../contexts/authContext";
+import { Button } from "react-bootstrap";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import "./todo.scss";
-
+import {
+  collection,
+  onSnapshot,
+  deleteDoc,
+  doc,
+  updateDoc,
+  getDoc,
+} from "firebase/firestore";
+import { useAuth } from "../../contexts/authContext";
+import { db } from "../../firebase/firebase";
 function UserTodosList() {
   const [userTodos, setUserTodos] = useState([]);
+  const [editingTodoId, setEditingTodoId] = useState(null);
+  const [editedTodoName, setEditedTodoName] = useState("");
+  const [editedTodoDescription, setEditedTodoDescription] = useState("");
+  const [completed, setCompleted] = useState(false);
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    const fetchUserTodos = async () => {
-      try {
-        if (!currentUser || !currentUser.uid) {
-          console.log("No currentUser found or currentUser uid is undefined");
-          return;
-        }
+    const unsubscribe = onSnapshot(collection(db, "todos"), (snapshot) => {
+      const todosData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      const filteredTodos = todosData.filter(
+        (todo) => todo.assignedTo === currentUser.uid
+      );
+      setUserTodos(filteredTodos);
+    });
 
-        const q = query(
-          collection(db, "todos"),
-          where("assignedTo", "==", currentUser.uid)
-        );
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          const todosData = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          console.log("User Todos:", todosData);
-          setUserTodos(todosData);
-        });
-
-        return () => unsubscribe();
-      } catch (error) {
-        console.error("Error fetching user todos:", error);
-      }
-    };
-
-    fetchUserTodos();
+    return () => unsubscribe();
   }, [currentUser]);
 
+  const deleteTodo = async (id) => {
+    try {
+      await deleteDoc(doc(db, "todos", id));
+      console.log(`Todo with ID ${id} deleted successfully`);
+    } catch (error) {
+      console.error(`Error deleting todo with ID ${id}:`, error.message);
+    }
+  };
+
+  const startEditing = (id, name, description, completed) => {
+    setEditingTodoId(id);
+    setEditedTodoName(name);
+    setEditedTodoDescription(description);
+    setCompleted(completed);
+  };
+
+  const cancelEditing = () => {
+    setEditingTodoId(null);
+    setEditedTodoName("");
+    setEditedTodoDescription("");
+    setCompleted(false);
+  };
+
+  const saveEditing = async () => {
+    try {
+      const todoRef = doc(db, "todos", editingTodoId);
+      await updateDoc(todoRef, {
+        name: editedTodoName,
+        description: editedTodoDescription,
+        completed: completed,
+      });
+      console.log(`Todo with ID ${editingTodoId} updated successfully`);
+      setEditingTodoId(null);
+    } catch (error) {
+      console.error(
+        `Error updating todo with ID ${editingTodoId}:`,
+        error.message
+      );
+    }
+  };
+
   return (
-    <div className="user-todos-list">
+    <div>
       <h2>Your Todos</h2>
       {userTodos.map((todo) => (
-        <div key={todo.id} className="todo-box">
-          <div className="todo-item">
-            <p>
-              <strong>Name:</strong> {todo.name}
-            </p>
-            {todo.description ? (
-              <p>
-                <strong>Description:</strong> {todo.description}
-              </p>
-            ) : null}
-
-            {/* <p><strong>Money:</strong> ${todo.money}</p> */}
-            {/* <p><strong>Points:</strong> {todo.points}</p> */}
-          </div>
+        <div
+          key={todo.id}
+          className={`todo-item todo-box ${
+            todo.completed ? "completed-todo" : ""
+          }`}
+        >
+          {editingTodoId === todo.id ? (
+            <>
+              <input
+                type="text"
+                value={editedTodoName}
+                onChange={(e) => setEditedTodoName(e.target.value)}
+                className="todo-box"
+              />
+              <input
+                type="text"
+                value={editedTodoDescription}
+                onChange={(e) => setEditedTodoDescription(e.target.value)}
+                className="todo-box"
+              />
+              <select
+                value={completed}
+                onChange={(e) => setCompleted(e.target.value === "true")}
+              >
+                <option value="true">Completed</option>
+                <option value="false">Not Completed</option>
+              </select>
+              <Button onClick={saveEditing}>Save</Button>
+              <Button onClick={cancelEditing}>Cancel</Button>
+            </>
+          ) : (
+            <>
+              <p>Name: {todo.name}</p>
+              {todo.description && <p>Description: {todo.description}</p>}
+              <p>Completed: {todo.completed ? "Yes" : "No"}</p>
+              <div>
+                <Button
+                  onClick={() =>
+                    startEditing(
+                      todo.id,
+                      todo.name,
+                      todo.description,
+                      todo.completed
+                    )
+                  }
+                >
+                  <FaEdit />
+                </Button>
+                <Button
+                  onClick={() => deleteTodo(todo.id)}
+                  className="btn-danger"
+                >
+                  <FaTrash />
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       ))}
     </div>
