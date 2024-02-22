@@ -1,38 +1,44 @@
-import React, { useState } from 'react';
-import { Form, Button, Container, Row, Col } from 'react-bootstrap';
-import { collection, doc, setDoc } from 'firebase/firestore';
-import { db } from '../../firebase/firebase';
-import { useAuth } from '../../contexts/authContext';
+import React, { useState } from "react";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from "../../firebase/firebase";
+import { useAuth } from "../../contexts/authContext";
 
 function ChildCreation() {
   const { currentUser } = useAuth();
-  const [newChildName, setNewChildName] = useState('');
-  const [newChildMoney, setNewChildMoney] = useState(''); // Updated state for money
-  const [newChildPoints, setNewChildPoints] = useState('');
+  const [newChildName, setNewChildName] = useState("");
+  const [newChildMoney, setNewChildMoney] = useState("");
+  const [newChildPoints, setNewChildPoints] = useState("");
+  const [photoURL, setPhotoURL] = useState(""); // State for photo URL
 
   const createChild = async () => {
     try {
-      const money = newChildMoney === '' ? 0 : parseFloat(newChildMoney); // Updated money field
-      const points = newChildPoints === '' ? 0 : parseInt(newChildPoints);
+      const money = newChildMoney === "" ? 0 : parseFloat(newChildMoney);
+      const points = newChildPoints === "" ? 0 : parseInt(newChildPoints);
+
       const childToAdd = {
-        id: doc(collection(db, 'children')).id,
+        id: doc(collection(db, "children")).id,
         name: newChildName,
-        money: money, // Updated field name
+        money: money,
         points: points,
         userId: currentUser.uid,
-        todos: [],
+        photoURL: photoURL, // Include the photo URL in the child object
       };
 
-      await setDoc(doc(db, 'children', childToAdd.id), childToAdd);
-      console.log('Child created successfully');
-      setNewChildName('');
-      setNewChildMoney('');
-      setNewChildPoints('');
+      await setDoc(doc(db, "children", childToAdd.id), childToAdd);
+
+      setNewChildName("");
+      setNewChildMoney("");
+      setNewChildPoints("");
+      setPhotoURL(""); // Reset the photo URL state
+
+      console.log("Child created successfully");
+
       if (window.todoCreationUpdateChildren) {
         window.todoCreationUpdateChildren();
       }
     } catch (error) {
-      console.error('Error creating child:', error);
+      console.error("Error creating child:", error);
     }
   };
 
@@ -52,7 +58,18 @@ function ChildCreation() {
                   onChange={(event) => setNewChildName(event.target.value)}
                 />
               </Form.Group>
-              <Form.Group controlId="childMoneyInput"> {/* Updated form group for money */}
+              <Form.Group controlId="childPhotoURLInput">
+                {" "}
+                {/* New form group for photo URL */}
+                <Form.Label>Photo URL (optional):</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter child's photo URL to display image"
+                  value={photoURL}
+                  onChange={(event) => setPhotoURL(event.target.value)} // Update the photo URL state
+                />
+              </Form.Group>
+              <Form.Group controlId="childMoneyInput">
                 <Form.Label>Money:</Form.Label>
                 <Form.Control
                   type="text"
@@ -61,7 +78,7 @@ function ChildCreation() {
                   onChange={(event) => setNewChildMoney(event.target.value)}
                 />
               </Form.Group>
-              <Form.Group controlId="childPointsInput"> {/* Input field for points */}
+              <Form.Group controlId="childPointsInput">
                 <Form.Label>Points:</Form.Label>
                 <Form.Control
                   type="text"
@@ -70,7 +87,12 @@ function ChildCreation() {
                   onChange={(event) => setNewChildPoints(event.target.value)}
                 />
               </Form.Group>
-              <Button variant="primary" onClick={createChild} style={{ marginTop: '10px' }} className='custom-button btn-primary'>
+              <Button
+                variant="primary"
+                onClick={createChild}
+                style={{ marginTop: "10px" }}
+                className="custom-button btn-primary"
+              >
                 Create Child
               </Button>
             </Form>
