@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 const Home = () => {
     return (
         <div className="text-center mt-5">
+            <br/>
+            <br/>
             <h1>Welcome to the Allowance App</h1>
             <p>Please login or register to continue.</p>
             <div className="mt-3">

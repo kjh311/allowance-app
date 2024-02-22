@@ -12,6 +12,7 @@ import UserProfile from "./components/userProfile";
 import { AuthProvider } from "./contexts/authContext";
 import ChildPage from "./components/children/ChildPage";
 import Children from "./components/children";
+import Profile from "./components/userProfile";
 import { db } from "./firebase/firebase";
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
             <Routes>
               {" "}
               {/* Define your routes inside Routes */}
-              <Route path="/" element={<Login />} />
+              <Route path="/" element={<Profile />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/home" element={<Home />} />

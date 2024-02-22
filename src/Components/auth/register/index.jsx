@@ -30,7 +30,7 @@ const Register = () => {
                 await addUserToFirestore(userCredential.user.uid, { email, displayName });
 
                 // If registration is successful, navigate to the home page
-                navigate('/home');
+                navigate('/profile');
             } catch (error) {
                 setErrorMessage(error.message);
                 setIsRegistering(false);
@@ -44,7 +44,7 @@ const Register = () => {
         try {
             await doSignInWithGoogle();
             // Redirect to the home page after successful Google sign-in
-            navigate('/home');
+            navigate('/profile');
         } catch (error) {
             console.error('Error signing in with Google:', error.message);
         }

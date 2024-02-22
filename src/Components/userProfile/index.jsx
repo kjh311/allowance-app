@@ -6,6 +6,7 @@ import TodoCounter from "../todos/TodoCounter.jsx";
 import UserTodosList from "../todos/UserTodosList.jsx";
 import ChildCounter from "../children/ChildCounter.jsx";
 import TodoCreation from "../todos/TodoCreation.jsx";
+import InvitationSystem from "../invitation/InvitationSystem.jsx";
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 
@@ -24,6 +25,8 @@ const UserProfile = () => {
 
     return (
         <Container className="mt-5 mb-5">
+            <br/>
+            <br/>
             <Row className="justify-content-center">
                 <Col md={6} lg={4} xl={3}>
                     <div className="bg-gray-800 rounded-lg p-4 mb-4">
@@ -66,7 +69,13 @@ const UserProfile = () => {
                 <UserTodosList currentUser={currentUser} />
 
                 </Col>
+                <Col md={6} lg={4} xl={3}>
+                <InvitationSystem />
+
+                </Col>
             </Row>
+            <br/>
+            <br/>
         </Container>
     );
 };

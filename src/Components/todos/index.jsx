@@ -25,6 +25,8 @@ const ToDos = () => {
             {/* <div className="flex justify-center">
                 <TodoCounter />
             </div> */}
+            <br/>
+            <br/>
         </div>
     )
 }
