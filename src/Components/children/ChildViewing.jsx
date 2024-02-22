@@ -29,10 +29,10 @@ function ChildViewing() {
     return () => unsubscribe();
   }, [currentUser]);
 
-  const editChild = (id, name, owed, points) => {
+  const editChild = (id, name, money, points) => {
     setEditingChildId(id);
     setEditChildName(name);
-    setEditChildOwed(owed);
+    setEditChildOwed(money);
     setEditChildPoints(points); // Set initial value for points
   };
 
@@ -45,7 +45,7 @@ function ChildViewing() {
       const childDocRef = doc(db, "children", id);
       await updateDoc(childDocRef, {
         name: editChildName,
-        owed: parseFloat(editChildOwed),
+        money: parseFloat(editChildOwed),
         points: parseInt(editChildPoints) // Update points
       });
       console.log(`Child with ID ${id} updated successfully`);
