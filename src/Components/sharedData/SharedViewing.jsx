@@ -9,6 +9,8 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { useAuth } from "../../contexts/authContext";
+import { FaCheckCircle, FaEdit, FaTrash } from "react-icons/fa";
+import "./Share.scss";
 
 function SharedViewing() {
   const { currentUser } = useAuth();
@@ -62,7 +64,7 @@ function SharedViewing() {
 
   return (
     <Container>
-      <h2>Those who are alowed to share your data:</h2>
+      <h2>Those who are allowed to share your data:</h2>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -83,7 +85,15 @@ function SharedViewing() {
                     onChange={(e) => setEditEmail(e.target.value)}
                   />
                 ) : (
-                  data.email
+                  <>
+                    {data.email}
+                    {data.shareAllow && (
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <p>Sharing</p>
+                        <FaCheckCircle className="check-mark" />
+                      </div>
+                    )}
+                  </>
                 )}
               </td>
               <td>
@@ -98,14 +108,14 @@ function SharedViewing() {
                       onClick={() => handleEdit(data.email, data.id)}
                       disabled={editMode}
                     >
-                      Edit
+                      <FaEdit />
                     </Button>
                     <Button
                       variant="danger"
                       onClick={() => handleDelete(data.id)}
                       disabled={editMode}
                     >
-                      Delete
+                      <FaTrash />
                     </Button>
                   </>
                 )}
