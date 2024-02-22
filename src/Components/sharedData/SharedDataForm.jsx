@@ -1,14 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  where,
-  updateDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/authContext";
 
@@ -18,38 +10,16 @@ function ShareDataForm() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const checkConsentStatus = async () => {
-      try {
-        const shareDataRef = collection(db, "sharedData");
-        const querySnapshot = await getDocs(
-          query(shareDataRef, where("email", "==", currentUser.email))
-        );
-        if (!querySnapshot.empty) {
-          const userData = querySnapshot.docs[0].data();
-          if (!userData.shareAllow) {
-            // Prompt user to provide consent
-            setError("Please provide consent to share data.");
-          }
-        }
-      } catch (error) {
-        console.error("Error checking consent status:", error);
-      }
-    };
-
-    if (currentUser) {
-      checkConsentStatus();
-    }
-  }, [currentUser]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Add the email, user ID, and shareAllow to the sharedData collection in Firestore
+      // Add the email, user ID, shareAllow, asked, and senderEmail to the sharedData collection in Firestore
       await addDoc(collection(db, "sharedData"), {
         email,
         userId: currentUser.uid,
         shareAllow: false,
+        asked: false,
+        senderEmail: currentUser.email, // Add sender's email
       });
       setMessage("Email added successfully!");
       setError("");
@@ -58,18 +28,6 @@ function ShareDataForm() {
       console.error("Error adding email:", error);
       setError("Error adding email. Please try again.");
       setMessage("");
-    }
-  };
-
-  const handleConsent = async () => {
-    try {
-      // Update consent status to true
-      const shareDataRef = doc(db, "sharedData", currentUser.email);
-      await updateDoc(shareDataRef, { shareAllow: true });
-      setError("");
-    } catch (error) {
-      console.error("Error updating consent status:", error);
-      setError("Error updating consent status. Please try again.");
     }
   };
 
@@ -96,11 +54,6 @@ function ShareDataForm() {
           Share
         </Button>
       </Form>
-      {error && (
-        <Button variant="primary" onClick={handleConsent}>
-          Give Consent
-        </Button>
-      )}
     </div>
   );
 }

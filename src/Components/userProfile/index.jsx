@@ -7,6 +7,7 @@ import ChildCounter from "../children/ChildCounter.jsx";
 import TodoCreation from "../todos/TodoCreation.jsx";
 import SharedData from "../sharedData/SharedDataForm.jsx";
 import SharedViewing from "../sharedData/SharedViewing.jsx";
+import ShareDataInvitation from "../sharedData/ShareDataInvitation.jsx";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 
@@ -30,6 +31,7 @@ const UserProfile = () => {
     <Container className="mt-5 mb-5">
       <br />
       <br />
+      <ShareDataInvitation />
       <Row className="justify-content-center">
         <Col md={6} lg={4} xl={3}>
           <div className="bg-gray-800 rounded-lg p-4 mb-4">
