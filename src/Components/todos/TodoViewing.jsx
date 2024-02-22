@@ -30,11 +30,9 @@ function TodoViewing() {
         id: doc.id,
         ...doc.data(),
       }));
-      // Filter todos based on createdBy or assignedTo
+      // Filter todos based on sharedUsers
       const filteredTodos = todosData.filter(
-        (todo) =>
-          todo.createdBy === currentUser.uid ||
-          todo.assignedTo === currentUser.uid
+        (todo) => todo.sharedUsers && todo.sharedUsers.includes(currentUser.uid)
       );
       setTodos(filteredTodos);
     });
