@@ -9,6 +9,7 @@ import {
   deleteDoc,
   query,
   where,
+  getDocs,
 } from "firebase/firestore";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -30,11 +31,17 @@ function ChildViewing() {
       childrenCollectionRef,
       where("userId", "==", currentUser.uid)
     );
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const unsubscribe = onSnapshot(q, async (querySnapshot) => {
       const loadedChildren = [];
-      querySnapshot.forEach((doc) => {
-        loadedChildren.push({ id: doc.id, ...doc.data() });
-      });
+      for (const doc of querySnapshot.docs) {
+        const childData = doc.data();
+        // Retrieve todos associated with this child
+        const todosQuerySnapshot = await getDocs(
+          query(collection(db, "todos"), where("assignedTo", "==", doc.id))
+        );
+        const todosCount = todosQuerySnapshot.docs.length;
+        loadedChildren.push({ id: doc.id, ...childData, todosCount });
+      }
       setChildren(loadedChildren);
     });
 
@@ -97,6 +104,9 @@ function ChildViewing() {
             <Card.Text className="text-center">Owed: ${child.money}</Card.Text>
             <Card.Text className="text-center">
               Points: {child.points}
+            </Card.Text>
+            <Card.Text className="text-center">
+              Todos: {child.todosCount}
             </Card.Text>
             <Link to={`/child/${child.id}`} className="btn btn-primary">
               View Details
