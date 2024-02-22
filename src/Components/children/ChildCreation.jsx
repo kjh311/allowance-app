@@ -70,7 +70,7 @@ function ChildCreation() {
                   onChange={(event) => setNewChildPoints(event.target.value)}
                 />
               </Form.Group>
-              <Button variant="primary" onClick={createChild} style={{ marginTop: '10px' }}>
+              <Button variant="primary" onClick={createChild} style={{ marginTop: '10px' }} className='custom-button btn-primary'>
                 Create Child
               </Button>
             </Form>

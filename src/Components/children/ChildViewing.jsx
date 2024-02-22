@@ -103,22 +103,23 @@ function ChildViewing() {
                     onChange={(event) => setEditChildPoints(event.target.value)}
                   />
                 </Form.Group>
-                <Button variant="success" onClick={() => submitEdit(child.id)} className="mb-2">
+                <Button variant="success" onClick={() => submitEdit(child.id)} className="mb-2 btn-success">
                   <FaEdit className="mr-2" />
                   Submit
                 </Button>
-                <Button variant="secondary" onClick={cancelEdit}>
+                <Button variant="secondary" onClick={cancelEdit} className="btn-secondary">
                   Cancel
                 </Button>
               </Form>
             ) : (
               <div className="d-flex flex-column align-items-center">
-                <Button variant="primary" onClick={() => editChild(child.id, child.name, child.money, child.points)} className="mb-2">
-                  <FaEdit />
-                </Button>
-                <Button variant="danger" onClick={() => deleteChild(child.id)} className="mb-2">
-                  <FaTrash />
-                </Button>
+               <Button variant="primary" onClick={() => editChild(child.id, child.name, child.money, child.points)} className="mb-2 custom-button">
+  <FaEdit />
+</Button>
+<Button variant="danger" onClick={() => deleteChild(child.id)} className="mb-2 custom-button">
+  <FaTrash />
+</Button>
+
               </div>
             )}
           </Card.Footer>

@@ -1,10 +1,10 @@
 import React from 'react';
 import { useAuth } from '../../contexts/authContext';
 import { Container, Row, Col } from 'react-bootstrap';
-import ChildrenCrud from "../children/ChildrenCrud.jsx";
 import ChildCreation from "../children/ChildCreation.jsx";
 import ChildViewing from "../children/ChildViewing.jsx";
 import ChildCounter from "../children/ChildCounter.jsx";
+import "./Child.scss";
 
 
 const Children = () => {
