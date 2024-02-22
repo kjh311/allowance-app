@@ -29,7 +29,7 @@ function ChildViewing() {
     const childrenCollectionRef = collection(db, "children");
     const q = query(
       childrenCollectionRef,
-      where("userId", "==", currentUser.uid)
+      where("sharedUsers", "array-contains", currentUser.uid)
     );
     const unsubscribe = onSnapshot(q, async (querySnapshot) => {
       const loadedChildren = [];

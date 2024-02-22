@@ -22,15 +22,17 @@ function ChildCreation() {
         money: money,
         points: points,
         userId: currentUser.uid,
-        photoURL: photoURL, // Include the photo URL in the child object
+        photoURL: photoURL,
+        sharedUsers: [currentUser.uid], // Initialize sharedUsers array with current user's id
       };
 
+      // Include the sharedUsers field in the child document
       await setDoc(doc(db, "children", childToAdd.id), childToAdd);
 
       setNewChildName("");
       setNewChildMoney("");
       setNewChildPoints("");
-      setPhotoURL(""); // Reset the photo URL state
+      setPhotoURL("");
 
       console.log("Child created successfully");
 
