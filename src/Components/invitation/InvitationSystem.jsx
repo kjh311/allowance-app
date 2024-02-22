@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
-import { db } from '../../firebase/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import React, { useState } from "react";
+import { Form, Button } from "react-bootstrap";
+import { db } from "../../firebase/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import "./Invitation.scss";
-import { useAuth } from '../../contexts/authContext';
+import { useAuth } from "../../contexts/authContext";
 
 function InvitationSystem() {
   const { currentUser } = useAuth(); // Use the useAuth hook to get the currentUser
-  
-  const [email, setEmail] = useState('');
+
+  const [email, setEmail] = useState("");
 
   const generateInvitationCode = () => {
     // Generate a random invitation code
@@ -19,18 +19,18 @@ function InvitationSystem() {
       creatorId: currentUser.uid,
       email,
       code: invitationCode,
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp(),
     };
 
     // Add the invitation to the "invitations" collection
-    const invitationsCollection = collection(db, 'invitations');
+    const invitationsCollection = collection(db, "invitations");
     addDoc(invitationsCollection, invitationData)
       .then(() => {
-        console.log('Invitation created successfully!');
+        console.log("Invitation created successfully!");
         // Optionally, send the invitation link via email or other channels
       })
-      .catch(error => {
-        console.error('Error creating invitation:', error);
+      .catch((error) => {
+        console.error("Error creating invitation:", error);
       });
   };
 
@@ -40,7 +40,7 @@ function InvitationSystem() {
   };
 
   return (
-    <div>
+    <div className="invitation-wrapper">
       <h2>Create Invitation</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="email">
@@ -53,7 +53,7 @@ function InvitationSystem() {
             required
           />
         </Form.Group>
-        <Button variant="primary" type="submit" className='btn-primary'>
+        <Button variant="primary" type="submit" className="btn-primary">
           Generate Invitation
         </Button>
       </Form>

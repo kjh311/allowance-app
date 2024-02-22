@@ -8,6 +8,14 @@
   .custom-button:hover {
     filter: brightness(90%); /* Slightly darken on hover */
   }
+
+  .todo-box{
+    background-color: #fff;
+  }
+
+input{
+    background-color: #fff !important;
+  }
   
   /* Primary (blue) button */
  .btn-primary {
@@ -37,3 +45,10 @@
     color: #fff;
   }
   
+  .user-todos-wrapper, .todo-list-container{
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 10px;
+    // background-color: #c9c9c9;
+  }

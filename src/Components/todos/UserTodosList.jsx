@@ -77,7 +77,7 @@ function UserTodosList() {
   };
 
   return (
-    <div>
+    <div className="user-todos-wrapper">
       <h2>Your Todos</h2>
       {userTodos.map((todo) => (
         <div

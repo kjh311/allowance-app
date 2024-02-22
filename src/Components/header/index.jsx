@@ -6,6 +6,8 @@ import { useAuth } from "../../contexts/authContext";
 import { doSignOut } from "../../firebase/auth";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import "./Header.scss";
+import { CiLogout } from "react-icons/ci";
+import { CiLogin } from "react-icons/ci";
 
 const Header = () => {
   const { currentUser, userLoggedIn } = useAuth();
@@ -38,14 +40,23 @@ const Header = () => {
               Children{" "}
             </Nav.Link>
             {userLoggedIn ? (
-              <Nav.Link onClick={handleLogout} as={Link} to="/">
-                Logout
+              <Nav.Link
+                onClick={handleLogout}
+                as={Link}
+                to="/"
+                className="d-flex align-items-center"
+              >
+                <span>Logout</span> <CiLogout className="ml-2" />
               </Nav.Link>
             ) : (
               <>
                 {location.pathname !== "/login" && (
-                  <Nav.Link as={Link} to="/login">
-                    Login
+                  <Nav.Link
+                    as={Link}
+                    to="/login"
+                    className="d-flex align-items-center"
+                  >
+                    <span>Login</span> <CiLogin className="ml-2" />
                   </Nav.Link>
                 )}
                 {location.pathname !== "/register" && (
