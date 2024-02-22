@@ -7,28 +7,27 @@ import { useAuth } from '../../contexts/authContext';
 function ChildCreation() {
   const { currentUser } = useAuth();
   const [newChildName, setNewChildName] = useState('');
-  const [newChildOwed, setNewChildOwed] = useState('');
-  const [newChildPoints, setNewChildPoints] = useState(''); // State for points
+  const [newChildMoney, setNewChildMoney] = useState(''); // Updated state for money
+  const [newChildPoints, setNewChildPoints] = useState('');
 
   const createChild = async () => {
     try {
-      const owed = newChildOwed === '' ? 0 : parseFloat(newChildOwed); // Set default to 0 if empty
-      const points = newChildPoints === '' ? 0 : parseInt(newChildPoints); // Set default to 0 if empty
+      const money = newChildMoney === '' ? 0 : parseFloat(newChildMoney); // Updated money field
+      const points = newChildPoints === '' ? 0 : parseInt(newChildPoints);
       const childToAdd = {
-        id: doc(collection(db, 'children')).id, // Generate a unique ID for the child
+        id: doc(collection(db, 'children')).id,
         name: newChildName,
-        owed: owed,
-        points: points, // Add the points field
+        money: money, // Updated field name
+        points: points,
         userId: currentUser.uid,
-        todos: [], // Initialize todos field as an empty array
+        todos: [],
       };
 
-      await setDoc(doc(db, 'children', childToAdd.id), childToAdd); // Set the document with the generated ID
+      await setDoc(doc(db, 'children', childToAdd.id), childToAdd);
       console.log('Child created successfully');
       setNewChildName('');
-      setNewChildOwed('');
+      setNewChildMoney('');
       setNewChildPoints('');
-      // Trigger update to children state in TodoCreation component
       if (window.todoCreationUpdateChildren) {
         window.todoCreationUpdateChildren();
       }
@@ -53,13 +52,13 @@ function ChildCreation() {
                   onChange={(event) => setNewChildName(event.target.value)}
                 />
               </Form.Group>
-              <Form.Group controlId="childOwedInput">
-                <Form.Label>Amount Owed:</Form.Label>
+              <Form.Group controlId="childMoneyInput"> {/* Updated form group for money */}
+                <Form.Label>Money:</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter amount owed"
-                  value={newChildOwed}
-                  onChange={(event) => setNewChildOwed(event.target.value)}
+                  placeholder="Enter amount of money"
+                  value={newChildMoney}
+                  onChange={(event) => setNewChildMoney(event.target.value)}
                 />
               </Form.Group>
               <Form.Group controlId="childPointsInput"> {/* Input field for points */}

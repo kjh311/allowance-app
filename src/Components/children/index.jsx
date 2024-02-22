@@ -12,6 +12,10 @@ const Children = () => {
 
     return (
         <Container>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
             <Row>
                 <Col>
                     <h2>Children</h2>
@@ -32,6 +36,10 @@ const Children = () => {
                     <ChildCounter />
                 </Col>
             </Row>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
         </Container>
     );
 };
