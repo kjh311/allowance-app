@@ -7,6 +7,7 @@ import {
   query,
   updateDoc,
   doc,
+  arrayUnion,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/authContext";
@@ -42,9 +43,34 @@ function ShareDataInvitation() {
 
   const handleAcceptInvitation = async () => {
     try {
+      if (!invitationData) {
+        console.error("Invitation data is null or undefined.");
+        return;
+      }
+
+      // Update consent status to true
       const shareDataRef = doc(db, "sharedData", invitationData.id);
       await updateDoc(shareDataRef, { shareAllow: true, asked: true });
-      setInvitationData(null);
+
+      // Add current user's id to sharedUsers field in children collection
+      const childrenRef = collection(db, "children");
+      const childrenQuerySnapshot = await getDocs(
+        query(childrenRef, where("userId", "==", invitationData.userId))
+      );
+
+      childrenQuerySnapshot.forEach(async (childDoc) => {
+        const childData = childDoc.data();
+        if (
+          childData.userId === invitationData.userId ||
+          childData.sharedUsers.includes(currentUser.uid)
+        ) {
+          await updateDoc(childDoc.ref, {
+            sharedUsers: arrayUnion(currentUser.uid),
+          });
+        }
+      });
+
+      setError("");
     } catch (error) {
       console.error("Error accepting invitation:", error);
       setError("Error accepting invitation. Please try again.");
@@ -53,6 +79,8 @@ function ShareDataInvitation() {
 
   const handleDeclineInvitation = async () => {
     try {
+      if (!invitationData) return; // Check if invitation data exists
+
       const shareDataRef = doc(db, "sharedData", invitationData.id);
       await updateDoc(shareDataRef, { asked: true });
       setInvitationData(null);

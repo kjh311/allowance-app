@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import { collection, addDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  where,
+  query,
+  updateDoc,
+  doc,
+  arrayUnion,
+} from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/authContext";
 
