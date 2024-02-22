@@ -5,7 +5,7 @@ import ChildCreation from "../children/ChildCreation.jsx";
 import UserTodosList from "../todos/UserTodosList.jsx";
 import ChildCounter from "../children/ChildCounter.jsx";
 import TodoCreation from "../todos/TodoCreation.jsx";
-import SharedData from "../sharedData/SharedData.jsx";
+import SharedData from "../sharedData/SharedDataForm.jsx";
 import SharedViewing from "../sharedData/SharedViewing.jsx";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
