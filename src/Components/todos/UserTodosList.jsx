@@ -130,7 +130,7 @@ function UserTodosList() {
                 </Button>
                 <Button
                   onClick={() => deleteTodo(todo.id)}
-                  className="btn-danger"
+                  className="btn-danger custom-button"
                 >
                   <FaTrash />
                 </Button>
