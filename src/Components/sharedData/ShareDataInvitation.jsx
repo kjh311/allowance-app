@@ -52,23 +52,46 @@ function ShareDataInvitation() {
       const shareDataRef = doc(db, "sharedData", invitationData.id);
       await updateDoc(shareDataRef, { shareAllow: true, asked: true });
 
-      // Add current user's id to sharedUsers field in children collection
-      const childrenRef = collection(db, "children");
-      const childrenQuerySnapshot = await getDocs(
-        query(childrenRef, where("userId", "==", invitationData.userId))
+      // Add current user's id to sharedUsers field in children collection for sender's children
+      const senderChildrenQuerySnapshot = await getDocs(
+        query(
+          collection(db, "children"),
+          where("userId", "==", invitationData.userId)
+        )
       );
 
-      childrenQuerySnapshot.forEach(async (childDoc) => {
-        const childData = childDoc.data();
-        if (
-          childData.userId === invitationData.userId ||
-          childData.sharedUsers.includes(currentUser.uid)
-        ) {
-          await updateDoc(childDoc.ref, {
-            sharedUsers: arrayUnion(currentUser.uid),
-          });
+      const senderChildrenUpdatePromises = senderChildrenQuerySnapshot.docs.map(
+        async (childDoc) => {
+          const childData = childDoc.data();
+          if (!childData.sharedUsers.includes(currentUser.uid)) {
+            await updateDoc(childDoc.ref, {
+              sharedUsers: arrayUnion(currentUser.uid),
+            });
+          }
         }
-      });
+      );
+
+      await Promise.all(senderChildrenUpdatePromises);
+
+      // Add invitation sender's id to sharedUsers field in children collection for current user's children
+      const currentUserChildrenQuerySnapshot = await getDocs(
+        query(
+          collection(db, "children"),
+          where("userId", "==", currentUser.uid)
+        )
+      );
+
+      const currentUserChildrenUpdatePromises =
+        currentUserChildrenQuerySnapshot.docs.map(async (childDoc) => {
+          const childData = childDoc.data();
+          if (!childData.sharedUsers.includes(invitationData.userId)) {
+            await updateDoc(childDoc.ref, {
+              sharedUsers: arrayUnion(invitationData.userId),
+            });
+          }
+        });
+
+      await Promise.all(currentUserChildrenUpdatePromises);
 
       setError("");
     } catch (error) {
