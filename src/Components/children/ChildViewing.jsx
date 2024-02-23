@@ -78,8 +78,16 @@ function ChildViewing() {
 
   const deleteChild = async (id) => {
     try {
+      // Delete the child document
       await deleteDoc(doc(db, "children", id));
       console.log(`Child with ID ${id} deleted successfully`);
+
+      // Remove the child's ID from the children array under the current user's document
+      const userRef = doc(db, "users", currentUser.uid);
+      await updateDoc(userRef, {
+        children: firestore.FieldValue.arrayRemove(id),
+      });
+      console.log(`Child ID ${id} removed from user's children array`);
     } catch (error) {
       console.error(`Error deleting child with ID ${id}:`, error);
     }
