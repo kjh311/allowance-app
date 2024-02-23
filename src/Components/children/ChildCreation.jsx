@@ -16,15 +16,27 @@ function ChildCreation() {
       const money = newChildMoney === "" ? 0 : parseFloat(newChildMoney);
       const points = newChildPoints === "" ? 0 : parseInt(newChildPoints);
 
+      // Determine the name to use for createdBy field
+      const createdBy = currentUser.displayName || currentUser.email;
+
       const childToAdd = {
         id: doc(collection(db, "children")).id,
         name: newChildName,
         money: money,
         points: points,
         userId: currentUser.uid,
+        createdBy: createdBy, // Add createdBy field with user's name or email
         photoURL: photoURL,
         sharedUsers: [currentUser.uid], // Initialize sharedUsers array with current user's id
       };
+
+      // Fetch the sharingWith field from the current user's document
+      const currentUserRef = doc(db, "users", currentUser.uid);
+      const currentUserDoc = await getDoc(currentUserRef);
+      const sharingWithIds = currentUserDoc.data().sharingWith || [];
+
+      // Include sharingWith IDs in the sharedUsers field of the new child
+      childToAdd.sharedUsers.push(...sharingWithIds);
 
       // Include the sharedUsers field in the child document
       await setDoc(doc(db, "children", childToAdd.id), childToAdd);
