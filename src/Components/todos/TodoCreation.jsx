@@ -57,6 +57,9 @@ function TodoCreation() {
         await updateDoc(currentUserRef, { todos: [] });
       }
 
+      // Determine the name to use for createdBy field
+      const createdBy = currentUser.displayName || currentUser.email;
+
       // Add sharingWith IDs to the sharedUsers field of the new todo
       const todoToAdd = {
         name: newTodoName,
@@ -66,6 +69,8 @@ function TodoCreation() {
         assignedTo: selectedAssignee,
         completed: false, // Add the completed field and set it to false
         sharedUsers: [currentUser.uid, ...sharingWithIds], // Add current user and sharingWith IDs to sharedUsers
+        userId: currentUser.uid, // Add userId field with current user's ID
+        createdBy: createdBy, // Add createdBy field with user's name or email
       };
 
       if (selectedAssignee) {

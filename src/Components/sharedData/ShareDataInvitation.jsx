@@ -9,6 +9,7 @@ import {
   updateDoc,
   doc,
   arrayUnion,
+  writeBatch,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/authContext";
@@ -49,74 +50,80 @@ function ShareDataInvitation() {
         return;
       }
 
-      // Update consent status to true
-      const shareDataRef = doc(db, "sharedData", invitationData.id);
-      await updateDoc(shareDataRef, { shareAllow: true, asked: true });
-
-      // Update sharingWith field in users collection for current user
       const currentUserRef = doc(db, "users", currentUser.uid);
+      const senderUserRef = doc(db, "users", invitationData.userId);
+
+      // Update sharingWith field for current user
       await updateDoc(currentUserRef, {
         sharingWith: arrayUnion(invitationData.userId),
       });
 
-      // Check if the sharingWith field exists for the invitation sender
-      const senderUserRef = doc(db, "users", invitationData.userId);
+      // Update sharingWith field for invitation sender
+      await updateDoc(senderUserRef, {
+        sharingWith: arrayUnion(currentUser.uid),
+      });
+
+      // Update sharedUsers field for todos belonging to invitation sender
       const senderUserDoc = await getDoc(senderUserRef);
-      if (senderUserDoc.exists()) {
-        const senderUserData = senderUserDoc.data();
-        if (!senderUserData.sharingWith) {
-          // If sharingWith field doesn't exist, create it with an array containing the current user's ID
-          await updateDoc(senderUserRef, {
-            sharingWith: [currentUser.uid],
-          });
-        } else {
-          // Update sharingWith field in users collection for invitation sender
-          await updateDoc(senderUserRef, {
-            sharingWith: arrayUnion(currentUser.uid),
-          });
-        }
-      } else {
-        // If the invitation sender's document doesn't exist, create it with sharingWith field
-        await setDoc(senderUserRef, {
-          sharingWith: [currentUser.uid],
+      const senderUserTodos = senderUserDoc.data().todos;
+      if (senderUserTodos) {
+        senderUserTodos.forEach(async (todoId) => {
+          const todoRef = doc(db, "todos", todoId);
+          const todoDoc = await getDoc(todoRef);
+          if (todoDoc.exists()) {
+            await updateDoc(todoRef, {
+              sharedUsers: arrayUnion(currentUser.uid, invitationData.userId),
+            });
+          }
         });
       }
 
-      // Update sharedUsers field for todos belonging to the current user
-      const currentUserTodosQuerySnapshot = await getDocs(
-        query(
-          collection(db, "todos"),
-          where("createdBy", "==", currentUser.uid)
-        )
-      );
-
-      currentUserTodosQuerySnapshot.forEach(async (todoDoc) => {
-        const todoData = todoDoc.data();
-        const updatedSharedUsers = Array.from(
-          new Set([...todoData.sharedUsers, invitationData.userId])
-        );
-        await updateDoc(todoDoc.ref, {
-          sharedUsers: updatedSharedUsers,
+      // Update sharedUsers field for children belonging to invitation sender
+      const senderUserChildren = senderUserDoc.data().children;
+      if (senderUserChildren) {
+        senderUserChildren.forEach(async (childId) => {
+          const childRef = doc(db, "children", childId);
+          const childDoc = await getDoc(childRef);
+          if (childDoc.exists()) {
+            await updateDoc(childRef, {
+              sharedUsers: arrayUnion(currentUser.uid, invitationData.userId),
+            });
+          }
         });
-      });
+      }
 
-      // Update sharedUsers field for children belonging to the current user
-      const currentUserChildrenQuerySnapshot = await getDocs(
-        query(
-          collection(db, "children"),
-          where("userId", "==", currentUser.uid)
-        )
-      );
-
-      currentUserChildrenQuerySnapshot.forEach(async (childDoc) => {
-        const childData = childDoc.data();
-        const updatedSharedUsers = Array.from(
-          new Set([...childData.sharedUsers, invitationData.userId])
-        );
-        await updateDoc(childDoc.ref, {
-          sharedUsers: updatedSharedUsers,
+      // Update sharedUsers field for todos belonging to current user
+      const currentUserDoc = await getDoc(currentUserRef);
+      const currentUserTodos = currentUserDoc.data().todos;
+      if (currentUserTodos) {
+        currentUserTodos.forEach(async (todoId) => {
+          const todoRef = doc(db, "todos", todoId);
+          const todoDoc = await getDoc(todoRef);
+          if (todoDoc.exists()) {
+            await updateDoc(todoRef, {
+              sharedUsers: arrayUnion(currentUser.uid, invitationData.userId),
+            });
+          }
         });
-      });
+      }
+
+      // Update sharedUsers field for children belonging to current user
+      const currentUserChildren = currentUserDoc.data().children;
+      if (currentUserChildren) {
+        currentUserChildren.forEach(async (childId) => {
+          const childRef = doc(db, "children", childId);
+          const childDoc = await getDoc(childRef);
+          if (childDoc.exists()) {
+            await updateDoc(childRef, {
+              sharedUsers: arrayUnion(currentUser.uid, invitationData.userId),
+            });
+          }
+        });
+      }
+
+      // Switch "asked" and "shareAllow" fields to true in sharedData collection
+      const shareDataRef = doc(db, "sharedData", invitationData.id);
+      await updateDoc(shareDataRef, { asked: true, shareAllow: true });
 
       setError("");
       setInvitationData(null); // Hide invitation after accepting
