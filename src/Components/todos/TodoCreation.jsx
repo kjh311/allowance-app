@@ -47,9 +47,15 @@ function TodoCreation() {
   const createTodo = async () => {
     try {
       // Fetch sharingWith field from the current user's document
-      const currentUserDoc = await getDoc(doc(db, "users", currentUser.uid));
+      const currentUserRef = doc(db, "users", currentUser.uid);
+      const currentUserDoc = await getDoc(currentUserRef);
       const currentUserData = currentUserDoc.data();
       const sharingWithIds = currentUserData.sharingWith || [];
+
+      // Ensure the todos field exists for the current user
+      if (!currentUserData.todos) {
+        await updateDoc(currentUserRef, { todos: [] });
+      }
 
       // Add sharingWith IDs to the sharedUsers field of the new todo
       const todoToAdd = {
@@ -58,7 +64,6 @@ function TodoCreation() {
         money: newTodoMoney === "" ? 0 : parseFloat(newTodoMoney),
         points: newTodoPoints === "" ? 0 : parseInt(newTodoPoints),
         assignedTo: selectedAssignee,
-        createdBy: currentUser.uid, // Add the createdBy field with the current user's ID
         completed: false, // Add the completed field and set it to false
         sharedUsers: [currentUser.uid, ...sharingWithIds], // Add current user and sharingWith IDs to sharedUsers
       };
@@ -66,6 +71,11 @@ function TodoCreation() {
       if (selectedAssignee) {
         const newTodoRef = await addDoc(collection(db, "todos"), todoToAdd);
         const newTodoId = newTodoRef.id;
+
+        // Update the todos field of the current user by adding the new todo ID
+        await updateDoc(currentUserRef, {
+          todos: arrayUnion(newTodoId),
+        });
 
         setNewTodoName("");
         setNewTodoDescription("");
@@ -76,7 +86,13 @@ function TodoCreation() {
         // Optionally, update the selectedAssignee's todo list here
         // based on your application logic
       } else {
-        await addDoc(collection(db, "todos"), todoToAdd);
+        const newTodoRef = await addDoc(collection(db, "todos"), todoToAdd);
+        const newTodoId = newTodoRef.id;
+
+        // Update the todos field of the current user by adding the new todo ID
+        await updateDoc(currentUserRef, {
+          todos: arrayUnion(newTodoId),
+        });
 
         setNewTodoName("");
         setNewTodoDescription("");

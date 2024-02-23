@@ -5,6 +5,7 @@ import {
   getDocs,
   where,
   query,
+  getDoc,
   updateDoc,
   doc,
   arrayUnion,
@@ -58,20 +59,30 @@ function ShareDataInvitation() {
         sharingWith: arrayUnion(invitationData.userId),
       });
 
-      // Update sharingWith field in users collection for invitation sender
+      // Check if the sharingWith field exists for the invitation sender
       const senderUserRef = doc(db, "users", invitationData.userId);
-      await updateDoc(senderUserRef, {
-        sharingWith: arrayUnion(currentUser.uid),
-      });
+      const senderUserDoc = await getDoc(senderUserRef);
+      if (senderUserDoc.exists()) {
+        const senderUserData = senderUserDoc.data();
+        if (!senderUserData.sharingWith) {
+          // If sharingWith field doesn't exist, create it with an array containing the current user's ID
+          await updateDoc(senderUserRef, {
+            sharingWith: [currentUser.uid],
+          });
+        } else {
+          // Update sharingWith field in users collection for invitation sender
+          await updateDoc(senderUserRef, {
+            sharingWith: arrayUnion(currentUser.uid),
+          });
+        }
+      } else {
+        // If the invitation sender's document doesn't exist, create it with sharingWith field
+        await setDoc(senderUserRef, {
+          sharingWith: [currentUser.uid],
+        });
+      }
 
-      // Fetch todos for both the sender and the current user
-      const senderTodosQuerySnapshot = await getDocs(
-        query(
-          collection(db, "todos"),
-          where("createdBy", "==", invitationData.userId)
-        )
-      );
-
+      // Update sharedUsers field for todos belonging to the current user
       const currentUserTodosQuerySnapshot = await getDocs(
         query(
           collection(db, "todos"),
@@ -79,46 +90,17 @@ function ShareDataInvitation() {
         )
       );
 
-      // Update sharedUsers and createdBy fields for todos belonging to the sender
-      senderTodosQuerySnapshot.forEach(async (todoDoc) => {
-        const todoData = todoDoc.data();
-        const updatedSharedUsers = Array.from(
-          new Set([
-            ...todoData.sharedUsers,
-            currentUser.uid,
-            invitationData.userId,
-          ])
-        );
-        await updateDoc(todoDoc.ref, {
-          sharedUsers: updatedSharedUsers,
-          createdBy: currentUser.uid, // Update createdBy field to current user
-        });
-      });
-
-      // Update sharedUsers and createdBy fields for todos belonging to the current user
       currentUserTodosQuerySnapshot.forEach(async (todoDoc) => {
         const todoData = todoDoc.data();
         const updatedSharedUsers = Array.from(
-          new Set([
-            ...todoData.sharedUsers,
-            currentUser.uid,
-            invitationData.userId,
-          ])
+          new Set([...todoData.sharedUsers, invitationData.userId])
         );
         await updateDoc(todoDoc.ref, {
           sharedUsers: updatedSharedUsers,
-          createdBy: currentUser.uid, // Update createdBy field to current user
         });
       });
 
-      // Fetch children for both the sender and the current user
-      const senderChildrenQuerySnapshot = await getDocs(
-        query(
-          collection(db, "children"),
-          where("userId", "==", invitationData.userId)
-        )
-      );
-
+      // Update sharedUsers field for children belonging to the current user
       const currentUserChildrenQuerySnapshot = await getDocs(
         query(
           collection(db, "children"),
@@ -126,18 +108,6 @@ function ShareDataInvitation() {
         )
       );
 
-      // Update sharedUsers field for children belonging to the sender
-      senderChildrenQuerySnapshot.forEach(async (childDoc) => {
-        const childData = childDoc.data();
-        const updatedSharedUsers = Array.from(
-          new Set([...childData.sharedUsers, currentUser.uid])
-        );
-        await updateDoc(childDoc.ref, {
-          sharedUsers: updatedSharedUsers,
-        });
-      });
-
-      // Update sharedUsers field for children belonging to the current user
       currentUserChildrenQuerySnapshot.forEach(async (childDoc) => {
         const childData = childDoc.data();
         const updatedSharedUsers = Array.from(
