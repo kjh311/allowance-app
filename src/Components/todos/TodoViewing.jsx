@@ -192,6 +192,10 @@ function TodoViewing() {
     }
   };
 
+  if (todos.length === 0) {
+    return <div>No Todos</div>;
+  }
+
   return (
     <div className="todo-list-container">
       {todos.map((todo) => (
