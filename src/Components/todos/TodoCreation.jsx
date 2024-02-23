@@ -46,6 +46,12 @@ function TodoCreation() {
 
   const createTodo = async () => {
     try {
+      // Fetch sharingWith field from the current user's document
+      const currentUserDoc = await getDoc(doc(db, "users", currentUser.uid));
+      const currentUserData = currentUserDoc.data();
+      const sharingWithIds = currentUserData.sharingWith || [];
+
+      // Add sharingWith IDs to the sharedUsers field of the new todo
       const todoToAdd = {
         name: newTodoName,
         description: newTodoDescription,
@@ -54,7 +60,7 @@ function TodoCreation() {
         assignedTo: selectedAssignee,
         createdBy: currentUser.uid, // Add the createdBy field with the current user's ID
         completed: false, // Add the completed field and set it to false
-        sharedUsers: [currentUser.uid], // Add sharedUsers field with current user's ID
+        sharedUsers: [currentUser.uid, ...sharingWithIds], // Add current user and sharingWith IDs to sharedUsers
       };
 
       if (selectedAssignee) {
