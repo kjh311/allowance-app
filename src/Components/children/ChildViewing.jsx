@@ -6,6 +6,7 @@ import {
   onSnapshot,
   doc,
   updateDoc,
+  getDoc,
   deleteDoc,
   query,
   where,
@@ -82,12 +83,21 @@ function ChildViewing() {
       await deleteDoc(doc(db, "children", id));
       console.log(`Child with ID ${id} deleted successfully`);
 
-      // Remove the child's ID from the children array under the current user's document
+      // Get the current user's document
       const userRef = doc(db, "users", currentUser.uid);
-      await updateDoc(userRef, {
-        children: firestore.FieldValue.arrayRemove(id),
-      });
-      console.log(`Child ID ${id} removed from user's children array`);
+      const userDoc = await getDoc(userRef);
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        // Remove the child's ID from the children array
+        const updatedChildren = userData.children.filter(
+          (childId) => childId !== id
+        );
+        // Update the user document with the modified children array
+        await updateDoc(userRef, { children: updatedChildren });
+        console.log(`Child ID ${id} removed from user's children array`);
+      } else {
+        console.error(`User document with ID ${currentUser.uid} not found`);
+      }
     } catch (error) {
       console.error(`Error deleting child with ID ${id}:`, error);
     }
