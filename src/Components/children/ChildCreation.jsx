@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/authContext";
 
@@ -28,6 +28,26 @@ function ChildCreation() {
 
       // Include the sharedUsers field in the child document
       await setDoc(doc(db, "children", childToAdd.id), childToAdd);
+
+      // Fetch the user document
+      const userRef = doc(db, "users", currentUser.uid);
+      const userDoc = await getDoc(userRef);
+
+      if (!userDoc.exists()) {
+        // If the user document doesn't exist, create it with the children field
+        await setDoc(userRef, {
+          children: [childToAdd.id],
+        });
+      } else {
+        // If the user document exists, update it with the children field
+        await setDoc(
+          userRef,
+          {
+            children: [childToAdd.id],
+          },
+          { merge: true }
+        );
+      }
 
       setNewChildName("");
       setNewChildMoney("");
