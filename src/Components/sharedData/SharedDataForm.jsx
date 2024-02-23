@@ -6,6 +6,7 @@ import {
   where,
   query,
   updateDoc,
+  addDoc,
   doc,
   arrayUnion,
 } from "firebase/firestore";

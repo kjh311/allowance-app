@@ -13,6 +13,16 @@ const Header = () => {
   const { currentUser, userLoggedIn } = useAuth();
   const location = useLocation();
 
+  const renderDisplayName = () => {
+    if (currentUser && currentUser.displayName) {
+      return currentUser.displayName;
+    } else if (currentUser && currentUser.email) {
+      return currentUser.email;
+    } else {
+      return "User";
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await doSignOut();
@@ -30,11 +40,23 @@ const Header = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
+            <Nav.Link as={Link} to="/profile">
+              {renderDisplayName()}
+              {/* {currentUser.photoURL && (
+                <img
+                  src={currentUser.photoURL}
+                  alt="User Photo"
+                  style={{
+                    width: 30,
+                    height: 30,
+                    borderRadius: "50%",
+                    marginRight: 5,
+                  }}
+                />
+              )} */}
+            </Nav.Link>
             <Nav.Link as={Link} to="/todos">
               ToDos{" "}
-            </Nav.Link>{" "}
-            <Nav.Link as={Link} to="/profile">
-              Profile{" "}
             </Nav.Link>{" "}
             <Nav.Link as={Link} to="/children">
               Children{" "}
