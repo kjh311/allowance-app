@@ -66,10 +66,10 @@ function ShareDataInvitation() {
       // Update sharedUsers field for todos and children
       const batch = writeBatch(db);
 
-      // Update todos sharedUsers
+      // Update todos sharedUsers and invitation sender's sharedUsers
       const todosQuery = query(
         collection(db, "todos"),
-        where("userId", "==", currentUser.uid)
+        where("userId", "in", [currentUser.uid, invitationData.userId])
       );
       const todosSnapshot = await getDocs(todosQuery);
       todosSnapshot.forEach((doc) => {
@@ -78,10 +78,10 @@ function ShareDataInvitation() {
         });
       });
 
-      // Update children sharedUsers
+      // Update children sharedUsers and invitation sender's sharedUsers
       const childrenQuery = query(
         collection(db, "children"),
-        where("userId", "==", currentUser.uid)
+        where("userId", "in", [currentUser.uid, invitationData.userId])
       );
       const childrenSnapshot = await getDocs(childrenQuery);
       childrenSnapshot.forEach((doc) => {
