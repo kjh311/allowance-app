@@ -41,26 +41,6 @@ function ChildCreation() {
       // Include the sharedUsers field in the child document
       await setDoc(doc(db, "children", childToAdd.id), childToAdd);
 
-      // Fetch the user document
-      const userRef = doc(db, "users", currentUser.uid);
-      const userDoc = await getDoc(userRef);
-
-      if (!userDoc.exists()) {
-        // If the user document doesn't exist, create it with the children field
-        await setDoc(userRef, {
-          children: [childToAdd.id],
-        });
-      } else {
-        // If the user document exists, update it with the children field
-        await setDoc(
-          userRef,
-          {
-            children: [childToAdd.id],
-          },
-          { merge: true }
-        );
-      }
-
       setNewChildName("");
       setNewChildMoney("");
       setNewChildPoints("");

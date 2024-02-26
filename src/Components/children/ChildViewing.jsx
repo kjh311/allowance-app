@@ -82,22 +82,6 @@ function ChildViewing() {
       // Delete the child document
       await deleteDoc(doc(db, "children", id));
       console.log(`Child with ID ${id} deleted successfully`);
-
-      // Get the current user's document
-      const userRef = doc(db, "users", currentUser.uid);
-      const userDoc = await getDoc(userRef);
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        // Remove the child's ID from the children array
-        const updatedChildren = userData.children.filter(
-          (childId) => childId !== id
-        );
-        // Update the user document with the modified children array
-        await updateDoc(userRef, { children: updatedChildren });
-        console.log(`Child ID ${id} removed from user's children array`);
-      } else {
-        console.error(`User document with ID ${currentUser.uid} not found`);
-      }
     } catch (error) {
       console.error(`Error deleting child with ID ${id}:`, error);
     }
