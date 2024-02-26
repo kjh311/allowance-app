@@ -49,6 +49,11 @@ function TodoCreation() {
       // Determine the name to use for createdBy field
       const createdBy = currentUser.displayName || currentUser.email;
 
+      // Fetch the sharingWith field from the current user's document
+      const currentUserRef = doc(db, "users", currentUser.uid);
+      const currentUserDoc = await getDoc(currentUserRef);
+      const sharingWithIds = currentUserDoc.data().sharingWith || [];
+
       // Add sharingWith IDs to the sharedUsers field of the new todo
       const todoToAdd = {
         name: newTodoName,
@@ -57,7 +62,7 @@ function TodoCreation() {
         points: newTodoPoints === "" ? 0 : parseInt(newTodoPoints),
         assignedTo: selectedAssignee,
         completed: false, // Add the completed field and set it to false
-        sharedUsers: [currentUser.uid], // Add current user to sharedUsers
+        sharedUsers: [currentUser.uid, ...sharingWithIds], // Add current user and sharingWith IDs to sharedUsers
         userId: currentUser.uid, // Add userId field with current user's ID
         createdBy: createdBy, // Add createdBy field with user's name or email
       };
