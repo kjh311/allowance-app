@@ -56,18 +56,6 @@ function TodoViewing() {
 
   const deleteTodo = async (id) => {
     try {
-      // Fetch the user document
-      const userRef = doc(db, "users", currentUser.uid);
-      const userDoc = await getDoc(userRef);
-      const userData = userDoc.data();
-
-      // Remove the todo's ID from the todos field of the user
-      if (userData.todos && userData.todos.includes(id)) {
-        await updateDoc(userRef, {
-          todos: userData.todos.filter((todoId) => todoId !== id),
-        });
-      }
-
       // Delete the todo document
       await deleteDoc(doc(db, "todos", id));
       console.log(`Todo with ID ${id} deleted successfully`);
@@ -346,6 +334,7 @@ function TodoViewing() {
               <p>Completed: {todo.completed ? "Yes" : "No"}</p>{" "}
               {/* Display completed status */}
               <p>Assigned To: {getChildName(todo.assignedTo)}</p>
+              <p>Created By: {todo.createdBy}</p>
               <div className="flex">
                 <Button
                   onClick={() =>
