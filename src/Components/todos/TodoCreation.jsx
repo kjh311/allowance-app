@@ -46,17 +46,6 @@ function TodoCreation() {
 
   const createTodo = async () => {
     try {
-      // Fetch sharingWith field from the current user's document
-      const currentUserRef = doc(db, "users", currentUser.uid);
-      const currentUserDoc = await getDoc(currentUserRef);
-      const currentUserData = currentUserDoc.data();
-      const sharingWithIds = currentUserData.sharingWith || [];
-
-      // Ensure the todos field exists for the current user
-      if (!currentUserData.todos) {
-        await updateDoc(currentUserRef, { todos: [] });
-      }
-
       // Determine the name to use for createdBy field
       const createdBy = currentUser.displayName || currentUser.email;
 
@@ -68,20 +57,13 @@ function TodoCreation() {
         points: newTodoPoints === "" ? 0 : parseInt(newTodoPoints),
         assignedTo: selectedAssignee,
         completed: false, // Add the completed field and set it to false
-        sharedUsers: [currentUser.uid, ...sharingWithIds], // Add current user and sharingWith IDs to sharedUsers
+        sharedUsers: [currentUser.uid], // Add current user to sharedUsers
         userId: currentUser.uid, // Add userId field with current user's ID
         createdBy: createdBy, // Add createdBy field with user's name or email
       };
 
       if (selectedAssignee) {
         const newTodoRef = await addDoc(collection(db, "todos"), todoToAdd);
-        const newTodoId = newTodoRef.id;
-
-        // Update the todos field of the current user by adding the new todo ID
-        await updateDoc(currentUserRef, {
-          todos: arrayUnion(newTodoId),
-        });
-
         setNewTodoName("");
         setNewTodoDescription("");
         setNewTodoMoney("");
@@ -92,13 +74,6 @@ function TodoCreation() {
         // based on your application logic
       } else {
         const newTodoRef = await addDoc(collection(db, "todos"), todoToAdd);
-        const newTodoId = newTodoRef.id;
-
-        // Update the todos field of the current user by adding the new todo ID
-        await updateDoc(currentUserRef, {
-          todos: arrayUnion(newTodoId),
-        });
-
         setNewTodoName("");
         setNewTodoDescription("");
         setNewTodoMoney("");
