@@ -36,6 +36,7 @@ export const doSignInWithGoogle = async () => {
       await setDoc(userRef, {
         displayName: result.user.displayName,
         email: result.user.email,
+        sharingWith: result.user.sharingWith,
         // Add other user data as needed
       });
     }

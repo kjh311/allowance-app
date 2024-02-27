@@ -32,6 +32,7 @@ const UserProfile = () => {
       <br />
       <br />
       <ShareDataInvitation />
+
       <Row className="justify-content-center">
         <Col md={6} lg={4} xl={3}>
           <div className="bg-gray-800 rounded-lg p-4 mb-4">

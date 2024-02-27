@@ -12,6 +12,7 @@ import { useAuth } from "../../contexts/authContext";
 import { FaCheckCircle, FaEdit, FaTrash } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
 import "./Share.scss";
+// import SharingWithChecker from "../sharingWith/SharingWithChecker";
 
 function SharedViewing() {
   const { currentUser } = useAuth();
