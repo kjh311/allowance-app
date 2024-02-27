@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { useAuth } from "../../contexts/authContext";
 import { FaCheckCircle, FaEdit, FaTrash } from "react-icons/fa";
+import { IoIosCloseCircle } from "react-icons/io";
 import "./Share.scss";
 
 function SharedViewing() {
@@ -62,6 +63,16 @@ function SharedViewing() {
     }
   };
 
+  const getStatusIcon = (data) => {
+    if (data.asked && data.shareAllow) {
+      return <FaCheckCircle className="check-mark" />;
+    } else if (data.asked && !data.shareAllow) {
+      return <IoIosCloseCircle className="close-mark" />;
+    } else {
+      return "Pending";
+    }
+  };
+
   return (
     <Container>
       <h2>Those who are allowed to share your data:</h2>
@@ -70,6 +81,7 @@ function SharedViewing() {
           <tr>
             <th>#</th>
             <th>Email</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -85,17 +97,10 @@ function SharedViewing() {
                     onChange={(e) => setEditEmail(e.target.value)}
                   />
                 ) : (
-                  <>
-                    {data.email}
-                    {data.shareAllow && (
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <p>Sharing</p>
-                        <FaCheckCircle className="check-mark" />
-                      </div>
-                    )}
-                  </>
+                  <>{data.email}</>
                 )}
               </td>
+              <td>{getStatusIcon(data)}</td>
               <td>
                 {editMode && data.id === editId ? (
                   <Button variant="success" onClick={handleUpdate}>
