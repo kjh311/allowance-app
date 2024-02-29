@@ -6,6 +6,9 @@ import {
   doc,
   updateDoc,
   getDoc,
+  getDocs,
+  query,
+  where,
 } from "firebase/firestore";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Button } from "react-bootstrap";
@@ -15,6 +18,8 @@ import { db } from "../../firebase/firebase";
 function TodoViewing() {
   const [todos, setTodos] = useState([]);
   const [children, setChildren] = useState([]);
+  const [sharingWithIds, setSharingWithIds] = useState([]); // Define sharingWithIds state
+  const [sharingWithChildren, setSharingWithChildren] = useState([]); //
   const [editingTodoId, setEditingTodoId] = useState(null);
   const [editedTodoName, setEditedTodoName] = useState("");
   const [editedTodoDescription, setEditedTodoDescription] = useState("");
@@ -25,6 +30,54 @@ function TodoViewing() {
   const { currentUser } = useAuth();
 
   useEffect(() => {
+    const fetchSharingWithIds = async () => {
+      try {
+        // Fetch the sharingWith field for the current user
+        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+        const userData = userDoc.data();
+        const sharingWithIds = userData.sharingWith || [];
+
+        // Fetch displayName and children for each user in sharingWithIds
+        const sharingWithDataPromises = sharingWithIds.map(async (userId) => {
+          const userDoc = await getDoc(doc(db, "users", userId));
+          const userData = userDoc.data();
+
+          // Fetch children of the user
+          const childrenSnapshot = await getDocs(
+            query(collection(db, "children"), where("userId", "==", userId))
+          );
+          const childrenData = childrenSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+
+          return {
+            id: userId,
+            displayName: userData.displayName,
+            children: childrenData,
+          };
+        });
+
+        // Resolve all promises
+        const sharingWithData = await Promise.all(sharingWithDataPromises);
+
+        // Set state with id, displayName, and children
+        setSharingWithIds(sharingWithData);
+
+        // Extract and set children data separately
+        const allChildrenData = sharingWithData.reduce(
+          (acc, curr) => [...acc, ...curr.children],
+          []
+        );
+        setSharingWithChildren(allChildrenData);
+      } catch (error) {
+        console.error("Error fetching sharingWith ids:", error);
+      }
+    };
+
+    // Call the function when the component mounts or when currentUser changes
+    fetchSharingWithIds();
+
     const unsubscribeTodos = onSnapshot(collection(db, "todos"), (snapshot) => {
       const todosData = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -37,6 +90,7 @@ function TodoViewing() {
       setTodos(filteredTodos);
     });
 
+    // Fetch children
     const unsubscribeChildren = onSnapshot(
       collection(db, "children"),
       (snapshot) => {
@@ -141,6 +195,7 @@ function TodoViewing() {
       }
 
       // Update todo
+      // Update todo
       await updateDoc(todoRef, {
         name: editedTodoName,
         description: editedTodoDescription,
@@ -148,6 +203,7 @@ function TodoViewing() {
         points: parseInt(editedTodoPoints),
         assignedTo: assignedTo,
         completed: completed,
+        sharedUsers: todoData.sharedUsers, // Retain the existing sharedUsers array without modification
       });
 
       console.log(`Todo with ID ${editingTodoId} updated successfully`);
@@ -187,9 +243,7 @@ function TodoViewing() {
       );
       console.log("Selected Child:", selectedChild);
       // Check if the selected child belongs to the current user
-      if (selectedChild) {
-        setSelectedChildId(selectedChildId);
-      }
+      setSelectedChildId(selectedChildId);
     }
   };
 
@@ -296,12 +350,27 @@ function TodoViewing() {
                         {child.name}
                       </option>
                     ))}
-                  {/* Add an option for the current user */}
+
+                  {/*children of user's sharingWith */}
+                  {sharingWithChildren.map((child) => (
+                    <option key={child.id} value={child.id}>
+                      {child.name}
+                    </option>
+                  ))}
+
+                  <option disabled>Current User:</option>
                   {currentUser && (
                     <option key={currentUser.uid} value={currentUser.uid}>
                       {currentUser.displayName || "Current User"}
                     </option>
                   )}
+
+                  <option disabled>Sharing With:</option>
+                  {sharingWithIds.map((shareduser) => (
+                    <option key={shareduser.id} value={shareduser.id}>
+                      {shareduser.displayName}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>

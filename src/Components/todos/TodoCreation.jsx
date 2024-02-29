@@ -75,8 +75,9 @@ function TodoCreation() {
       let assignedTo = "";
       if (selectedAssignee) {
         assignedTo = selectedAssignee;
-      } else if (currentUser) {
-        assignedTo = currentUser.uid;
+      } else {
+        // If "Unassigned" is selected, keep assignedTo as an empty string
+        assignedTo = "";
       }
 
       // Ensure only user IDs are included in sharedUsers
