@@ -4,8 +4,6 @@ import {
   addDoc,
   query,
   getDoc,
-  updateDoc,
-  arrayUnion,
   getDocs,
   doc,
   where,
@@ -53,18 +51,6 @@ function TodoCreation() {
               id: userId,
               ...userDoc.data(),
             });
-
-            // Fetch children of each user listed under sharingWith
-            const userChildrenQuery = query(
-              collection(db, "children"),
-              where("userId", "==", userId)
-            );
-            const userChildrenSnapshot = await getDocs(userChildrenQuery);
-            const userChildrenData = userChildrenSnapshot.docs.map((doc) => ({
-              id: doc.id,
-              ...doc.data(),
-            }));
-            sharingWithUsersData.push(...userChildrenData);
           }
         }
 
@@ -81,27 +67,38 @@ function TodoCreation() {
     fetchChildrenAndSharingWithUsers();
   }, [currentUser]);
 
-  // Existing code...
-
   const createTodo = async () => {
     try {
-      // Determine the name to use for createdBy field
       const createdBy = currentUser.displayName || currentUser.email;
 
-      // Add selectedAssignee to the sharedUsers field of the new todo
+      // Determine assignedTo based on selectedAssignee
+      let assignedTo = "";
+      if (selectedAssignee) {
+        assignedTo = selectedAssignee;
+      } else if (currentUser) {
+        assignedTo = currentUser.uid;
+      }
+
+      // Ensure only user IDs are included in sharedUsers
+      const filteredSharingWithIds = sharingWithUsers
+        .filter((user) => user.id !== currentUser.uid)
+        .map((user) => user.id);
+
+      const sharedUsers = [currentUser.uid, ...filteredSharingWithIds];
+
       const todoToAdd = {
         name: newTodoName,
         description: newTodoDescription,
         money: newTodoMoney === "" ? 0 : parseFloat(newTodoMoney),
         points: newTodoPoints === "" ? 0 : parseInt(newTodoPoints),
-        assignedTo: selectedAssignee,
+        assignedTo: assignedTo,
         completed: false,
-        sharedUsers: [currentUser.uid, selectedAssignee],
+        sharedUsers: sharedUsers,
         userId: currentUser.uid,
         createdBy: createdBy,
       };
 
-      const newTodoRef = await addDoc(collection(db, "todos"), todoToAdd);
+      await addDoc(collection(db, "todos"), todoToAdd);
       setNewTodoName("");
       setNewTodoDescription("");
       setNewTodoMoney("");

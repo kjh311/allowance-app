@@ -23,36 +23,8 @@ function TodoViewing() {
   const [selectedChildId, setSelectedChildId] = useState("");
   const [completed, setCompleted] = useState(false); // New state for completed
   const { currentUser } = useAuth();
-  const [sharingWithIds, setSharingWithIds] = useState([]);
 
   useEffect(() => {
-    const fetchSharingWithIds = async () => {
-      try {
-        // Fetch the sharingWith field for the current user
-        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-        const userData = userDoc.data();
-        const sharingWithIds = userData.sharingWith || [];
-
-        // Fetch displayName for each user in sharingWithIds
-        const displayNamePromises = sharingWithIds.map(async (userId) => {
-          const userDoc = await getDoc(doc(db, "users", userId));
-          const userData = userDoc.data();
-          return { id: userId, displayName: userData.displayName };
-        });
-
-        // Resolve all promises
-        const displayNameData = await Promise.all(displayNamePromises);
-
-        // Set state with id and displayName
-        setSharingWithIds(displayNameData);
-      } catch (error) {
-        console.error("Error fetching sharingWith ids:", error);
-      }
-    };
-
-    // Call the function when the component mounts or when currentUser changes
-    fetchSharingWithIds();
-
     const unsubscribeTodos = onSnapshot(collection(db, "todos"), (snapshot) => {
       const todosData = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -324,11 +296,6 @@ function TodoViewing() {
                         {child.name}
                       </option>
                     ))}
-                  {sharingWithIds.map((child) => (
-                    <option key={child.id} value={child.id}>
-                      {child.displayName}
-                    </option>
-                  ))}
                   {/* Add an option for the current user */}
                   {currentUser && (
                     <option key={currentUser.uid} value={currentUser.uid}>
