@@ -53,24 +53,14 @@ function ShareDataInvitation() {
       const currentUserRef = doc(db, "users", currentUser.uid);
       const senderUserRef = doc(db, "users", invitationData.userId);
 
-      // Fetch sender's email
-      const senderUserDoc = await getDoc(senderUserRef);
-      const senderEmail = senderUserDoc.data().email;
-
-      // Update sharingWith field for current user with sender's user ID and email
+      // Update sharingWith field for current user with sender's user ID
       await updateDoc(currentUserRef, {
-        sharingWith: arrayUnion({
-          userId: invitationData.userId,
-          email: senderEmail,
-        }),
+        sharingWith: arrayUnion(invitationData.userId),
       });
 
-      // Update sharingWith field for invitation sender with current user's user ID and email
+      // Update sharingWith field for invitation sender with current user's user ID
       await updateDoc(senderUserRef, {
-        sharingWith: arrayUnion({
-          userId: currentUser.uid,
-          email: currentUser.email,
-        }),
+        sharingWith: arrayUnion(currentUser.uid),
       });
 
       // Update sharedUsers field for todos and children
