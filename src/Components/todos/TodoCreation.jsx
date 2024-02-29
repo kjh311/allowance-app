@@ -20,13 +20,15 @@ function TodoCreation() {
   const [newTodoPoints, setNewTodoPoints] = useState("");
   const [selectedAssignee, setSelectedAssignee] = useState("");
   const [children, setChildren] = useState([]);
+  const [sharingWithUsers, setSharingWithUsers] = useState([]);
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    const fetchChildren = async () => {
+    const fetchChildrenAndSharingWithUsers = async () => {
       try {
-        if (!currentUser) return; // If no user is logged in, return early
+        if (!currentUser) return;
 
+        // Fetch children of the current user
         const childrenQuery = query(
           collection(db, "children"),
           where("userId", "==", currentUser.uid)
@@ -36,55 +38,75 @@ function TodoCreation() {
           id: doc.id,
           ...doc.data(),
         }));
-        setChildren(childrenData);
+
+        // Fetch users listed under the sharingWith field
+        const currentUserRef = doc(db, "users", currentUser.uid);
+        const currentUserDoc = await getDoc(currentUserRef);
+        const sharingWithIds = currentUserDoc.data().sharingWith || [];
+        const sharingWithUsersData = [];
+
+        // Retrieve users listed under sharingWith field
+        for (const userId of sharingWithIds) {
+          const userDoc = await getDoc(doc(db, "users", userId));
+          if (userDoc.exists()) {
+            sharingWithUsersData.push({
+              id: userId,
+              ...userDoc.data(),
+            });
+
+            // Fetch children of each user listed under sharingWith
+            const userChildrenQuery = query(
+              collection(db, "children"),
+              where("userId", "==", userId)
+            );
+            const userChildrenSnapshot = await getDocs(userChildrenQuery);
+            const userChildrenData = userChildrenSnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            sharingWithUsersData.push(...userChildrenData);
+          }
+        }
+
+        // Combine children and users listed under sharingWith into a single array
+        const allChildren = [...childrenData, ...sharingWithUsersData];
+
+        setChildren(allChildren);
+        setSharingWithUsers(sharingWithUsersData);
       } catch (error) {
-        console.error("Error fetching children:", error);
+        console.error("Error fetching children and sharingWith users:", error);
       }
     };
-    fetchChildren();
-  }, [currentUser]); // Re-run effect when currentUser changes
+
+    fetchChildrenAndSharingWithUsers();
+  }, [currentUser]);
+
+  // Existing code...
 
   const createTodo = async () => {
     try {
       // Determine the name to use for createdBy field
       const createdBy = currentUser.displayName || currentUser.email;
 
-      // Fetch the sharingWith field from the current user's document
-      const currentUserRef = doc(db, "users", currentUser.uid);
-      const currentUserDoc = await getDoc(currentUserRef);
-      const sharingWithIds = currentUserDoc.data().sharingWith || [];
-
-      // Add sharingWith IDs to the sharedUsers field of the new todo
+      // Add selectedAssignee to the sharedUsers field of the new todo
       const todoToAdd = {
         name: newTodoName,
         description: newTodoDescription,
         money: newTodoMoney === "" ? 0 : parseFloat(newTodoMoney),
         points: newTodoPoints === "" ? 0 : parseInt(newTodoPoints),
         assignedTo: selectedAssignee,
-        completed: false, // Add the completed field and set it to false
-        sharedUsers: [currentUser.uid, ...sharingWithIds], // Add current user and sharingWith IDs to sharedUsers
-        userId: currentUser.uid, // Add userId field with current user's ID
-        createdBy: createdBy, // Add createdBy field with user's name or email
+        completed: false,
+        sharedUsers: [currentUser.uid, selectedAssignee],
+        userId: currentUser.uid,
+        createdBy: createdBy,
       };
 
-      if (selectedAssignee) {
-        const newTodoRef = await addDoc(collection(db, "todos"), todoToAdd);
-        setNewTodoName("");
-        setNewTodoDescription("");
-        setNewTodoMoney("");
-        setNewTodoPoints("");
-        console.log("Todo created successfully");
-
-        // Optionally, update the selectedAssignee's todo list here
-        // based on your application logic
-      } else {
-        const newTodoRef = await addDoc(collection(db, "todos"), todoToAdd);
-        setNewTodoName("");
-        setNewTodoDescription("");
-        setNewTodoMoney("");
-        setNewTodoPoints("");
-        console.log("Todo created successfully");
-      }
+      const newTodoRef = await addDoc(collection(db, "todos"), todoToAdd);
+      setNewTodoName("");
+      setNewTodoDescription("");
+      setNewTodoMoney("");
+      setNewTodoPoints("");
+      console.log("Todo created successfully");
     } catch (error) {
       console.error("Error creating todo:", error);
     }
@@ -138,7 +160,6 @@ function TodoCreation() {
           onChange={(event) => setNewTodoPoints(event.target.value)}
           className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
         />
-        {/* Dropdown menu */}
         <label htmlFor="assigneeDropdown" className="block mb-2">
           Assign to:
         </label>
@@ -149,11 +170,13 @@ function TodoCreation() {
           className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
         >
           <option value="">Unassigned</option>
-          {children.map((child) => (
-            <option key={child.id} value={child.id}>
-              {child.name}
-            </option>
-          ))}
+          {children
+            .filter((child) => child.name) // Filter out children without a valid name
+            .map((child) => (
+              <option key={child.id} value={child.id}>
+                {child.name}
+              </option>
+            ))}
           <optgroup label="Current User">
             {currentUser && (
               <option key={currentUser.uid} value={currentUser.uid}>
@@ -161,7 +184,17 @@ function TodoCreation() {
               </option>
             )}
           </optgroup>
+          <optgroup label="Sharing With">
+            {sharingWithUsers
+              .filter((user) => user.displayName || user.email) // Filter out users without a valid displayName or email
+              .map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.displayName || user.email}
+                </option>
+              ))}
+          </optgroup>
         </select>
+
         <br />
         <button
           onClick={createTodo}
