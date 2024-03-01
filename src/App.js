@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Im
 import "./Styles/App.scss";
 // import ColorCrud from "./components/ColorCrud";
 import Login from "./components/auth/login";
+import ChildLoginPage from "./components/auth/childLogin";
 import Register from "./components/auth/register";
 import Header from "./components/header";
 import StickyFooter from "./components/footer/StickyFooter";
@@ -29,6 +30,7 @@ function App() {
               {/* Define your routes inside Routes */}
               <Route path="/" element={<Profile />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/childLogin" element={<ChildLoginPage />} />
               <Route path="/register" element={<Register />} />
               <Route path="/home" element={<Home />} />
               <Route path="/todos" element={<ToDos />} />
