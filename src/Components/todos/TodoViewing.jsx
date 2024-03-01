@@ -18,31 +18,28 @@ import { db } from "../../firebase/firebase";
 function TodoViewing() {
   const [todos, setTodos] = useState([]);
   const [children, setChildren] = useState([]);
-  const [sharingWithIds, setSharingWithIds] = useState([]); // Define sharingWithIds state
-  const [sharingWithChildren, setSharingWithChildren] = useState([]); //
+  const [sharingWithIds, setSharingWithIds] = useState([]);
+  const [sharingWithChildren, setSharingWithChildren] = useState([]);
   const [editingTodoId, setEditingTodoId] = useState(null);
   const [editedTodoName, setEditedTodoName] = useState("");
   const [editedTodoDescription, setEditedTodoDescription] = useState("");
   const [editedTodoMoney, setEditedTodoMoney] = useState("");
   const [editedTodoPoints, setEditedTodoPoints] = useState("");
   const [selectedChildId, setSelectedChildId] = useState("");
-  const [completed, setCompleted] = useState(false); // New state for completed
+  const [completed, setCompleted] = useState(false);
   const { currentUser } = useAuth();
 
   useEffect(() => {
     const fetchSharingWithIds = async () => {
       try {
-        // Fetch the sharingWith field for the current user
         const userDoc = await getDoc(doc(db, "users", currentUser.uid));
         const userData = userDoc.data();
         const sharingWithIds = userData.sharingWith || [];
 
-        // Fetch displayName and children for each user in sharingWithIds
         const sharingWithDataPromises = sharingWithIds.map(async (userId) => {
           const userDoc = await getDoc(doc(db, "users", userId));
           const userData = userDoc.data();
 
-          // Fetch children of the user
           const childrenSnapshot = await getDocs(
             query(collection(db, "children"), where("userId", "==", userId))
           );
@@ -58,13 +55,10 @@ function TodoViewing() {
           };
         });
 
-        // Resolve all promises
         const sharingWithData = await Promise.all(sharingWithDataPromises);
 
-        // Set state with id, displayName, and children
         setSharingWithIds(sharingWithData);
 
-        // Extract and set children data separately
         const allChildrenData = sharingWithData.reduce(
           (acc, curr) => [...acc, ...curr.children],
           []
@@ -75,7 +69,6 @@ function TodoViewing() {
       }
     };
 
-    // Call the function when the component mounts or when currentUser changes
     fetchSharingWithIds();
 
     const unsubscribeTodos = onSnapshot(collection(db, "todos"), (snapshot) => {
@@ -83,14 +76,12 @@ function TodoViewing() {
         id: doc.id,
         ...doc.data(),
       }));
-      // Filter todos based on sharedUsers
       const filteredTodos = todosData.filter(
         (todo) => todo.sharedUsers && todo.sharedUsers.includes(currentUser.uid)
       );
       setTodos(filteredTodos);
     });
 
-    // Fetch children
     const unsubscribeChildren = onSnapshot(
       collection(db, "children"),
       (snapshot) => {
@@ -106,13 +97,17 @@ function TodoViewing() {
       unsubscribeTodos();
       unsubscribeChildren();
     };
-  }, [currentUser]); // Re-run effect when currentUser changes
+  }, [currentUser]);
 
   const deleteTodo = async (id) => {
     try {
-      // Delete the todo document
-      await deleteDoc(doc(db, "todos", id));
-      console.log(`Todo with ID ${id} deleted successfully`);
+      const confirmation = window.confirm(
+        "Are you sure you want to delete this todo?"
+      );
+      if (confirmation) {
+        await deleteDoc(doc(db, "todos", id));
+        console.log(`Todo with ID ${id} deleted successfully`);
+      }
     } catch (error) {
       console.error(`Error deleting todo with ID ${id}:`, error.message);
     }
@@ -133,7 +128,7 @@ function TodoViewing() {
     setEditedTodoMoney(money);
     setEditedTodoPoints(points);
     setSelectedChildId(assignedTo);
-    setCompleted(completed); // Set initial value for completed
+    setCompleted(completed);
   };
 
   const cancelEditing = () => {
@@ -143,20 +138,18 @@ function TodoViewing() {
     setEditedTodoMoney("");
     setEditedTodoPoints("");
     setSelectedChildId("");
-    setCompleted(false); // Reset completed to false
+    setCompleted(false);
   };
 
   const saveEditing = async () => {
     try {
-      let assignedTo = selectedChildId !== undefined ? selectedChildId : ""; // Use selectedChildId if defined, otherwise use an empty string (for Unassigned)
+      let assignedTo = selectedChildId !== undefined ? selectedChildId : "";
       const todoRef = doc(db, "todos", editingTodoId);
       const todoDoc = await getDoc(todoRef);
       const todoData = todoDoc.data();
 
-      // Check if the completion status changed
       if (completed !== todoData.completed) {
         if (completed && assignedTo) {
-          // Adding money if completed and assigned to a child
           const childRef = doc(db, "children", assignedTo);
           const childDoc = await getDoc(childRef);
           if (childDoc.exists()) {
@@ -174,7 +167,6 @@ function TodoViewing() {
             console.error(`Child with ID ${assignedTo} not found`);
           }
         } else if (!completed && todoData.assignedTo) {
-          // Subtracting money if not completed and assigned to a child
           const childRef = doc(db, "children", todoData.assignedTo);
           const childDoc = await getDoc(childRef);
           if (childDoc.exists()) {
@@ -194,12 +186,11 @@ function TodoViewing() {
         }
       }
 
-      // Update todo
       await updateDoc(todoRef, {
         name: editedTodoName,
         description: editedTodoDescription,
-        money: parseFloat(editedTodoMoney) || 0, // Parse as float or default to 0
-        points: parseInt(editedTodoPoints) || 0, // Parse as integer or default to 0
+        money: parseFloat(editedTodoMoney) || 0,
+        points: parseInt(editedTodoPoints) || 0,
         assignedTo: assignedTo,
         completed: completed,
         sharedUsers: todoData.sharedUsers,
@@ -219,12 +210,10 @@ function TodoViewing() {
     if (childId === currentUser.uid) {
       return currentUser.displayName || "Current User";
     } else {
-      // Check if the childId belongs to another user in the sharingWith list
       const sharedUser = sharingWithIds.find((user) => user.id === childId);
       if (sharedUser) {
         return sharedUser.displayName || "Sharing With User";
       } else {
-        // Find the child in the children list
         const child = children.find((child) => child.id === childId);
         return child ? child.name : "Unassigned";
       }
@@ -236,22 +225,18 @@ function TodoViewing() {
     console.log("Selected Child ID:", selectedChildId);
     console.log("Current User ID:", currentUser.uid);
 
-    // Check if the selected child is unassigned
     if (!selectedChildId) {
       setSelectedChildId("");
     } else if (selectedChildId === currentUser.uid) {
       setSelectedChildId(selectedChildId);
     } else {
-      // Find the selected child in the children list
       const selectedChild = children.find(
         (child) => child.id === selectedChildId
       );
       console.log("Selected Child:", selectedChild);
-      // Check if the selected child belongs to the current user
       if (selectedChild && selectedChild.userId === currentUser.uid) {
         setSelectedChildId(selectedChildId);
       } else {
-        // Check if the selected child belongs to a user in sharingWithIds
         const sharedUserChild = sharingWithChildren.find(
           (child) => child.id === selectedChildId
         );
@@ -259,7 +244,6 @@ function TodoViewing() {
         if (sharedUserChild) {
           setSelectedChildId(selectedChildId);
         } else {
-          // If not found, set selectedChildId to the user ID
           setSelectedChildId(selectedChildId);
         }
       }
@@ -276,7 +260,7 @@ function TodoViewing() {
         <div
           key={todo.id}
           className={`todo-item border border-gray-300 p-4 mb-4 rounded-md ${
-            todo.completed ? "completed-todo" : ""
+            todo.completed ? "bg-green-100" : ""
           }`}
         >
           {editingTodoId === todo.id ? (
@@ -287,12 +271,7 @@ function TodoViewing() {
                   type="text"
                   value={editedTodoName}
                   onChange={(e) => setEditedTodoName(e.target.value)}
-                  style={{
-                    marginBottom: "10px",
-                    border: "1px solid #ced4da",
-                    borderRadius: "4px",
-                    padding: "6px",
-                  }}
+                  className="input-style"
                 />
               </div>
               <div>
@@ -301,12 +280,7 @@ function TodoViewing() {
                   type="text"
                   value={editedTodoDescription}
                   onChange={(e) => setEditedTodoDescription(e.target.value)}
-                  style={{
-                    marginBottom: "10px",
-                    border: "1px solid #ced4da",
-                    borderRadius: "4px",
-                    padding: "6px",
-                  }}
+                  className="input-style"
                 />
               </div>
               <div>
@@ -315,12 +289,7 @@ function TodoViewing() {
                   type="text"
                   value={editedTodoMoney}
                   onChange={(e) => setEditedTodoMoney(e.target.value)}
-                  style={{
-                    marginBottom: "10px",
-                    border: "1px solid #ced4da",
-                    borderRadius: "4px",
-                    padding: "6px",
-                  }}
+                  className="input-style"
                 />
               </div>
               <div>
@@ -329,12 +298,7 @@ function TodoViewing() {
                   type="text"
                   value={editedTodoPoints}
                   onChange={(e) => setEditedTodoPoints(e.target.value)}
-                  style={{
-                    marginBottom: "10px",
-                    border: "1px solid #ced4da",
-                    borderRadius: "4px",
-                    padding: "6px",
-                  }}
+                  className="input-style"
                 />
               </div>
               <div>
@@ -342,12 +306,7 @@ function TodoViewing() {
                 <select
                   value={completed}
                   onChange={(e) => setCompleted(e.target.value === "true")}
-                  style={{
-                    marginBottom: "10px",
-                    border: "1px solid #ced4da",
-                    borderRadius: "4px",
-                    padding: "6px",
-                  }}
+                  className="input-style"
                 >
                   <option value="true">Yes</option>
                   <option value="false">No</option>
@@ -359,25 +318,23 @@ function TodoViewing() {
                   id="assigneeDropdown"
                   value={selectedChildId}
                   onChange={handleDropdownChange}
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
+                  className="input-style"
                 >
                   <option value="">Unassigned</option>
                   <optgroup label="Children:">
                     {children
-                      .filter((child) => child.userId === currentUser.uid) // Filter children based on userId
+                      .filter((child) => child.userId === currentUser.uid)
                       .map((child) => (
                         <option key={child.id} value={child.id}>
                           {child.name}
                         </option>
                       ))}
-                    {/*children of user's sharingWith */}
                     {sharingWithChildren.map((child) => (
                       <option key={child.id} value={child.id}>
                         {child.name}
                       </option>
                     ))}
                   </optgroup>
-
                   <optgroup label="Current User:">
                     {currentUser && (
                       <option key={currentUser.uid} value={currentUser.uid}>
@@ -385,7 +342,6 @@ function TodoViewing() {
                       </option>
                     )}
                   </optgroup>
-
                   <optgroup label="Sharing With:">
                     {sharingWithIds.map((shareduser) => (
                       <option key={shareduser.id} value={shareduser.id}>
@@ -396,22 +352,10 @@ function TodoViewing() {
                 </select>
               </div>
               <div>
-                <Button
-                  onClick={saveEditing}
-                  variant="primary"
-                  style={{
-                    marginRight: "5px",
-                    backgroundColor: "#007bff",
-                    borderColor: "#007bff",
-                  }}
-                >
+                <Button onClick={saveEditing} variant="primary">
                   Save
                 </Button>
-                <Button
-                  onClick={cancelEditing}
-                  variant="secondary"
-                  style={{ backgroundColor: "#6c757d", borderColor: "#6c757d" }}
-                >
+                <Button onClick={cancelEditing} variant="secondary">
                   Cancel
                 </Button>
               </div>
@@ -423,7 +367,6 @@ function TodoViewing() {
               {todo.money ? <p>Money: ${todo.money}</p> : null}
               {todo.points ? <p>Points: {todo.points}</p> : null}
               <p>Completed: {todo.completed ? "Yes" : "No"}</p>{" "}
-              {/* Display completed status */}
               <p>Assigned To: {getChildName(todo.assignedTo)}</p>
               <p>Created By: {todo.createdBy}</p>
               <div className="flex">
@@ -440,19 +383,10 @@ function TodoViewing() {
                     )
                   }
                   variant="primary"
-                  style={{
-                    marginRight: "5px",
-                    backgroundColor: "#007bff",
-                    borderColor: "#007bff",
-                  }}
                 >
                   <FaEdit className="mr-2" />
                 </Button>
-                <Button
-                  onClick={() => deleteTodo(todo.id)}
-                  variant="danger"
-                  style={{ backgroundColor: "#dc3545", borderColor: "#dc3545" }}
-                >
+                <Button onClick={() => deleteTodo(todo.id)} variant="danger">
                   <FaTrash className="mr-2" />
                 </Button>
               </div>

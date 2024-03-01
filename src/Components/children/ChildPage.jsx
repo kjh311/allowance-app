@@ -64,7 +64,12 @@ function ChildPage() {
   }
 
   return (
-    <div className="flex justify-center items-center flex-col h-screen">
+    <div className="flex justify-center items-center flex-col ">
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
       <Card className="relative max-w-md mx-auto md:max-w-2xl mt-6 min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-xl mt-16">
         <div className="px-6">
           <div className="flex flex-wrap justify-center">
@@ -80,6 +85,14 @@ function ChildPage() {
               </div>
             </div>
             <div className="w-full text-center mt-20">
+              <br />
+              <br />
+              <br />
+              <div className="text-center mt-2">
+                <h3 className="text-2xl text-slate-700 font-bold leading-normal mb-1">
+                  {child.name}
+                </h3>
+              </div>
               <div className="flex justify-center lg:pt-4 pt-8 pb-0">
                 <div className="p-3 text-center">
                   <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
@@ -96,22 +109,14 @@ function ChildPage() {
 
                 <div className="p-3 text-center">
                   <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
-                    564
+                    {child.loginPin}
                   </span>
-                  <span className="text-sm text-slate-400">Following</span>
+                  <span className="text-sm text-slate-400">Login Pin</span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="text-center mt-2">
-            <h3 className="text-2xl text-slate-700 font-bold leading-normal mb-1">
-              {child.name}
-            </h3>
-            {/* <div className="text-xs mt-0 mb-2 text-slate-400 font-bold uppercase">
-              <i className="fas fa-map-marker-alt mr-2 text-slate-400 opacity-75"></i>
-              Paris, France
-            </div> */}
-          </div>
+
           <div className="mt-6 py-6 border-t border-slate-200 text-center">
             <div className="flex flex-wrap justify-center">
               <div className="w-full px-4">
@@ -120,12 +125,17 @@ function ChildPage() {
                   Melbourne-raised, Brooklyn-based Nick Murphy writes, performs
                   and records all of his own music, giving it a warm.
                 </p> */}
+                <ChildTodoList childId={id} jsx="true" />
               </div>
             </div>
           </div>
         </div>
       </Card>
-      <ChildTodoList childId={id} jsx="true" />
+      {/* <ChildTodoList childId={id} jsx="true" /> */}
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   );
 }

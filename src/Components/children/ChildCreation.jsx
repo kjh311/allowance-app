@@ -17,7 +17,6 @@ function ChildCreation() {
       const points = newChildPoints === "" ? 0 : parseInt(newChildPoints);
       const createdBy = currentUser.displayName || currentUser.email;
 
-      // Generate a random PIN for the child (6 characters or fewer)
       const pin = generateRandomPin(6);
 
       const childToAdd = {
@@ -29,7 +28,7 @@ function ChildCreation() {
         createdBy: createdBy,
         photoURL: photoURL,
         sharedUsers: [currentUser.uid],
-        loginPin: pin, // Store the PIN directly
+        loginPin: pin,
       };
 
       const currentUserRef = doc(db, "users", currentUser.uid);
@@ -47,7 +46,6 @@ function ChildCreation() {
 
       console.log("Child created successfully");
 
-      // Log the generated PIN for reference
       console.log("Generated PIN:", pin);
 
       if (window.todoCreationUpdateChildren) {
@@ -58,7 +56,6 @@ function ChildCreation() {
     }
   };
 
-  // Function to generate a random PIN
   function generateRandomPin(length) {
     const digits = "0123456789";
     let pin = "";
@@ -72,9 +69,9 @@ function ChildCreation() {
   return (
     <Container>
       <Row className="justify-content-center">
-        <Col md={10}>
+        <Col md={6}>
           <div className="add-child-form rounded-lg border border-gray-300 p-4 mb-4">
-            <h1>Create new Child</h1>
+            <h1 className="mb-4">Create New Child</h1>
             <Form>
               <Form.Group controlId="childNameInput">
                 <Form.Label>Child Name:</Form.Label>
@@ -115,8 +112,7 @@ function ChildCreation() {
               <Button
                 variant="primary"
                 onClick={createChild}
-                style={{ marginTop: "10px" }}
-                className="custom-button btn-primary"
+                className="mt-3 w-100"
               >
                 Create Child
               </Button>
