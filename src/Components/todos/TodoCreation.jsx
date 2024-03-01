@@ -22,7 +22,7 @@ function TodoCreation() {
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    const fetchChildrenAndSharingWithUsers = async () => {
+    const fetchData = async () => {
       try {
         if (!currentUser) return;
 
@@ -43,28 +43,46 @@ function TodoCreation() {
         const sharingWithIds = currentUserDoc.data().sharingWith || [];
         const sharingWithUsersData = [];
 
-        // Retrieve users listed under sharingWith field
-        for (const userId of sharingWithIds) {
-          const userDoc = await getDoc(doc(db, "users", userId));
-          if (userDoc.exists()) {
+        // Loop through the users collection to find users with matching IDs
+        const usersQuerySnapshot = await getDocs(collection(db, "users"));
+        for (const userDoc of usersQuerySnapshot.docs) {
+          const userData = userDoc.data();
+          if (sharingWithIds.includes(userDoc.id)) {
+            // Fetch children data for the user
+            const userChildrenQuery = query(
+              collection(db, "children"),
+              where("userId", "==", userDoc.id)
+            );
+            const userChildrenSnapshot = await getDocs(userChildrenQuery);
+            const userChildrenData = userChildrenSnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+
+            // Add user with children to sharingWithUsersData
             sharingWithUsersData.push({
-              id: userId,
-              ...userDoc.data(),
+              id: userDoc.id,
+              displayName: userData.displayName,
+              email: userData.email,
+              children: userChildrenData,
             });
           }
         }
 
         // Combine children and users listed under sharingWith into a single array
-        const allChildren = [...childrenData, ...sharingWithUsersData];
+        const allChildren = [
+          ...childrenData,
+          ...sharingWithUsersData.flatMap((user) => user.children),
+        ];
 
         setChildren(allChildren);
         setSharingWithUsers(sharingWithUsersData);
       } catch (error) {
-        console.error("Error fetching children and sharingWith users:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchChildrenAndSharingWithUsers();
+    fetchData();
   }, [currentUser]);
 
   const createTodo = async () => {
@@ -169,7 +187,7 @@ function TodoCreation() {
         >
           <option value="">Unassigned</option>
           {children
-            .filter((child) => child.name) // Filter out children without a valid name
+            .filter((child) => child && child.name) // Filter out children without a valid name
             .map((child) => (
               <option key={child.id} value={child.id}>
                 {child.name}
@@ -183,13 +201,11 @@ function TodoCreation() {
             )}
           </optgroup>
           <optgroup label="Sharing With">
-            {sharingWithUsers
-              .filter((user) => user.displayName || user.email) // Filter out users without a valid displayName or email
-              .map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.displayName || user.email}
-                </option>
-              ))}
+            {sharingWithUsers.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.displayName || user.email}
+              </option>
+            ))}
           </optgroup>
         </select>
 
