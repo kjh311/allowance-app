@@ -1,16 +1,15 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
-import { Navbar, Nav, Button } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext";
 import { doSignOut } from "../../firebase/auth";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import { CiLogout, CiLogin } from "react-icons/ci";
+import { FaChild } from "react-icons/fa";
 import "./Header.scss";
-import { CiLogout } from "react-icons/ci";
-import { CiLogin } from "react-icons/ci";
 
 const Header = () => {
-  const { currentUser, userLoggedIn } = useAuth();
+  const { currentUser } = useAuth();
   const location = useLocation();
 
   const renderDisplayName = () => {
@@ -33,43 +32,35 @@ const Header = () => {
     }
   };
 
+  const userLoggedIn = currentUser !== null;
+
   return (
-    <Navbar expand="lg" className=" fixed-top navbar" bg="primary">
+    <Navbar expand="lg" className="fixed-top navbar" bg="primary">
       <Container>
         <Navbar.Brand className="brand">Allowance App</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link as={Link} to="/profile">
-              {renderDisplayName()}
-              {/* {currentUser.photoURL && (
-                <img
-                  src={currentUser.photoURL}
-                  alt="User Photo"
-                  style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: "50%",
-                    marginRight: 5,
-                  }}
-                />
-              )} */}
-            </Nav.Link>
-            <Nav.Link as={Link} to="/todos">
-              ToDos{" "}
-            </Nav.Link>{" "}
-            <Nav.Link as={Link} to="/children">
-              Children{" "}
-            </Nav.Link>
             {userLoggedIn ? (
-              <Nav.Link
-                onClick={handleLogout}
-                as={Link}
-                to="/"
-                className="d-flex align-items-center"
-              >
-                <span>Logout</span> <CiLogout className="ml-2" />
-              </Nav.Link>
+              <>
+                <Nav.Link as={Link} to="/profile">
+                  {renderDisplayName()}
+                </Nav.Link>
+                <Nav.Link as={Link} to="/todos">
+                  ToDos{" "}
+                </Nav.Link>{" "}
+                <Nav.Link as={Link} to="/children">
+                  Children{" "}
+                </Nav.Link>
+                <Nav.Link
+                  onClick={handleLogout}
+                  as={Link}
+                  to="/"
+                  className="d-flex align-items-center"
+                >
+                  <span>Logout</span> <CiLogout className="ml-2" />
+                </Nav.Link>
+              </>
             ) : (
               <>
                 {location.pathname !== "/login" && (
@@ -87,6 +78,16 @@ const Header = () => {
                   </Nav.Link>
                 )}
               </>
+            )}
+            {!userLoggedIn && location.pathname !== "/childLogin" && (
+              <Nav.Link
+                as={Link}
+                to="/childLogin"
+                className="d-flex align-items-center"
+              >
+                <span>Child Login</span>
+                <FaChild className="ml-2" />
+              </Nav.Link>
             )}
           </Nav>
         </Navbar.Collapse>

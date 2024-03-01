@@ -18,6 +18,7 @@ ICEBOX:
 -chores can be bumped up based on due date and may change color to indicate importance.
 -Chores will automatically be bumped up the chain based on their urgency or due date.
 -chores for adults, add list of chores and adults can pick which they'd like to accomplish
+-Set reaccuring allowance to auto add to the child's total
 
 NOTES:
 FIREBASE CONSOLE: https://console.firebase.google.com/u/0/
@@ -27,41 +28,4 @@ Github repo for authenticatino: https://github.com/Nitij/react-firebase-auth-boi
 YOUTUBE CRUD: https://www.youtube.com/watch?v=jCY6DH8F4oc&list=PLpPqplz6dKxUfvM22GXRvYA4s-mvJE0XF
 ADDING SASS STYLESHEET: https://create-react-app.dev/docs/adding-a-sass-stylesheet/
 
-temp firebase:
-rules_version = '2';
-2
-​
-3
-service cloud.firestore {
-4
-match /databases/{database}/documents {
-5
-​
-6
-// This rule allows anyone with your Firestore database reference to view, edit,
-7
-// and delete all data in your Firestore database. It is useful for getting
-8
-// started, but it is configured to expire after 30 days because it
-9
-// leaves your app open to attackers. At that time, all client
-10
-// requests to your Firestore database will be denied.
-11
-//
-12
-// Make sure to write security rules for your app before that time, or else
-13
-// all client requests to your Firestore database will be denied until you Update
-14
-// your rules
-15
-match /{document=\*\*} {
-16
-allow read, write: if request.time < timestamp.date(2024, 2, 16);
-17
-}
-18
-}
-19
-}
+DATABASE:
