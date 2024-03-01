@@ -2,36 +2,51 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { useAuth } from "../../contexts/authContext";
+import { useNavigate } from "react-router-dom";
 import ChildTodoList from "../children/ChildTodoList.jsx";
-import { useAuth } from "../../contexts/authContext"; // Import useAuth to get the current user
-import { useNavigate } from "react-router-dom"; // Import useNavigate instead of useHistory
 
 function ChildPage() {
   const { id } = useParams();
   const [child, setChild] = useState(null);
   const { currentUser } = useAuth();
-  const navigate = useNavigate(); // Use useNavigate hook
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchChildData = async () => {
       try {
-        console.log("Fetching child data...");
         const childDocRef = doc(db, "children", id);
         const docSnap = await getDoc(childDocRef);
         if (docSnap.exists()) {
           const childData = docSnap.data();
-          const childUserId = childData.userId; // Get the user ID associated with the child
-          // Check if the current user is authorized to view this child
-          if (currentUser && childUserId === currentUser.uid) {
-            setChild({ id: docSnap.id, ...childData });
+          const childUserId = childData.userId;
+
+          // Fetch the current user's document from Firestore
+          const userDocRef = doc(db, "users", currentUser.uid);
+          const userDocSnap = await getDoc(userDocRef);
+          if (userDocSnap.exists()) {
+            const userData = userDocSnap.data();
+            const sharingWith = userData.sharingWith || [];
+
+            // Check if the child belongs to the current user or a user in sharingWith
+            if (
+              childUserId === currentUser.uid ||
+              sharingWith.includes(childUserId)
+            ) {
+              setChild({ id: docSnap.id, ...childData });
+            } else {
+              console.log("Unauthorized access to child data:", id);
+              navigate("/unauthorized");
+            }
           } else {
-            console.log("Unauthorized access to child data:", id);
-            // Redirect the user to a different page or show an error message
-            navigate("/unauthorized");
+            console.log(
+              "User document not found for current user:",
+              currentUser.uid
+            );
+            navigate("/error");
           }
         } else {
           console.log("No such document found for ID:", id);
-          // Redirect the user to a different page or show an error message
           navigate("/notfound");
         }
       } catch (error) {
@@ -40,12 +55,7 @@ function ChildPage() {
     };
 
     fetchChildData();
-
-    // Cleanup function
-    return () => {
-      // Any cleanup code here
-    };
-  }, [id, currentUser, navigate]); // Re-run effect when ID, currentUser, or navigate changes
+  }, [id, currentUser, navigate]);
 
   if (!child) {
     console.log("Child data not yet loaded...");
