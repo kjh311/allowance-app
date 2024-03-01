@@ -156,37 +156,29 @@ function TodoViewing() {
       // Check if the completion status changed
       if (completed !== todoData.completed) {
         if (completed && assignedTo) {
-          // Adding money and points if completed and assigned to a child
+          // Adding money if completed and assigned to a child
           const childRef = doc(db, "children", assignedTo);
           const childDoc = await getDoc(childRef);
           if (childDoc.exists()) {
             const childData = childDoc.data();
             const updatedMoney = childData.money + parseFloat(editedTodoMoney);
-            const updatedPoints = childData.points + parseInt(editedTodoPoints);
-            await updateDoc(childRef, {
-              money: updatedMoney,
-              points: updatedPoints,
-            });
+            await updateDoc(childRef, { money: updatedMoney });
             console.log(
-              `Child with ID ${assignedTo} updated with money: ${updatedMoney} and points: ${updatedPoints}`
+              `Child with ID ${assignedTo} updated with money: ${updatedMoney}`
             );
           } else {
             console.error(`Child with ID ${assignedTo} not found`);
           }
         } else if (!completed && todoData.assignedTo) {
-          // Subtracting money and points if not completed and assigned to a child
+          // Subtracting money if not completed and assigned to a child
           const childRef = doc(db, "children", todoData.assignedTo);
           const childDoc = await getDoc(childRef);
           if (childDoc.exists()) {
             const childData = childDoc.data();
             const updatedMoney = childData.money - parseFloat(todoData.money);
-            const updatedPoints = childData.points - parseInt(todoData.points);
-            await updateDoc(childRef, {
-              money: updatedMoney,
-              points: updatedPoints,
-            });
+            await updateDoc(childRef, { money: updatedMoney });
             console.log(
-              `Child with ID ${todoData.assignedTo} updated with money: ${updatedMoney} and points: ${updatedPoints}`
+              `Child with ID ${todoData.assignedTo} updated with money: ${updatedMoney}`
             );
           } else {
             console.error(`Child with ID ${todoData.assignedTo} not found`);
@@ -198,7 +190,7 @@ function TodoViewing() {
       await updateDoc(todoRef, {
         name: editedTodoName,
         description: editedTodoDescription,
-        owed: parseFloat(editedTodoMoney) || 0, // Parse as float or default to 0
+        money: parseFloat(editedTodoMoney) || 0, // Parse as float or default to 0
         points: parseInt(editedTodoPoints) || 0, // Parse as integer or default to 0
         assignedTo: assignedTo,
         completed: completed,
