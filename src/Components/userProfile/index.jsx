@@ -3,7 +3,7 @@ import { useAuth } from "../../contexts/authContext";
 import { Container, Row, Col } from "react-bootstrap";
 import ChildCreation from "../children/ChildCreation.jsx";
 import UserTodosList from "../todos/UserTodosList.jsx";
-import ChildCounter from "../children/ChildCounter.jsx";
+// import ChildCounter from "../children/ChildCounter.jsx";
 import TodoCreation from "../todos/TodoCreation.jsx";
 import SharedData from "../sharedData/SharedDataForm.jsx";
 import SharedViewing from "../sharedData/SharedViewing.jsx";
@@ -82,9 +82,9 @@ const UserProfile = () => {
             childrenOptions={childrenOptions}
           />
         </Col>
-        <Col md={6} lg={4} xl={3}>
+        {/* <Col md={6} lg={4} xl={3}>
           <ChildCounter />
-        </Col>
+        </Col> */}
       </Row>
       <Row className="justify-content-center">
         <Col md={6} lg={4} xl={3}>

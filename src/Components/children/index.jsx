@@ -3,7 +3,7 @@ import { useAuth } from "../../contexts/authContext";
 import { Container, Row, Col } from "react-bootstrap";
 import ChildCreation from "../children/ChildCreation.jsx";
 import ChildViewing from "../children/ChildViewing.jsx";
-import ChildCounter from "../children/ChildCounter.jsx";
+// import ChildCounter from "../children/ChildCounter.jsx";
 // import "./Child.scss";
 
 const Children = () => {
@@ -30,11 +30,11 @@ const Children = () => {
           <ChildViewing />
         </Col>
       </Row>
-      <Row>
+      {/* <Row>
         <Col>
           <ChildCounter />
         </Col>
-      </Row>
+      </Row> */}
       <br />
       <br />
       <br />

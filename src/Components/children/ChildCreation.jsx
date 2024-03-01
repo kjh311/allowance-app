@@ -1,23 +1,28 @@
 import React, { useState } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
-import { collection, doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, collection, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/authContext";
+import { hash } from "bcryptjs";
 
 function ChildCreation() {
   const { currentUser } = useAuth();
   const [newChildName, setNewChildName] = useState("");
   const [newChildMoney, setNewChildMoney] = useState("");
   const [newChildPoints, setNewChildPoints] = useState("");
-  const [photoURL, setPhotoURL] = useState(""); // State for photo URL
+  const [photoURL, setPhotoURL] = useState("");
 
   const createChild = async () => {
     try {
       const money = newChildMoney === "" ? 0 : parseFloat(newChildMoney);
       const points = newChildPoints === "" ? 0 : parseInt(newChildPoints);
-
-      // Determine the name to use for createdBy field
       const createdBy = currentUser.displayName || currentUser.email;
+
+      // Generate a random password for the child (6 characters or fewer)
+      const password = generateRandomPassword(6);
+
+      // Hash the password before storing it in the database
+      const hashedPassword = await hash(password, 10);
 
       const childToAdd = {
         id: doc(collection(db, "children")).id,
@@ -25,20 +30,18 @@ function ChildCreation() {
         money: money,
         points: points,
         userId: currentUser.uid,
-        createdBy: createdBy, // Add createdBy field with user's name or email
+        createdBy: createdBy,
         photoURL: photoURL,
-        sharedUsers: [currentUser.uid], // Initialize sharedUsers array with current user's id
+        sharedUsers: [currentUser.uid],
+        loginPassword: hashedPassword, // Store hashed password
       };
 
-      // Fetch the sharingWith field from the current user's document
       const currentUserRef = doc(db, "users", currentUser.uid);
       const currentUserDoc = await getDoc(currentUserRef);
       const sharingWithIds = currentUserDoc.data().sharingWith || [];
 
-      // Include sharingWith IDs in the sharedUsers field of the new child
       childToAdd.sharedUsers.push(...sharingWithIds);
 
-      // Include the sharedUsers field in the child document
       await setDoc(doc(db, "children", childToAdd.id), childToAdd);
 
       setNewChildName("");
@@ -48,6 +51,9 @@ function ChildCreation() {
 
       console.log("Child created successfully");
 
+      // Log the generated password for reference
+      console.log("Generated password:", password);
+
       if (window.todoCreationUpdateChildren) {
         window.todoCreationUpdateChildren();
       }
@@ -55,6 +61,17 @@ function ChildCreation() {
       console.error("Error creating child:", error);
     }
   };
+
+  // Function to generate a random password
+  function generateRandomPassword(length) {
+    const characters = "abcdefghijklmnopqrstuvwxyz";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      password += characters[randomIndex];
+    }
+    return password;
+  }
 
   return (
     <Container>
@@ -73,14 +90,12 @@ function ChildCreation() {
                 />
               </Form.Group>
               <Form.Group controlId="childPhotoURLInput">
-                {" "}
-                {/* New form group for photo URL */}
                 <Form.Label>Photo URL (optional):</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter child's photo URL to display image"
+                  placeholder="Enter child's photo URL"
                   value={photoURL}
-                  onChange={(event) => setPhotoURL(event.target.value)} // Update the photo URL state
+                  onChange={(event) => setPhotoURL(event.target.value)}
                 />
               </Form.Group>
               <Form.Group controlId="childMoneyInput">

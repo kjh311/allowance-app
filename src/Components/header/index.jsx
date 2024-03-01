@@ -72,22 +72,22 @@ const Header = () => {
                     <span>Login</span> <CiLogin className="ml-2" />
                   </Nav.Link>
                 )}
+                {!userLoggedIn && location.pathname !== "/childLogin" && (
+                  <Nav.Link
+                    as={Link}
+                    to="/childLogin"
+                    className="d-flex align-items-center"
+                  >
+                    <span>Child Login</span>
+                    <FaChild className="ml-2" />
+                  </Nav.Link>
+                )}
                 {location.pathname !== "/register" && (
                   <Nav.Link as={Link} to="/register">
                     Register New Account
                   </Nav.Link>
                 )}
               </>
-            )}
-            {!userLoggedIn && location.pathname !== "/childLogin" && (
-              <Nav.Link
-                as={Link}
-                to="/childLogin"
-                className="d-flex align-items-center"
-              >
-                <span>Child Login</span>
-                <FaChild className="ml-2" />
-              </Nav.Link>
             )}
           </Nav>
         </Navbar.Collapse>
