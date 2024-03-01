@@ -162,9 +162,13 @@ function TodoViewing() {
           if (childDoc.exists()) {
             const childData = childDoc.data();
             const updatedMoney = childData.money + parseFloat(editedTodoMoney);
-            await updateDoc(childRef, { money: updatedMoney });
+            const updatedPoints = childData.points + parseInt(editedTodoPoints);
+            await Promise.all([
+              updateDoc(childRef, { money: updatedMoney }),
+              updateDoc(childRef, { points: updatedPoints }),
+            ]);
             console.log(
-              `Child with ID ${assignedTo} updated with money: ${updatedMoney}`
+              `Child with ID ${assignedTo} updated with money: ${updatedMoney} and points: ${updatedPoints}`
             );
           } else {
             console.error(`Child with ID ${assignedTo} not found`);
@@ -176,9 +180,13 @@ function TodoViewing() {
           if (childDoc.exists()) {
             const childData = childDoc.data();
             const updatedMoney = childData.money - parseFloat(todoData.money);
-            await updateDoc(childRef, { money: updatedMoney });
+            const updatedPoints = childData.points - parseInt(todoData.points);
+            await Promise.all([
+              updateDoc(childRef, { money: updatedMoney }),
+              updateDoc(childRef, { points: updatedPoints }),
+            ]);
             console.log(
-              `Child with ID ${todoData.assignedTo} updated with money: ${updatedMoney}`
+              `Child with ID ${todoData.assignedTo} updated with money: ${updatedMoney} and points: ${updatedPoints}`
             );
           } else {
             console.error(`Child with ID ${todoData.assignedTo} not found`);
