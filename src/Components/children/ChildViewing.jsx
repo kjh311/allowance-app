@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Button, Form, Card } from "react-bootstrap";
+import { Container, Button, Form } from "react-bootstrap";
 import { db } from "../../firebase/firebase";
 import {
   collection,
@@ -95,79 +95,71 @@ function ChildViewing() {
   return (
     <Container>
       {children.map((child) => (
-        <Card
+        <div
           key={child.id}
-          className="border border-gray-300 mb-4 d-flex align-items-center flex-column"
+          className="bg-white rounded-lg shadow-lg mb-6 p-4 w-full md:max-w-md lg:max-w-2xl mx-auto"
         >
-          <Card.Body className="d-flex flex-column align-items-center justify-content-center">
-            <Card.Title className="text-center">{child.name}</Card.Title>
-            {child.photoURL ? (
+          <div className="flex flex-col justify-center items-center">
+            <h2 className="text-xl font-semibold mb-2">{child.name}</h2>
+            {child.photoURL && (
               <img
-                className="mx-auto rounded-full w-36"
                 src={child.photoURL}
                 alt="child avatar"
+                className="rounded-full w-36"
               />
-            ) : null}
-            <Card.Text className="text-center">Owed: ${child.money}</Card.Text>
-            <Card.Text className="text-center">
-              Points: {child.points}
-            </Card.Text>
-
-            <Card.Text className="text-center">
-              Todos: {child.todosCount}
-            </Card.Text>
-            <Card.Text className="text-center">
+            )}
+            <p className="text-gray-600 mt-2">Owed: ${child.money}</p>
+            <p className="text-gray-600">Points: {child.points}</p>
+            <p className="text-gray-600">Todos: {child.todosCount}</p>
+            <p className="text-gray-600">
               Login Pin: {decryptedPasswords[child.id]}
-            </Card.Text>
-            <Link to={`/child/${child.id}`} className="btn btn-primary">
+            </p>
+            <Link
+              to={`/child/${child.id}`}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded mt-4 inline-block"
+            >
               View Details
             </Link>
-          </Card.Body>
-          <Card.Footer className="d-flex flex-column align-items-center justify-content-center">
+          </div>
+          <div className="flex justify-center mt-4">
             {editingChildId === child.id ? (
-              <Form className="d-flex flex-column">
-                <Form.Label>Child's Name:</Form.Label>
-                <Form.Group controlId="editChildName" className="mb-2">
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter child's name"
-                    value={editChildName}
-                    onChange={(event) => setEditChildName(event.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group controlId="editChildOwed" className="mb-2">
-                  <Form.Label>Money Owed:</Form.Label>
-                  <Form.Control
-                    type="number"
-                    placeholder="Enter amount owed"
-                    value={editChildOwed}
-                    onChange={(event) => setEditChildOwed(event.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group controlId="editChildPoints" className="mb-2">
-                  <Form.Label>Points:</Form.Label>
-                  <Form.Control
-                    type="number"
-                    placeholder="Enter points"
-                    value={editChildPoints}
-                    onChange={(event) => setEditChildPoints(event.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group controlId="editChildPhotoURL" className="mb-2">
-                  <Form.Label>Photo URL:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter child's photo URL"
-                    value={editChildPhotoURL}
-                    onChange={(event) =>
-                      setEditChildPhotoURL(event.target.value)
-                    }
-                  />
-                </Form.Group>
+              <Form className="flex flex-col items-center">
+                <Form.Label className="mb-2">Child's Name:</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter child's name"
+                  value={editChildName}
+                  onChange={(event) => setEditChildName(event.target.value)}
+                  className="mb-2 border border-gray-300 rounded-md px-3 py-2"
+                />
+                <Form.Label className="mb-2">Money Owed:</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="Enter amount owed"
+                  value={editChildOwed}
+                  onChange={(event) => setEditChildOwed(event.target.value)}
+                  className="mb-2 border border-gray-300 rounded-md px-3 py-2"
+                />
+                <Form.Label className="mb-2">Points:</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="Enter points"
+                  value={editChildPoints}
+                  onChange={(event) => setEditChildPoints(event.target.value)}
+                  className="mb-2 border border-gray-300 rounded-md px-3 py-2"
+                />
+                <Form.Label className="mb-2">Photo URL:</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter child's photo URL"
+                  value={editChildPhotoURL}
+                  onChange={(event) => setEditChildPhotoURL(event.target.value)}
+                  className="mb-2 border border-gray-300 rounded-md px-3 py-2"
+                />
                 <Button
                   variant="success"
                   onClick={() => submitEdit(child.id)}
-                  className="mb-2 btn-success"
+                  className="mb-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded"
                 >
                   <FaEdit className="mr-2" />
                   Submit
@@ -175,13 +167,13 @@ function ChildViewing() {
                 <Button
                   variant="secondary"
                   onClick={cancelEdit}
-                  className="btn-secondary"
+                  className="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded"
                 >
                   Cancel
                 </Button>
               </Form>
             ) : (
-              <div className="d-flex flex-column align-items-center">
+              <div className="flex">
                 <Button
                   variant="primary"
                   onClick={() =>
@@ -193,21 +185,21 @@ function ChildViewing() {
                       child.photoURL
                     )
                   }
-                  className="mb-2 custom-button"
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded mr-2"
                 >
                   <FaEdit />
                 </Button>
                 <Button
                   variant="danger"
                   onClick={() => deleteChild(child.id)}
-                  className="mb-2 custom-button"
+                  className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded"
                 >
                   <FaTrash />
                 </Button>
               </div>
             )}
-          </Card.Footer>
-        </Card>
+          </div>
+        </div>
       ))}
     </Container>
   );

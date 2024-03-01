@@ -83,15 +83,15 @@ function ChildPage() {
               <div className="flex justify-center lg:pt-4 pt-8 pb-0">
                 <div className="p-3 text-center">
                   <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
-                    {child.points}
-                  </span>
-                  <span className="text-sm text-slate-400">Points</span>
-                </div>
-                <div className="p-3 text-center">
-                  <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
                     ${child.money}
                   </span>
                   <span className="text-sm text-slate-400">Money</span>
+                </div>
+                <div className="p-3 text-center">
+                  <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
+                    {child.points}
+                  </span>
+                  <span className="text-sm text-slate-400">Points</span>
                 </div>
 
                 <div className="p-3 text-center">

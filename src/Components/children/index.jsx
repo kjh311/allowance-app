@@ -16,9 +16,7 @@ const Children = () => {
       <br />
       <br />
       <Row>
-        <Col>
-          <h2>Children</h2>
-        </Col>
+        <Col>{/* <h2>Children</h2> */}</Col>
       </Row>
       <Row>
         <Col>
