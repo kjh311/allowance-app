@@ -3,7 +3,6 @@ import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { doc, collection, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/authContext";
-import { hash } from "bcryptjs";
 
 function ChildCreation() {
   const { currentUser } = useAuth();
@@ -18,11 +17,8 @@ function ChildCreation() {
       const points = newChildPoints === "" ? 0 : parseInt(newChildPoints);
       const createdBy = currentUser.displayName || currentUser.email;
 
-      // Generate a random password for the child (6 characters or fewer)
-      const password = generateRandomPassword(6);
-
-      // Hash the password before storing it in the database
-      const hashedPassword = await hash(password, 10);
+      // Generate a random PIN for the child (6 characters or fewer)
+      const pin = generateRandomPin(6);
 
       const childToAdd = {
         id: doc(collection(db, "children")).id,
@@ -33,7 +29,7 @@ function ChildCreation() {
         createdBy: createdBy,
         photoURL: photoURL,
         sharedUsers: [currentUser.uid],
-        loginPassword: hashedPassword, // Store hashed password
+        loginPin: pin, // Store the PIN directly
       };
 
       const currentUserRef = doc(db, "users", currentUser.uid);
@@ -51,8 +47,8 @@ function ChildCreation() {
 
       console.log("Child created successfully");
 
-      // Log the generated password for reference
-      console.log("Generated password:", password);
+      // Log the generated PIN for reference
+      console.log("Generated PIN:", pin);
 
       if (window.todoCreationUpdateChildren) {
         window.todoCreationUpdateChildren();
@@ -62,15 +58,15 @@ function ChildCreation() {
     }
   };
 
-  // Function to generate a random password
-  function generateRandomPassword(length) {
-    const characters = "abcdefghijklmnopqrstuvwxyz";
-    let password = "";
+  // Function to generate a random PIN
+  function generateRandomPin(length) {
+    const digits = "0123456789";
+    let pin = "";
     for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      password += characters[randomIndex];
+      const randomIndex = Math.floor(Math.random() * digits.length);
+      pin += digits[randomIndex];
     }
-    return password;
+    return pin;
   }
 
   return (

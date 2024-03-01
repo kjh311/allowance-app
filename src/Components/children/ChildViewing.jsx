@@ -5,9 +5,9 @@ import {
   collection,
   onSnapshot,
   doc,
-  updateDoc,
   getDoc,
   deleteDoc,
+  updateDoc,
   query,
   where,
   getDocs,
@@ -24,6 +24,7 @@ function ChildViewing() {
   const [editChildOwed, setEditChildOwed] = useState("");
   const [editChildPoints, setEditChildPoints] = useState("");
   const [editChildPhotoURL, setEditChildPhotoURL] = useState("");
+  const [decryptedPasswords, setDecryptedPasswords] = useState({});
 
   useEffect(() => {
     console.log("Reading children data from database...");
@@ -34,8 +35,11 @@ function ChildViewing() {
     );
     const unsubscribe = onSnapshot(q, async (querySnapshot) => {
       const loadedChildren = [];
+      const decryptedPasswordsCopy = { ...decryptedPasswords };
       for (const doc of querySnapshot.docs) {
         const childData = doc.data();
+        // No need to decrypt PIN, just assign it
+        decryptedPasswordsCopy[doc.id] = childData.loginPin;
         // Retrieve todos associated with this child
         const todosQuerySnapshot = await getDocs(
           query(collection(db, "todos"), where("assignedTo", "==", doc.id))
@@ -44,6 +48,7 @@ function ChildViewing() {
         loadedChildren.push({ id: doc.id, ...childData, todosCount });
       }
       setChildren(loadedChildren);
+      setDecryptedPasswords(decryptedPasswordsCopy);
     });
 
     return () => unsubscribe();
@@ -95,6 +100,7 @@ function ChildViewing() {
           className="border border-gray-300 mb-4 d-flex align-items-center flex-column"
         >
           <Card.Body className="d-flex flex-column align-items-center justify-content-center">
+            <Card.Title className="text-center">{child.name}</Card.Title>
             {child.photoURL ? (
               <img
                 className="mx-auto rounded-full w-36"
@@ -102,13 +108,16 @@ function ChildViewing() {
                 alt="child avatar"
               />
             ) : null}
-            <Card.Title className="text-center">Name: {child.name}</Card.Title>
             <Card.Text className="text-center">Owed: ${child.money}</Card.Text>
             <Card.Text className="text-center">
               Points: {child.points}
             </Card.Text>
+
             <Card.Text className="text-center">
               Todos: {child.todosCount}
+            </Card.Text>
+            <Card.Text className="text-center">
+              Login Pin: {decryptedPasswords[child.id]}
             </Card.Text>
             <Link to={`/child/${child.id}`} className="btn btn-primary">
               View Details
@@ -116,7 +125,8 @@ function ChildViewing() {
           </Card.Body>
           <Card.Footer className="d-flex flex-column align-items-center justify-content-center">
             {editingChildId === child.id ? (
-              <Form className="d-flex flex-column align-items-center">
+              <Form className="d-flex flex-column">
+                <Form.Label>Child's Name:</Form.Label>
                 <Form.Group controlId="editChildName" className="mb-2">
                   <Form.Control
                     type="text"
@@ -126,6 +136,7 @@ function ChildViewing() {
                   />
                 </Form.Group>
                 <Form.Group controlId="editChildOwed" className="mb-2">
+                  <Form.Label>Money Owed:</Form.Label>
                   <Form.Control
                     type="number"
                     placeholder="Enter amount owed"
@@ -134,6 +145,7 @@ function ChildViewing() {
                   />
                 </Form.Group>
                 <Form.Group controlId="editChildPoints" className="mb-2">
+                  <Form.Label>Points:</Form.Label>
                   <Form.Control
                     type="number"
                     placeholder="Enter points"
