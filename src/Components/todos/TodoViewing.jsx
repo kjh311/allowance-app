@@ -362,34 +362,37 @@ function TodoViewing() {
                   className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
                 >
                   <option value="">Unassigned</option>
-                  {children
-                    .filter((child) => child.userId === currentUser.uid) // Filter children based on userId
-                    .map((child) => (
+                  <optgroup label="Children:">
+                    {children
+                      .filter((child) => child.userId === currentUser.uid) // Filter children based on userId
+                      .map((child) => (
+                        <option key={child.id} value={child.id}>
+                          {child.name}
+                        </option>
+                      ))}
+                    {/*children of user's sharingWith */}
+                    {sharingWithChildren.map((child) => (
                       <option key={child.id} value={child.id}>
                         {child.name}
                       </option>
                     ))}
+                  </optgroup>
 
-                  {/*children of user's sharingWith */}
-                  {sharingWithChildren.map((child) => (
-                    <option key={child.id} value={child.id}>
-                      {child.name}
-                    </option>
-                  ))}
+                  <optgroup label="Current User:">
+                    {currentUser && (
+                      <option key={currentUser.uid} value={currentUser.uid}>
+                        {currentUser.displayName || "Current User"}
+                      </option>
+                    )}
+                  </optgroup>
 
-                  <option disabled>Current User:</option>
-                  {currentUser && (
-                    <option key={currentUser.uid} value={currentUser.uid}>
-                      {currentUser.displayName || "Current User"}
-                    </option>
-                  )}
-
-                  <option disabled>Sharing With:</option>
-                  {sharingWithIds.map((shareduser) => (
-                    <option key={shareduser.id} value={shareduser.id}>
-                      {shareduser.displayName}
-                    </option>
-                  ))}
+                  <optgroup label="Sharing With:">
+                    {sharingWithIds.map((shareduser) => (
+                      <option key={shareduser.id} value={shareduser.id}>
+                        {shareduser.displayName}
+                      </option>
+                    ))}
+                  </optgroup>
                 </select>
               </div>
               <div>

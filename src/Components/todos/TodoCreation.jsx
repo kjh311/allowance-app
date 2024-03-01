@@ -186,13 +186,15 @@ function TodoCreation() {
           className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
         >
           <option value="">Unassigned</option>
-          {children
-            .filter((child) => child && child.name) // Filter out children without a valid name
-            .map((child) => (
-              <option key={child.id} value={child.id}>
-                {child.name}
-              </option>
-            ))}
+          <optgroup label="Children">
+            {children
+              .filter((child) => child && child.name) // Filter out children without a valid name
+              .map((child) => (
+                <option key={child.id} value={child.id}>
+                  {child.name}
+                </option>
+              ))}
+          </optgroup>
           <optgroup label="Current User">
             {currentUser && (
               <option key={currentUser.uid} value={currentUser.uid}>
