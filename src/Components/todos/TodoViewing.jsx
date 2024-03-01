@@ -195,15 +195,14 @@ function TodoViewing() {
       }
 
       // Update todo
-      // Update todo
       await updateDoc(todoRef, {
         name: editedTodoName,
         description: editedTodoDescription,
-        owed: parseFloat(editedTodoMoney),
-        points: parseInt(editedTodoPoints),
+        owed: parseFloat(editedTodoMoney) || 0, // Parse as float or default to 0
+        points: parseInt(editedTodoPoints) || 0, // Parse as integer or default to 0
         assignedTo: assignedTo,
         completed: completed,
-        sharedUsers: todoData.sharedUsers, // Retain the existing sharedUsers array without modification
+        sharedUsers: todoData.sharedUsers,
       });
 
       console.log(`Todo with ID ${editingTodoId} updated successfully`);
@@ -220,8 +219,15 @@ function TodoViewing() {
     if (childId === currentUser.uid) {
       return currentUser.displayName || "Current User";
     } else {
-      const child = children.find((child) => child.id === childId);
-      return child ? child.name : "Unassigned";
+      // Check if the childId belongs to another user in the sharingWith list
+      const sharedUser = sharingWithIds.find((user) => user.id === childId);
+      if (sharedUser) {
+        return sharedUser.displayName || "Sharing With User";
+      } else {
+        // Find the child in the children list
+        const child = children.find((child) => child.id === childId);
+        return child ? child.name : "Unassigned";
+      }
     }
   };
 
@@ -238,12 +244,25 @@ function TodoViewing() {
     } else {
       // Find the selected child in the children list
       const selectedChild = children.find(
-        (child) =>
-          child.userId === currentUser.uid && child.id === selectedChildId
+        (child) => child.id === selectedChildId
       );
       console.log("Selected Child:", selectedChild);
       // Check if the selected child belongs to the current user
-      setSelectedChildId(selectedChildId);
+      if (selectedChild && selectedChild.userId === currentUser.uid) {
+        setSelectedChildId(selectedChildId);
+      } else {
+        // Check if the selected child belongs to a user in sharingWithIds
+        const sharedUserChild = sharingWithChildren.find(
+          (child) => child.id === selectedChildId
+        );
+        console.log("Shared User Child:", sharedUserChild);
+        if (sharedUserChild) {
+          setSelectedChildId(selectedChildId);
+        } else {
+          // If not found, set selectedChildId to the user ID
+          setSelectedChildId(selectedChildId);
+        }
+      }
     }
   };
 
