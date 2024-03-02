@@ -67,60 +67,56 @@ function ChildCreation() {
   }
 
   return (
-    <Container>
-      <Row className="justify-content-center">
-        <Col md={6}>
-          <div className="add-child-form rounded-lg border border-gray-300 p-4 mb-4">
-            <h1 className="mb-4">Create New Child</h1>
-            <Form>
-              <Form.Group controlId="childNameInput">
-                <Form.Label>Child Name:</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter child's name"
-                  value={newChildName}
-                  onChange={(event) => setNewChildName(event.target.value)}
-                />
-              </Form.Group>
-              <Form.Group controlId="childPhotoURLInput">
-                <Form.Label>Photo URL (optional):</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter child's photo URL"
-                  value={photoURL}
-                  onChange={(event) => setPhotoURL(event.target.value)}
-                />
-              </Form.Group>
-              <Form.Group controlId="childMoneyInput">
-                <Form.Label>Money:</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter amount of money"
-                  value={newChildMoney}
-                  onChange={(event) => setNewChildMoney(event.target.value)}
-                />
-              </Form.Group>
-              <Form.Group controlId="childPointsInput">
-                <Form.Label>Points:</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter points"
-                  value={newChildPoints}
-                  onChange={(event) => setNewChildPoints(event.target.value)}
-                />
-              </Form.Group>
-              <Button
-                variant="primary"
-                onClick={createChild}
-                className="mt-3 w-100"
-              >
-                Create Child
-              </Button>
-            </Form>
-          </div>
-        </Col>
-      </Row>
-    </Container>
+    // <Container>
+    // <Row className="justify-content-center">
+    // <Col md={8}>
+    <div className="add-child-form rounded-lg border border-gray-300 p-4 mb-4">
+      <h1 className="mb-4">Create New Child</h1>
+      <Form>
+        <Form.Group controlId="childNameInput">
+          <Form.Label>Child Name:</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter child's name"
+            value={newChildName}
+            onChange={(event) => setNewChildName(event.target.value)}
+          />
+        </Form.Group>
+        <Form.Group controlId="childPhotoURLInput">
+          <Form.Label>Photo URL (optional):</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter child's photo URL"
+            value={photoURL}
+            onChange={(event) => setPhotoURL(event.target.value)}
+          />
+        </Form.Group>
+        <Form.Group controlId="childMoneyInput">
+          <Form.Label>Money:</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter amount of money"
+            value={newChildMoney}
+            onChange={(event) => setNewChildMoney(event.target.value)}
+          />
+        </Form.Group>
+        <Form.Group controlId="childPointsInput">
+          <Form.Label>Points:</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter points"
+            value={newChildPoints}
+            onChange={(event) => setNewChildPoints(event.target.value)}
+          />
+        </Form.Group>
+        <Button variant="primary" onClick={createChild} className="mt-3 w-100">
+          Create Child
+        </Button>
+      </Form>
+    </div>
+    //  </Col>
+    // </Row>
+    // </Container>
   );
 }
 

@@ -84,11 +84,15 @@ function ChildViewing() {
 
   const deleteChild = async (id) => {
     try {
-      // Delete the child document
-      await deleteDoc(doc(db, "children", id));
-      console.log(`Child with ID ${id} deleted successfully`);
+      const confirmation = window.confirm(
+        "Are you sure you want to delete this Child?"
+      );
+      if (confirmation) {
+        await deleteDoc(doc(db, "children", id));
+        console.log(`Child with ID ${id} deleted successfully`);
+      }
     } catch (error) {
-      console.error(`Error deleting child with ID ${id}:`, error);
+      console.error(`Error deleting Child with ID ${id}:`, error.message);
     }
   };
 
