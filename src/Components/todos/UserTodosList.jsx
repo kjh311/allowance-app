@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import TodoCounter from "./TodoCounter";
+// import TodoCounter from "./TodoCounter";
 import {
   collection,
   onSnapshot,
@@ -80,7 +80,8 @@ function UserTodosList() {
   return (
     <div className="user-todos-wrapper bg-white rounded-lg shadow-lg">
       <h1 className="text-lg font-semibold mb-4 text-center your-todos">
-        Your Todos <TodoCounter />
+        Your Todos
+        {/* <TodoCounter /> */}
       </h1>
       {userTodos.map((todo) => (
         <div

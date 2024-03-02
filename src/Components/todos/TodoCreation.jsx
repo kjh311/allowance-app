@@ -208,7 +208,7 @@ function TodoCreation() {
       <Button
         onClick={createTodo}
         variant="primary"
-        block
+        block="true"
         className="mt-3 w-100"
       >
         Add Todo

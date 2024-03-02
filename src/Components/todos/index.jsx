@@ -15,7 +15,7 @@ const ToDos = () => {
       <br />
       <br />
       <Row className="justify-content-center">
-        <Col md={12} lg={12} xl={12}>
+        <Col md={8} lg={8} xl={8}>
           <div className="">
             <TodoCreation />
           </div>

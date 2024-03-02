@@ -4,17 +4,21 @@ import { Container, Row, Col } from "react-bootstrap";
 import ChildCreation from "../children/ChildCreation.jsx";
 import UserTodosList from "../todos/UserTodosList.jsx";
 import TodoCreation from "../todos/TodoCreation.jsx";
-import TodoCounter from "../todos/TodoCounter";
+// import TodoCounter from "../todos/TodoCounter";
 import SharedData from "../sharedData/SharedDataForm.jsx";
 import SharedViewing from "../sharedData/SharedViewing.jsx";
 import ShareDataInvitation from "../sharedData/ShareDataInvitation.jsx";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, where, onSnapshot } from "firebase/firestore";
+
 import { db } from "../../firebase/firebase";
 import "./user.scss";
 
 const UserProfile = () => {
   const { currentUser } = useAuth();
   const [childrenOptions, setChildrenOptions] = useState([]);
+  console.log("displayName: " + " " + currentUser.displayName);
+  // console.log("id: " + " " + currentUser.uid);
+  // console.log("email: " + " " + currentUser.email);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "children"), (snapshot) => {
@@ -33,7 +37,7 @@ const UserProfile = () => {
       <ShareDataInvitation />
       <Row className="justify-content-center">
         <Col md={10} lg={8} xl={12}>
-          <div className="bg-gray-800 rounded-lg p-4 mb-4 text-center u ser-card">
+          {/* <div className="bg-gray-800 rounded-lg p-4 mb-4 text-center u ser-card">
             <img
               className="mx-auto rounded-full h-36 w-36 mb-4"
               src={currentUser.photoURL}
@@ -45,43 +49,73 @@ const UserProfile = () => {
               </h3>
             </div>
             <div className="flex justify-center mt-4 space-x-5">
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block text-gray-400"
-              >
-                <span className="sr-only">Twitter</span>
-                {/* Twitter icon */}
-              </a>
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block text-gray-400"
-              >
-                <span className="sr-only">GitHub</span>
-                {/* GitHub icon */}
-              </a>
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block text-gray-400"
-              >
-                <span className="sr-only">LinkedIn</span>
-                {/* LinkedIn icon */}
-              </a>
+           
+            
+         
+            </div>
+          </div> */}
+          <div className="d-flex justify-content-center ">
+            <div className="bg-white rounded-lg shadow-lg border-gray-300 shadow-xl rounded-lg text-gray-900 w-100">
+              <div className="rounded-t-lg h-32 overflow-hidden">
+                <img
+                  className="object-cover object-top w-full"
+                  src="https://picsum.photos/1200/300
+                  "
+                  alt="Mountain"
+                />
+              </div>
+              {currentUser.photoURL ? (
+                <div className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
+                  <img
+                    className="object-cover object-center h-32"
+                    src={currentUser.photoURL}
+                    alt="user"
+                  />
+                </div>
+              ) : null}
+              <div className="text-center mt-2">
+                {currentUser.displayName ? (
+                  <h2 className="font-semibold">{currentUser.displayName}</h2>
+                ) : (
+                  <h2 className="font-semibold">{currentUser.email}</h2>
+                )}
+
+                {/* <p className="text-gray-500">Freelance Web Designer</p> */}
+              </div>
+              <ul className="py-4 mt-2 text-gray-700 flex items-center justify-around">
+                <li className="flex flex-col items-center justify-around">
+                  <div className="p-3 text-center">
+                    <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
+                      {/* <TodoCounter /> */}
+                    </span>
+                    <span className="text-sm text-slate-400">Todos</span>
+                  </div>
+                </li>
+                <li className="flex flex-col items-center justify-between">
+                  <div className="p-3 text-center">
+                    <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
+                      {/* <TodoCounter /> */}
+                    </span>
+                    <span className="text-sm text-slate-400">Todos</span>
+                  </div>
+                </li>
+                <li className="flex flex-col items-center justify-around">
+                  <div className="p-3 text-center">
+                    <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
+                      {/* <TodoCounter /> */}
+                    </span>
+                    <span className="text-sm text-slate-400">Todos</span>
+                  </div>
+                </li>
+              </ul>
             </div>
           </div>
         </Col>
       </Row>
+      <br />
       <Row className="justify-content-center">
         <Col md={10} lg={8} xl={6}>
-          <ChildCreation
-            // style={{ width: "80%" }}
-            childrenOptions={childrenOptions}
-          />
+          <ChildCreation childrenOptions={childrenOptions} />
         </Col>
         <Col md={10} lg={8} xl={6}>
           <TodoCreation childrenOptions={childrenOptions} />
@@ -91,7 +125,7 @@ const UserProfile = () => {
           <UserTodosList currentUser={currentUser} />
         </Col>
         <Col md={10} lg={8} xl={6}>
-          <div id="share-div ">
+          <div id="share-div" className="bg-white rounded-lg shadow-lg">
             <div>
               <SharedData />
             </div>

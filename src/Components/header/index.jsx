@@ -1,7 +1,7 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
 import { Navbar, Nav } from "react-bootstrap";
-import { Link, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext";
 import { doSignOut } from "../../firebase/auth";
 import { CiLogout, CiLogin } from "react-icons/ci";
@@ -37,25 +37,26 @@ const Header = () => {
   return (
     <Navbar expand="lg" className="fixed-top navbar" bg="primary">
       <Container>
-        <Navbar.Brand className="brand">Allowance App</Navbar.Brand>
+        <Navbar.Brand className="brand">
+          {/* <img src="../../../public/images/money-icon.png" /> */}
+          Allowance App
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
             {userLoggedIn ? (
               <>
-                <Nav.Link as={Link} to="/profile">
+                <Nav.Link as={NavLink} to="/profile">
                   {renderDisplayName()}
                 </Nav.Link>
-                <Nav.Link as={Link} to="/todos">
-                  ToDos{" "}
-                </Nav.Link>{" "}
-                <Nav.Link as={Link} to="/children">
-                  Children{" "}
+                <Nav.Link as={NavLink} to="/todos">
+                  ToDos
+                </Nav.Link>
+                <Nav.Link as={NavLink} to="/children">
+                  Children
                 </Nav.Link>
                 <Nav.Link
                   onClick={handleLogout}
-                  as={Link}
-                  to="/"
                   className="d-flex align-items-center"
                 >
                   <span>Logout</span> <CiLogout className="ml-2" />
@@ -65,8 +66,9 @@ const Header = () => {
               <>
                 {location.pathname !== "/login" && (
                   <Nav.Link
-                    as={Link}
+                    as={NavLink}
                     to="/login"
+                    activeClassName="active"
                     className="d-flex align-items-center"
                   >
                     <span>Login</span> <CiLogin className="ml-2" />
@@ -74,8 +76,9 @@ const Header = () => {
                 )}
                 {!userLoggedIn && location.pathname !== "/childLogin" && (
                   <Nav.Link
-                    as={Link}
+                    as={NavLink}
                     to="/childLogin"
+                    activeClassName="active"
                     className="d-flex align-items-center"
                   >
                     <span>Child Login</span>
@@ -83,7 +86,11 @@ const Header = () => {
                   </Nav.Link>
                 )}
                 {location.pathname !== "/register" && (
-                  <Nav.Link as={Link} to="/register">
+                  <Nav.Link
+                    as={NavLink}
+                    to="/register"
+                    activeClassName="active"
+                  >
                     Register New Account
                   </Nav.Link>
                 )}
