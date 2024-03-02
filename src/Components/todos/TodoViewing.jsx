@@ -271,7 +271,7 @@ function TodoViewing() {
                   type="text"
                   value={editedTodoName}
                   onChange={(e) => setEditedTodoName(e.target.value)}
-                  className="input-style"
+                  className="input-style w-100"
                 />
               </div>
               <div>
@@ -280,7 +280,7 @@ function TodoViewing() {
                   type="text"
                   value={editedTodoDescription}
                   onChange={(e) => setEditedTodoDescription(e.target.value)}
-                  className="input-style"
+                  className="input-style w-100"
                 />
               </div>
               <div>
@@ -289,7 +289,7 @@ function TodoViewing() {
                   type="text"
                   value={editedTodoMoney}
                   onChange={(e) => setEditedTodoMoney(e.target.value)}
-                  className="input-style"
+                  className="input-style w-100"
                 />
               </div>
               <div>
@@ -298,7 +298,7 @@ function TodoViewing() {
                   type="text"
                   value={editedTodoPoints}
                   onChange={(e) => setEditedTodoPoints(e.target.value)}
-                  className="input-style"
+                  className="input-style w-100"
                 />
               </div>
               <div>
@@ -306,7 +306,7 @@ function TodoViewing() {
                 <select
                   value={completed}
                   onChange={(e) => setCompleted(e.target.value === "true")}
-                  className="input-style"
+                  className="input-style w-100"
                 >
                   <option value="true">Yes</option>
                   <option value="false">No</option>
@@ -318,7 +318,7 @@ function TodoViewing() {
                   id="assigneeDropdown"
                   value={selectedChildId}
                   onChange={handleDropdownChange}
-                  className="input-style"
+                  className="input-style w-100"
                 >
                   <option value="">Unassigned</option>
                   <optgroup label="Children:">
@@ -351,6 +351,7 @@ function TodoViewing() {
                   </optgroup>
                 </select>
               </div>
+              <br />
               <div>
                 <Button onClick={saveEditing} variant="primary">
                   Save
@@ -371,6 +372,7 @@ function TodoViewing() {
               <p>Created By: {todo.createdBy}</p>
               <div className="flex">
                 <Button
+                  className="w-50 d-flex justify-content-center"
                   onClick={() =>
                     startEditing(
                       todo.id,
@@ -386,7 +388,11 @@ function TodoViewing() {
                 >
                   <FaEdit className="mr-2" />
                 </Button>
-                <Button onClick={() => deleteTodo(todo.id)} variant="danger">
+                <Button
+                  className="w-50 d-flex justify-content-center"
+                  onClick={() => deleteTodo(todo.id)}
+                  variant="danger"
+                >
                   <FaTrash className="mr-2" />
                 </Button>
               </div>

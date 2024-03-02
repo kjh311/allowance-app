@@ -19,12 +19,12 @@ const Children = () => {
         <Col>{/* <h2>Children</h2> */}</Col>
       </Row>
       <Row className="justify-content-center">
-        <Col md={10} lg={8} xl={10}>
+        <Col md={8} lg={6} xl={6}>
           <ChildCreation />
         </Col>
       </Row>
       <Row className="justify-content-center">
-        <Col md={10} lg={8} xl={10}>
+        <Col md={12} lg={10} xl={6}>
           <ChildViewing />
         </Col>
       </Row>

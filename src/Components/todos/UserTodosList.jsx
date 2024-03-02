@@ -83,7 +83,12 @@ function UserTodosList() {
         Your Todos <TodoCounter />
       </h1>
       {userTodos.map((todo) => (
-        <div key={todo.id} className="border rounded-lg p-4 mb-4">
+        <div
+          key={todo.id}
+          className={` border rounded-lg p-4 mb-4todo-item border border-gray-300 p-4 mb-4 rounded-md ${
+            todo.completed ? "bg-green-100" : ""
+          }`}
+        >
           {editingTodoId === todo.id ? (
             <div className="flex flex-col space-y-4">
               <label for="name">Update Name:</label>

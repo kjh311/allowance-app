@@ -59,7 +59,7 @@ function ShareDataForm() {
             We'll never share your email with anyone else.
           </Form.Text>
         </Form.Group>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" className="mt-3 w-100">
           Share
         </Button>
       </Form>
