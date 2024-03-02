@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import "./todo.scss";
 import {
   collection,
   onSnapshot,
@@ -12,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { useAuth } from "../../contexts/authContext";
 import { db } from "../../firebase/firebase";
+
 function UserTodosList() {
   const [userTodos, setUserTodos] = useState([]);
   const [editingTodoId, setEditingTodoId] = useState(null);
@@ -78,44 +78,52 @@ function UserTodosList() {
 
   return (
     <div className="user-todos-wrapper">
-      <h2>Your Todos</h2>
+      <h2 className="text-lg font-semibold mb-4">Your Todos</h2>
       {userTodos.map((todo) => (
-        <div
-          key={todo.id}
-          className={`todo-item todo-box ${
-            todo.completed ? "completed-todo" : ""
-          }`}
-        >
+        <div key={todo.id} className="border rounded-lg p-4 mb-4">
           {editingTodoId === todo.id ? (
-            <>
+            <div className="flex flex-col space-y-4">
+              <label for="name">Update Name:</label>
               <input
                 type="text"
+                name="name"
                 value={editedTodoName}
                 onChange={(e) => setEditedTodoName(e.target.value)}
-                className="todo-box"
+                className="form-input"
               />
+              <label for="description">Update Description:</label>
               <input
                 type="text"
+                name="description"
                 value={editedTodoDescription}
                 onChange={(e) => setEditedTodoDescription(e.target.value)}
-                className="todo-box"
+                className="form-input"
               />
               <select
                 value={completed}
                 onChange={(e) => setCompleted(e.target.value === "true")}
+                className="form-select"
               >
                 <option value="true">Completed</option>
                 <option value="false">Not Completed</option>
               </select>
-              <Button onClick={saveEditing}>Save</Button>
-              <Button onClick={cancelEditing}>Cancel</Button>
-            </>
+              <div className="flex space-x-4">
+                <Button onClick={saveEditing}>Save</Button>
+                <Button onClick={cancelEditing} variant="secondary">
+                  Cancel
+                </Button>
+              </div>
+            </div>
           ) : (
-            <>
-              <p>Name: {todo.name}</p>
-              {todo.description && <p>Description: {todo.description}</p>}
-              <p>Completed: {todo.completed ? "Yes" : "No"}</p>
-              <div>
+            <div className="flex flex-col space-y-2">
+              <p className="font-semibold">Name: {todo.name}</p>
+              {todo.description && (
+                <p className="font-normal">Description: {todo.description}</p>
+              )}
+              <p className="font-normal">
+                Completed: {todo.completed ? "Yes" : "No"}
+              </p>
+              <div className="flex space-x-4">
                 <Button
                   onClick={() =>
                     startEditing(
@@ -130,12 +138,13 @@ function UserTodosList() {
                 </Button>
                 <Button
                   onClick={() => deleteTodo(todo.id)}
-                  className="btn-danger custom-button"
+                  variant="danger"
+                  className="custom-button"
                 >
                   <FaTrash />
                 </Button>
               </div>
-            </>
+            </div>
           )}
         </div>
       ))}
