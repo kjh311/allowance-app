@@ -42,7 +42,7 @@ function ShareDataForm() {
 
   return (
     <div>
-      <h2>Share Data</h2>
+      <h2 className="text-center">Share Data</h2>
       {error && <Alert variant="danger">{error}</Alert>}
       {message && <Alert variant="success">{message}</Alert>}
       <Form onSubmit={handleSubmit}>

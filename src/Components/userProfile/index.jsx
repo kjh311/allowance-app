@@ -4,11 +4,13 @@ import { Container, Row, Col } from "react-bootstrap";
 import ChildCreation from "../children/ChildCreation.jsx";
 import UserTodosList from "../todos/UserTodosList.jsx";
 import TodoCreation from "../todos/TodoCreation.jsx";
+import TodoCounter from "../todos/TodoCounter";
 import SharedData from "../sharedData/SharedDataForm.jsx";
 import SharedViewing from "../sharedData/SharedViewing.jsx";
 import ShareDataInvitation from "../sharedData/ShareDataInvitation.jsx";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
+import "./user.scss";
 
 const UserProfile = () => {
   const { currentUser } = useAuth();
@@ -30,8 +32,8 @@ const UserProfile = () => {
     <Container className="mt-5 mb-5">
       <ShareDataInvitation />
       <Row className="justify-content-center">
-        <Col md={8} lg={6} xl={4}>
-          <div className="bg-gray-800 rounded-lg p-4 mb-4 text-center">
+        <Col md={10} lg={8} xl={12}>
+          <div className="bg-gray-800 rounded-lg p-4 mb-4 text-center u ser-card">
             <img
               className="mx-auto rounded-full h-36 w-36 mb-4"
               src={currentUser.photoURL}
@@ -41,7 +43,6 @@ const UserProfile = () => {
               <h3 className="text-white font-medium">
                 {currentUser.displayName}
               </h3>
-              <p className="text-indigo-300">Web Developer</p>
             </div>
             <div className="flex justify-center mt-4 space-x-5">
               <a
@@ -76,25 +77,28 @@ const UserProfile = () => {
         </Col>
       </Row>
       <Row className="justify-content-center">
-        <Col md={6} lg={4} xl={3}>
+        <Col md={10} lg={8} xl={6}>
           <ChildCreation
             // style={{ width: "80%" }}
             childrenOptions={childrenOptions}
           />
         </Col>
-        <Col md={6} lg={4} xl={3}>
+        <Col md={10} lg={8} xl={6}>
           <TodoCreation childrenOptions={childrenOptions} />
         </Col>
-        <Col md={6} lg={4} xl={3}>
+        <Col md={10} lg={8} xl={6}>
+          {/* <TodoCounter /> */}
           <UserTodosList currentUser={currentUser} />
         </Col>
-        <Col md={6} lg={4} xl={3}>
-          <div>
-            <SharedData />
-          </div>
-          <br />
-          <div>
-            <SharedViewing />
+        <Col md={10} lg={8} xl={6}>
+          <div id="share-div ">
+            <div>
+              <SharedData />
+            </div>
+            <br />
+            <div>
+              <SharedViewing />
+            </div>
           </div>
         </Col>
       </Row>

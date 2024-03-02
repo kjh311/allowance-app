@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/authContext";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
 function TodoCreation() {
   const [newTodoName, setNewTodoName] = useState("");
@@ -133,93 +134,87 @@ function TodoCreation() {
   };
 
   return (
-    <div className="create-todo-container">
-      <div className="add-todo-form rounded-lg border border-gray-300 p-4 mb-4">
-        <h1>Create new TODO</h1>
-        <label htmlFor="todoNameInput" className="block mb-2">
-          Todo Name:
-        </label>
-        <input
-          id="todoNameInput"
-          placeholder="Enter todo name"
-          value={newTodoName}
-          onChange={(event) => setNewTodoName(event.target.value)}
-          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
-        />
-        <label htmlFor="todoDescriptionInput" className="block mb-2">
-          Description:
-        </label>
-        <input
-          id="todoDescriptionInput"
-          placeholder="Enter description"
-          value={newTodoDescription}
-          onChange={(event) => setNewTodoDescription(event.target.value)}
-          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
-        />
-        <label htmlFor="todoMoneyInput" className="block mb-2">
-          Amount of Money:
-        </label>
-        <input
-          id="todoMoneyInput"
-          placeholder="Enter amount of money"
-          value={newTodoMoney}
-          onChange={(event) => setNewTodoMoney(event.target.value)}
-          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
-        />
-        <label htmlFor="todoPointsInput" className="block mb-2">
-          Amount of Points:
-        </label>
-        <input
-          id="todoPointsInput"
-          placeholder="Enter amount of points"
-          value={newTodoPoints}
-          onChange={(event) => setNewTodoPoints(event.target.value)}
-          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
-        />
-        <label htmlFor="assigneeDropdown" className="block mb-2">
-          Assign to:
-        </label>
-        <select
-          id="assigneeDropdown"
-          value={selectedAssignee}
-          onChange={handleDropdownChange}
-          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 mb-2"
-        >
-          <option value="">Unassigned</option>
-          <optgroup label="Children">
-            {children
-              .filter((child) => child && child.name) // Filter out children without a valid name
-              .map((child) => (
-                <option key={child.id} value={child.id}>
-                  {child.name}
-                </option>
-              ))}
-          </optgroup>
-          <optgroup label="Current User">
-            {currentUser && (
-              <option key={currentUser.uid} value={currentUser.uid}>
-                {currentUser.displayName}
-              </option>
-            )}
-          </optgroup>
-          <optgroup label="Sharing With">
-            {sharingWithUsers.map((user) => (
-              <option key={user.id} value={user.id}>
-                {user.displayName || user.email}
-              </option>
-            ))}
-          </optgroup>
-        </select>
-
-        <br />
-        <button
-          onClick={createTodo}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md"
-        >
-          Add Todo
-        </button>
-      </div>
-    </div>
+    <Container>
+      <Row className="justify-content-center">
+        <Col md={8}>
+          <div className="add-todo-form bg-white rounded-lg shadow-lg border-gray-300 p-4 mb-4">
+            <h1 className="text-center">Create new TODO</h1>
+            <Form.Group controlId="todoNameInput">
+              <Form.Label>Todo Name:</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter todo name"
+                value={newTodoName}
+                onChange={(event) => setNewTodoName(event.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="todoDescriptionInput">
+              <Form.Label>Description:</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter description"
+                value={newTodoDescription}
+                onChange={(event) => setNewTodoDescription(event.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="todoMoneyInput">
+              <Form.Label>Amount of Money:</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter amount of money"
+                value={newTodoMoney}
+                onChange={(event) => setNewTodoMoney(event.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="todoPointsInput">
+              <Form.Label>Amount of Points:</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter amount of points"
+                value={newTodoPoints}
+                onChange={(event) => setNewTodoPoints(event.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="assigneeDropdown">
+              <Form.Label>Assign to:</Form.Label>
+              <Form.Control
+                as="select"
+                value={selectedAssignee}
+                onChange={handleDropdownChange}
+              >
+                <option value="">Unassigned</option>
+                <optgroup label="Children">
+                  {children
+                    .filter((child) => child && child.name) // Filter out children without a valid name
+                    .map((child) => (
+                      <option key={child.id} value={child.id}>
+                        {child.name}
+                      </option>
+                    ))}
+                </optgroup>
+                <optgroup label="Current User">
+                  {currentUser && (
+                    <option key={currentUser.uid} value={currentUser.uid}>
+                      {currentUser.displayName}
+                    </option>
+                  )}
+                </optgroup>
+                <optgroup label="Sharing With">
+                  {sharingWithUsers.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.displayName || user.email}
+                    </option>
+                  ))}
+                </optgroup>
+              </Form.Control>
+            </Form.Group>
+            <Button onClick={createTodo} variant="primary" block>
+              Add Todo
+            </Button>
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

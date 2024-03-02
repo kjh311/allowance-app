@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Button, Table } from "react-bootstrap";
+import { Button, Container, Table } from "react-bootstrap";
 import { db } from "../../firebase/firebase";
 import {
   collection,
@@ -11,8 +11,6 @@ import {
 import { useAuth } from "../../contexts/authContext";
 import { FaCheckCircle, FaEdit, FaTrash } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
-import "./Share.scss";
-// import SharingWithChecker from "../sharingWith/SharingWithChecker";
 
 function SharedViewing() {
   const { currentUser } = useAuth();
@@ -66,18 +64,20 @@ function SharedViewing() {
 
   const getStatusIcon = (data) => {
     if (data.asked && data.shareAllow) {
-      return <FaCheckCircle className="check-mark" />;
+      return <FaCheckCircle className="text-green-500" />;
     } else if (data.asked && !data.shareAllow) {
-      return <IoIosCloseCircle className="close-mark" />;
+      return <IoIosCloseCircle className="text-red-500" />;
     } else {
       return "Pending";
     }
   };
 
   return (
-    <Container>
-      <h2>Those who are allowed to share your data:</h2>
-      <Table striped bordered hover>
+    <div>
+      <h2 className="text-lg font-semibold mb-4">
+        Those who are allowed to share your data:
+      </h2>
+      <Table responsive striped bordered hover>
         <thead>
           <tr>
             <th>#</th>
@@ -96,6 +96,7 @@ function SharedViewing() {
                     type="text"
                     value={editEmail}
                     onChange={(e) => setEditEmail(e.target.value)}
+                    className="form-control"
                   />
                 ) : (
                   <>{data.email}</>
@@ -104,7 +105,11 @@ function SharedViewing() {
               <td>{getStatusIcon(data)}</td>
               <td>
                 {editMode && data.id === editId ? (
-                  <Button variant="success" onClick={handleUpdate}>
+                  <Button
+                    variant="success"
+                    onClick={handleUpdate}
+                    className="mr-2"
+                  >
                     Save
                   </Button>
                 ) : (
@@ -113,6 +118,7 @@ function SharedViewing() {
                       variant="primary"
                       onClick={() => handleEdit(data.email, data.id)}
                       disabled={editMode}
+                      className="mr-2"
                     >
                       <FaEdit />
                     </Button>
@@ -130,7 +136,7 @@ function SharedViewing() {
           ))}
         </tbody>
       </Table>
-    </Container>
+    </div>
   );
 }
 

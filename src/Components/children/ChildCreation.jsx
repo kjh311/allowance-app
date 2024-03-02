@@ -70,8 +70,8 @@ function ChildCreation() {
     // <Container>
     // <Row className="justify-content-center">
     // <Col md={8}>
-    <div className="add-child-form rounded-lg border border-gray-300 p-4 mb-4">
-      <h1 className="mb-4">Create New Child</h1>
+    <div className="add-child-form rounded-lg border border-gray-300 p-4 mb-4 bg-white rounded-lg shadow-lg">
+      <h1 className="mb-4 text-center">Create New Child</h1>
       <Form>
         <Form.Group controlId="childNameInput">
           <Form.Label>Child Name:</Form.Label>

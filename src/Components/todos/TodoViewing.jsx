@@ -255,7 +255,7 @@ function TodoViewing() {
   }
 
   return (
-    <div className="todo-list-container">
+    <div className="todo-list-container bg-white rounded-lg shadow-lg">
       {todos.map((todo) => (
         <div
           key={todo.id}

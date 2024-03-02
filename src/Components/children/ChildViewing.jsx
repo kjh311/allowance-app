@@ -97,7 +97,7 @@ function ChildViewing() {
   };
 
   return (
-    <Container>
+    <div>
       {children.map((child) => (
         <div
           key={child.id}
@@ -205,7 +205,7 @@ function ChildViewing() {
           </div>
         </div>
       ))}
-    </Container>
+    </div>
   );
 }
 

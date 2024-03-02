@@ -15,21 +15,21 @@ const Children = () => {
       <br />
       <br />
       <br />
-      <Row>
+      <Row className="justify-content-center">
         <Col>{/* <h2>Children</h2> */}</Col>
       </Row>
-      <Row>
-        <Col>
+      <Row className="justify-content-center">
+        <Col md={10} lg={8} xl={10}>
           <ChildCreation />
         </Col>
       </Row>
-      <Row>
-        <Col>
+      <Row className="justify-content-center">
+        <Col md={10} lg={8} xl={10}>
           <ChildViewing />
         </Col>
       </Row>
-      {/* <Row>
-        <Col>
+      {/* <Row className="justify-content-center">
+        <Col md={10} lg={8} xl={6}>
           <ChildCounter />
         </Col>
       </Row> */}
