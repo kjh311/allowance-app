@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Button, Form } from "react-bootstrap";
+import { Container, Button, Form, Row, Col } from "react-bootstrap";
 import { db } from "../../firebase/firebase";
 import {
   collection,
@@ -112,12 +112,36 @@ function ChildViewing() {
                 className="rounded-full w-36"
               />
             )}
-            <p className="text-gray-600 mt-2">Owed: ${child.money}</p>
-            <p className="text-gray-600">Points: {child.points}</p>
-            <p className="text-gray-600">Todos: {child.todosCount}</p>
-            <p className="text-gray-600">
-              Login Pin: {decryptedPasswords[child.id]}
-            </p>
+            <div>
+              <br />
+              <Container>
+                <Row>
+                  <Col className="text-center">
+                    <p className="text-gray-600">
+                      Owed: {<br />}${child.money}
+                    </p>
+                  </Col>
+                  <Col className="text-center">
+                    <p className="text-gray-600">
+                      Points: {<br />}
+                      {child.points}
+                    </p>
+                  </Col>
+                  <Col className="text-center">
+                    <p className="text-gray-600">
+                      Todos: {<br />}
+                      {child.todosCount}
+                    </p>
+                  </Col>
+                  <Col className="text-center">
+                    <p className="text-gray-600">
+                      Login Pin: {<br />}
+                      {decryptedPasswords[child.id]}
+                    </p>
+                  </Col>
+                </Row>
+              </Container>
+            </div>
             <Link
               to={`/child/${child.id}`}
               className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded mt-4 inline-block"

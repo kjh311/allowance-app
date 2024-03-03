@@ -21,6 +21,7 @@ const Children = () => {
       <Row className="justify-content-center">
         <Col md={8} lg={9} xl={6}>
           <ChildCreation />
+          <br />
         </Col>
       </Row>
       <Row className="justify-content-center">
