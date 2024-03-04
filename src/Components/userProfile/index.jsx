@@ -66,11 +66,13 @@ const UserProfile = () => {
               </div>
               {currentUser.photoURL ? (
                 <div className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
-                  <img
-                    className="object-cover object-center h-32"
-                    src={currentUser.photoURL}
-                    alt="user"
-                  />
+                  {currentUser.photoURL ? (
+                    <img
+                      className="object-cover object-center h-32"
+                      src={currentUser.photoURL}
+                      alt="user"
+                    />
+                  ) : null}
                 </div>
               ) : null}
               <div className="text-center mt-2">
@@ -116,10 +118,14 @@ const UserProfile = () => {
       <Row className="justify-content-center">
         <Col md={10} lg={8} xl={6}>
           <ChildCreation childrenOptions={childrenOptions} />
+          <br />
         </Col>
+        <br />
         <Col md={10} lg={8} xl={6}>
           <TodoCreation childrenOptions={childrenOptions} />
+          <br />
         </Col>
+
         <Col md={10} lg={8} xl={6}>
           {/* <TodoCounter /> */}
           <UserTodosList currentUser={currentUser} />

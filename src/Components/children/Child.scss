@@ -58,3 +58,7 @@
   .create-new-child{
     margin-left: 20px !important;
   }
+
+  .accordion-body, #childCreationCollapse, .collapse, .show{
+    transition: all 3s ease !important;
+  }

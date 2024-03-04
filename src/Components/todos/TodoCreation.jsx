@@ -10,7 +10,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/authContext";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Accordion } from "react-bootstrap";
+import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
 
 function TodoCreation() {
   const [newTodoName, setNewTodoName] = useState("");
@@ -20,6 +21,7 @@ function TodoCreation() {
   const [selectedAssignee, setSelectedAssignee] = useState("");
   const [children, setChildren] = useState([]);
   const [sharingWithUsers, setSharingWithUsers] = useState([]);
+  const [accordionExpanded, setAccordionExpanded] = useState(false);
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -133,87 +135,103 @@ function TodoCreation() {
     setSelectedAssignee(event.target.value);
   };
 
+  const toggleAccordion = () => {
+    setAccordionExpanded(!accordionExpanded);
+  };
+
   return (
-    <div className="add-todo-form bg-white rounded-lg shadow-lg border-gray-300 p-4 mb-4">
-      <h1 className="text-center">Create new TODO</h1>
-      <Form.Group controlId="todoNameInput">
-        <Form.Label>Todo Name:</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Enter todo name"
-          value={newTodoName}
-          onChange={(event) => setNewTodoName(event.target.value)}
-        />
-      </Form.Group>
-      <Form.Group controlId="todoDescriptionInput">
-        <Form.Label>Description:</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Enter description"
-          value={newTodoDescription}
-          onChange={(event) => setNewTodoDescription(event.target.value)}
-        />
-      </Form.Group>
-      <Form.Group controlId="todoMoneyInput">
-        <Form.Label>Amount of Money:</Form.Label>
-        <Form.Control
-          type="number"
-          placeholder="Enter amount of money"
-          value={newTodoMoney}
-          onChange={(event) => setNewTodoMoney(event.target.value)}
-        />
-      </Form.Group>
-      <Form.Group controlId="todoPointsInput">
-        <Form.Label>Amount of Points:</Form.Label>
-        <Form.Control
-          type="number"
-          placeholder="Enter amount of points"
-          value={newTodoPoints}
-          onChange={(event) => setNewTodoPoints(event.target.value)}
-        />
-      </Form.Group>
-      <Form.Group controlId="assigneeDropdown">
-        <Form.Label>Assign to:</Form.Label>
-        <Form.Control
-          as="select"
-          value={selectedAssignee}
-          onChange={handleDropdownChange}
-        >
-          <option value="">Unassigned</option>
-          <optgroup label="Children">
-            {children
-              .filter((child) => child && child.name) // Filter out children without a valid name
-              .map((child) => (
-                <option key={child.id} value={child.id}>
-                  {child.name}
-                </option>
-              ))}
-          </optgroup>
-          <optgroup label="Current User">
-            {currentUser && (
-              <option key={currentUser.uid} value={currentUser.uid}>
-                {currentUser.displayName}
-              </option>
-            )}
-          </optgroup>
-          <optgroup label="Sharing With">
-            {sharingWithUsers.map((user) => (
-              <option key={user.id} value={user.id}>
-                {user.displayName || user.email}
-              </option>
-            ))}
-          </optgroup>
-        </Form.Control>
-      </Form.Group>
-      <Button
-        onClick={createTodo}
-        variant="primary"
-        block="true"
-        className="mt-3 w-100"
-      >
-        Add Todo
-      </Button>
-    </div>
+    <Accordion
+      defaultActiveKey=""
+      className="bg-white rounded-lg shadow-lg"
+      expanded={accordionExpanded}
+      onSelect={toggleAccordion}
+    >
+      <Accordion.Item eventKey="0">
+        <Accordion.Header>
+          {accordionExpanded ? <FaMinusCircle /> : <FaPlusCircle />}{" "}
+          <span className="create-new-todo">Create new TODO</span>
+        </Accordion.Header>
+        <Accordion.Body>
+          <Form.Group controlId="todoNameInput">
+            <Form.Label>Todo Name:</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter todo name"
+              value={newTodoName}
+              onChange={(event) => setNewTodoName(event.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="todoDescriptionInput">
+            <Form.Label>Description:</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter description"
+              value={newTodoDescription}
+              onChange={(event) => setNewTodoDescription(event.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="todoMoneyInput">
+            <Form.Label>Amount of Money:</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Enter amount of money"
+              value={newTodoMoney}
+              onChange={(event) => setNewTodoMoney(event.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="todoPointsInput">
+            <Form.Label>Amount of Points:</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Enter amount of points"
+              value={newTodoPoints}
+              onChange={(event) => setNewTodoPoints(event.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="assigneeDropdown">
+            <Form.Label>Assign to:</Form.Label>
+            <Form.Control
+              as="select"
+              value={selectedAssignee}
+              onChange={handleDropdownChange}
+            >
+              <option value="">Unassigned</option>
+              <optgroup label="Children">
+                {children
+                  .filter((child) => child && child.name) // Filter out children without a valid name
+                  .map((child) => (
+                    <option key={child.id} value={child.id}>
+                      {child.name}
+                    </option>
+                  ))}
+              </optgroup>
+              <optgroup label="Current User">
+                {currentUser && (
+                  <option key={currentUser.uid} value={currentUser.uid}>
+                    {currentUser.displayName}
+                  </option>
+                )}
+              </optgroup>
+              <optgroup label="Sharing With">
+                {sharingWithUsers.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.displayName || user.email}
+                  </option>
+                ))}
+              </optgroup>
+            </Form.Control>
+          </Form.Group>
+          <Button
+            onClick={createTodo}
+            variant="primary"
+            block="true"
+            className="mt-3 w-100"
+          >
+            Add Todo
+          </Button>
+        </Accordion.Body>
+      </Accordion.Item>
+    </Accordion>
   );
 }
 
