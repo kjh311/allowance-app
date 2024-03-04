@@ -18,6 +18,7 @@ const ToDos = () => {
         <Col md={8} lg={8} xl={8}>
           <div className="">
             <TodoCreation />
+            <br />
           </div>
         </Col>
       </Row>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Container, Row, Col } from "react-bootstrap";
 import { FaEdit, FaTrash } from "react-icons/fa";
 // import TodoCounter from "./TodoCounter";
 import {
@@ -124,15 +124,27 @@ function UserTodosList() {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col space-y-2">
-              <p className="font-semibold">Name: {todo.name}</p>
-              {todo.description && (
-                <p className="font-normal">Description: {todo.description}</p>
-              )}
-              <p className="font-normal">
-                Completed: {todo.completed ? "Yes" : "No"}
-              </p>
-              <div className="flex space-x-4">
+            <div className="">
+              <Container>
+                <Row className="text-center">
+                  <div className="text-center">
+                    <h3 className="font-semibold">{todo.name}</h3>
+                  </div>
+                  <Col>
+                    {todo.description && (
+                      <p className="font-normal">
+                        Description:{<br />} {todo.description}
+                      </p>
+                    )}
+                  </Col>
+                  <Col>
+                    <p className="font-normal">
+                      Completed:{<br />} {todo.completed ? "Yes" : "No"}
+                    </p>
+                  </Col>
+                </Row>
+              </Container>
+              <div className="space-x-4 text-center">
                 <Button
                   onClick={() =>
                     startEditing(

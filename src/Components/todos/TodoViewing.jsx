@@ -11,7 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { Button } from "react-bootstrap";
+import { Button, Container, Row, Col } from "react-bootstrap";
 import { useAuth } from "../../contexts/authContext";
 import { db } from "../../firebase/firebase";
 
@@ -363,13 +363,52 @@ function TodoViewing() {
             </>
           ) : (
             <>
-              <p>Name: {todo.name}</p>
-              {todo.description ? <p>Description: {todo.description}</p> : null}
-              {todo.money ? <p>Money: ${todo.money}</p> : null}
-              {todo.points ? <p>Points: {todo.points}</p> : null}
-              <p>Completed: {todo.completed ? "Yes" : "No"}</p>{" "}
-              <p>Assigned To: {getChildName(todo.assignedTo)}</p>
-              <p>Created By: {todo.createdBy}</p>
+              <Container>
+                <Row>
+                  <div className="text-center">
+                    <h3 className="text-center">{todo.name}</h3>
+                  </div>
+                  <Col>
+                    {todo.description ? (
+                      <p className="text-center">
+                        Description:{<br />} {todo.description}
+                      </p>
+                    ) : null}
+                  </Col>
+
+                  {todo.money ? (
+                    <Col>
+                      <p className="text-center">
+                        Money:{<br />} ${todo.money}
+                      </p>
+                    </Col>
+                  ) : null}
+
+                  {todo.points ? (
+                    <Col>
+                      <p className="text-center">
+                        Points:{<br />} {todo.points}
+                      </p>
+                    </Col>
+                  ) : null}
+
+                  <Col>
+                    <p className="text-center">
+                      Completed:{<br />} {todo.completed ? "Yes" : "No"}
+                    </p>{" "}
+                  </Col>
+                  <Col>
+                    <p className="text-center">
+                      Assigned To:{<br />} {getChildName(todo.assignedTo)}
+                    </p>
+                  </Col>
+                  <Col>
+                    <p className="text-center">
+                      Created By:{<br />} {todo.createdBy}
+                    </p>
+                  </Col>
+                </Row>
+              </Container>
               <div className="flex">
                 <Button
                   className="w-50 d-flex justify-content-center"
