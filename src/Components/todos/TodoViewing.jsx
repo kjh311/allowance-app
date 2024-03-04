@@ -15,6 +15,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { Button, Container, Row, Col } from "react-bootstrap";
 import { useAuth } from "../../contexts/authContext";
 import { db } from "../../firebase/firebase";
+import "./todo.scss";
 
 function TodoViewing() {
   const [todos, setTodos] = useState([]);
@@ -29,6 +30,7 @@ function TodoViewing() {
   const [selectedChildId, setSelectedChildId] = useState("");
   const [completed, setCompleted] = useState(false);
   const { currentUser } = useAuth();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSharingWithIds = async () => {
@@ -91,6 +93,7 @@ function TodoViewing() {
           ...doc.data(),
         }));
         setChildren(childrenData);
+        setLoading(false);
       }
     );
 
@@ -251,6 +254,10 @@ function TodoViewing() {
     }
   };
 
+  // if (loading) {
+  //   return <div className="text-center loading-message ">LOADING...</div>;
+  // }
+
   if (todos.length === 0) {
     return <div>No Todos</div>;
   }
@@ -353,7 +360,7 @@ function TodoViewing() {
                 </select>
               </div>
               <br />
-              <div>
+              <div className="space-x-4 text-center">
                 <Button onClick={saveEditing} variant="primary">
                   Save
                 </Button>

@@ -15,8 +15,10 @@ import {
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext";
+import "./Child.scss";
 
 function ChildViewing() {
+  const [loading, setLoading] = useState(true);
   const { currentUser } = useAuth();
   const [children, setChildren] = useState([]);
   const [editingChildId, setEditingChildId] = useState(null);
@@ -49,6 +51,7 @@ function ChildViewing() {
       }
       setChildren(loadedChildren);
       setDecryptedPasswords(decryptedPasswordsCopy);
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -95,6 +98,10 @@ function ChildViewing() {
       console.error(`Error deleting Child with ID ${id}:`, error.message);
     }
   };
+
+  if (loading) {
+    return <div className="text-center loading-message">LOADING...</div>;
+  }
 
   return (
     <>
