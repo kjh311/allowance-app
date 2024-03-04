@@ -11,6 +11,7 @@ import "./Header.scss";
 const Header = () => {
   const { currentUser } = useAuth();
   const location = useLocation();
+
   // const [activeLink, setActiveLink] = useState(location.pathname);
   // console.log(activeLink);
 
@@ -44,20 +45,11 @@ const Header = () => {
           Allowance App
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
+        <Navbar.Collapse id="basic-navbar-nav" className="">
           <Nav className="ms-auto">
             {userLoggedIn ? (
               <>
-                <Nav.Link
-                  // className={
-                  //   activeLink === "/profile"
-                  //     ? "nav-link active link"
-                  //     : "nav-link link"
-                  // }
-                  className="link"
-                  as={NavLink}
-                  to="/profile"
-                >
+                <Nav.Link className="link" as={NavLink} to="/profile">
                   {renderDisplayName()}
                 </Nav.Link>
                 <Nav.Link className="link" as={NavLink} to="/todos">
@@ -77,20 +69,18 @@ const Header = () => {
               <>
                 {location.pathname !== "/login" && (
                   <Nav.Link
-                    className="link"
                     as={NavLink}
                     to="/login"
-                    className="d-flex align-items-center"
+                    className="d-flex align-items-center link"
                   >
                     <span>Login</span> <CiLogin className="ml-2" />
                   </Nav.Link>
                 )}
                 {!userLoggedIn && location.pathname !== "/childLogin" && (
                   <Nav.Link
-                    className="link"
                     as={NavLink}
                     to="/childLogin"
-                    className="d-flex align-items-center"
+                    className="d-flex align-items-center link"
                   >
                     <span>Child Login</span>
                     <FaChild className="ml-2" />
