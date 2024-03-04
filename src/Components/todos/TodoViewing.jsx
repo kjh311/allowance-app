@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./todo.scss";
 import {
   collection,
   onSnapshot,
@@ -366,12 +367,13 @@ function TodoViewing() {
               <Container>
                 <Row>
                   <div className="text-center">
-                    <h3 className="text-center">{todo.name}</h3>
+                    <h3 className="text-center todo-name">{todo.name}</h3>
                   </div>
                   <Col>
                     {todo.description ? (
                       <p className="text-center">
-                        Description:{<br />} {todo.description}
+                        <span className="todo-card-p">Description:</span>
+                        {<br />} {todo.description}
                       </p>
                     ) : null}
                   </Col>
@@ -379,7 +381,8 @@ function TodoViewing() {
                   {todo.money ? (
                     <Col>
                       <p className="text-center">
-                        Money:{<br />} ${todo.money}
+                        <span className="todo-card-p">Money:</span>
+                        {<br />} ${todo.money}
                       </p>
                     </Col>
                   ) : null}
@@ -387,31 +390,35 @@ function TodoViewing() {
                   {todo.points ? (
                     <Col>
                       <p className="text-center">
-                        Points:{<br />} {todo.points}
+                        <span className="todo-card-p">Points:</span>
+                        {<br />} {todo.points}
                       </p>
                     </Col>
                   ) : null}
 
                   <Col>
                     <p className="text-center">
-                      Completed:{<br />} {todo.completed ? "Yes" : "No"}
+                      <span className="todo-card-p">Completed:</span>
+                      {<br />} {todo.completed ? "Yes" : "No"}
                     </p>{" "}
                   </Col>
                   <Col>
                     <p className="text-center">
-                      Assigned To:{<br />} {getChildName(todo.assignedTo)}
+                      <span className="todo-card-p">Assigned To:</span>
+                      {<br />} {getChildName(todo.assignedTo)}
                     </p>
                   </Col>
                   <Col>
                     <p className="text-center">
-                      Created By:{<br />} {todo.createdBy}
+                      <span className="todo-card-p">Created By:</span>
+                      {<br />} {todo.createdBy}
                     </p>
                   </Col>
                 </Row>
               </Container>
-              <div className="flex">
+              <div className="space-x-4 text-center">
                 <Button
-                  className="w-50 d-flex justify-content-center"
+                  className=" "
                   onClick={() =>
                     startEditing(
                       todo.id,
@@ -428,7 +435,7 @@ function TodoViewing() {
                   <FaEdit className="mr-2" />
                 </Button>
                 <Button
-                  className="w-50 d-flex justify-content-center"
+                  className=" "
                   onClick={() => deleteTodo(todo.id)}
                   variant="danger"
                 >

@@ -97,139 +97,140 @@ function ChildViewing() {
   };
 
   return (
-    <div>
+    <>
       {children.map((child) => (
-        <div
-          key={child.id}
-          className="bg-white rounded-lg shadow-lg mb-6 p-4 w-full md:max-w-md lg:max-w-2xl mx-auto"
-        >
-          <div className="flex flex-col justify-center items-center">
-            <h2 className="text-xl font-semibold mb-2">{child.name}</h2>
-            {child.photoURL && (
-              <img
-                src={child.photoURL}
-                alt="child avatar"
-                className="rounded-full w-36"
-              />
-            )}
-            <div>
-              <br />
-              <Container>
-                <Row>
-                  <Col className="text-center">
-                    <p className="text-gray-600">
-                      Owed: {<br />}${child.money}
-                    </p>
-                  </Col>
-                  <Col className="text-center">
-                    <p className="text-gray-600">
-                      Points: {<br />}
-                      {child.points}
-                    </p>
-                  </Col>
-                  <Col className="text-center">
-                    <p className="text-gray-600">
-                      Todos: {<br />}
-                      {child.todosCount}
-                    </p>
-                  </Col>
-                  <Col className="text-center">
-                    <p className="text-gray-600">
-                      Login Pin: {<br />}
-                      {decryptedPasswords[child.id]}
-                    </p>
-                  </Col>
-                </Row>
-              </Container>
-            </div>
-            <Link
-              to={`/child/${child.id}`}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded mt-4 inline-block"
-            >
-              View Details
-            </Link>
-          </div>
-          <div className="flex justify-center mt-4">
-            {editingChildId === child.id ? (
-              <Form className="flex flex-col items-center">
-                <Form.Label className="mb-2">Child's Name:</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter child's name"
-                  value={editChildName}
-                  onChange={(event) => setEditChildName(event.target.value)}
-                  className="mb-2 border border-gray-300 rounded-md px-3 py-2"
+        <Col md={12} lg={10} xl={6} key={child.id}>
+          <div className="bg-white rounded-lg shadow-lg mb-6 p-4">
+            <div className="flex flex-col justify-center items-center">
+              <h2 className="text-xl font-semibold mb-2">{child.name}</h2>
+              {child.photoURL && (
+                <img
+                  src={child.photoURL}
+                  alt="child avatar"
+                  className="rounded-full w-36"
                 />
-                <Form.Label className="mb-2">Money Owed:</Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder="Enter amount owed"
-                  value={editChildOwed}
-                  onChange={(event) => setEditChildOwed(event.target.value)}
-                  className="mb-2 border border-gray-300 rounded-md px-3 py-2"
-                />
-                <Form.Label className="mb-2">Points:</Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder="Enter points"
-                  value={editChildPoints}
-                  onChange={(event) => setEditChildPoints(event.target.value)}
-                  className="mb-2 border border-gray-300 rounded-md px-3 py-2"
-                />
-                <Form.Label className="mb-2">Photo URL:</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter child's photo URL"
-                  value={editChildPhotoURL}
-                  onChange={(event) => setEditChildPhotoURL(event.target.value)}
-                  className="mb-2 border border-gray-300 rounded-md px-3 py-2"
-                />
-                <Button
-                  variant="success"
-                  onClick={() => submitEdit(child.id)}
-                  className="mb-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded"
-                >
-                  <FaEdit className="mr-2" />
-                  Submit
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={cancelEdit}
-                  className="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded"
-                >
-                  Cancel
-                </Button>
-              </Form>
-            ) : (
-              <div className="flex">
-                <Button
-                  variant="primary"
-                  onClick={() =>
-                    editChild(
-                      child.id,
-                      child.name,
-                      child.money,
-                      child.points,
-                      child.photoURL
-                    )
-                  }
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded mr-2"
-                >
-                  <FaEdit />
-                </Button>
-                <Button
-                  variant="danger"
-                  onClick={() => deleteChild(child.id)}
-                  className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded"
-                >
-                  <FaTrash />
-                </Button>
+              )}
+              <div>
+                <br />
+                <Container>
+                  <Row>
+                    <Col className="text-center">
+                      <p className="text-gray-600">
+                        Owed: <br />${child.money}
+                      </p>
+                    </Col>
+                    <Col className="text-center">
+                      <p className="text-gray-600">
+                        Points: <br />
+                        {child.points}
+                      </p>
+                    </Col>
+                    <Col className="text-center">
+                      <p className="text-gray-600">
+                        Todos: <br />
+                        {child.todosCount}
+                      </p>
+                    </Col>
+                    <Col className="text-center">
+                      <p className="text-gray-600">
+                        Login Pin: <br />
+                        {decryptedPasswords[child.id]}
+                      </p>
+                    </Col>
+                  </Row>
+                </Container>
               </div>
-            )}
+              <Link
+                to={`/child/${child.id}`}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded mt-4 inline-block"
+              >
+                View Details
+              </Link>
+            </div>
+            <div className="flex justify-center mt-4">
+              {editingChildId === child.id ? (
+                <Form className="flex flex-col items-center">
+                  <Form.Label className="mb-2">Child's Name:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter child's name"
+                    value={editChildName}
+                    onChange={(event) => setEditChildName(event.target.value)}
+                    className="mb-2 border border-gray-300 rounded-md px-3 py-2"
+                  />
+                  <Form.Label className="mb-2">Money Owed:</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Enter amount owed"
+                    value={editChildOwed}
+                    onChange={(event) => setEditChildOwed(event.target.value)}
+                    className="mb-2 border border-gray-300 rounded-md px-3 py-2"
+                  />
+                  <Form.Label className="mb-2">Points:</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Enter points"
+                    value={editChildPoints}
+                    onChange={(event) => setEditChildPoints(event.target.value)}
+                    className="mb-2 border border-gray-300 rounded-md px-3 py-2"
+                  />
+                  <Form.Label className="mb-2">Photo URL:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter child's photo URL"
+                    value={editChildPhotoURL}
+                    onChange={(event) =>
+                      setEditChildPhotoURL(event.target.value)
+                    }
+                    className="mb-2 border border-gray-300 rounded-md px-3 py-2"
+                  />
+                  <Button
+                    variant="success"
+                    onClick={() => submitEdit(child.id)}
+                    className="mb-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded"
+                  >
+                    <FaEdit className="mr-2" />
+                    Submit
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={cancelEdit}
+                    className="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded"
+                  >
+                    Cancel
+                  </Button>
+                </Form>
+              ) : (
+                <div className="flex">
+                  <Button
+                    variant="primary"
+                    onClick={() =>
+                      editChild(
+                        child.id,
+                        child.name,
+                        child.money,
+                        child.points,
+                        child.photoURL
+                      )
+                    }
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded mr-2"
+                  >
+                    <FaEdit />
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => deleteChild(child.id)}
+                    className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded"
+                  >
+                    <FaTrash />
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        </Col>
       ))}
-    </div>
+    </>
   );
 }
 

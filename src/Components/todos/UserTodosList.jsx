@@ -128,7 +128,9 @@ function UserTodosList() {
               <Container>
                 <Row className="text-center">
                   <div className="text-center">
-                    <h3 className="font-semibold">{todo.name}</h3>
+                    <h3 className="font-semibold todo-user-name">
+                      {todo.name}
+                    </h3>
                   </div>
                   <Col>
                     {todo.description && (
