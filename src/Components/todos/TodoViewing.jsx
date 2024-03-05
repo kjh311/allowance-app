@@ -376,14 +376,15 @@ function TodoViewing() {
                   <div className="text-center">
                     <h3 className="text-center todo-name">{todo.name}</h3>
                   </div>
-                  <Col>
-                    {todo.description ? (
+
+                  {todo.description ? (
+                    <Col>
                       <p className="text-center">
                         <span className="todo-card-p">Description:</span>
                         {<br />} {todo.description}
                       </p>
-                    ) : null}
-                  </Col>
+                    </Col>
+                  ) : null}
 
                   {todo.money ? (
                     <Col>

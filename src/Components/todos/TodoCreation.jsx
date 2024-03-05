@@ -143,7 +143,7 @@ function TodoCreation() {
     <Accordion
       defaultActiveKey=""
       className="bg-white rounded-lg shadow-lg"
-      expanded={accordionExpanded}
+      expanded={accordionExpanded.toString()}
       onSelect={toggleAccordion}
     >
       <Accordion.Item eventKey="0">
