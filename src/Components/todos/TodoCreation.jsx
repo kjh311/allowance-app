@@ -10,10 +10,15 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/authContext";
-import { Container, Row, Col, Form, Button, Accordion } from "react-bootstrap";
+import { Accordion, Button, Form } from "react-bootstrap";
 import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "./todo.scss";
+import "./Calendar.scss";
 
 function TodoCreation() {
+  const [dueDate, setDueDate] = useState(null);
   const [newTodoName, setNewTodoName] = useState("");
   const [newTodoDescription, setNewTodoDescription] = useState("");
   const [newTodoMoney, setNewTodoMoney] = useState("");
@@ -108,6 +113,14 @@ function TodoCreation() {
 
       const sharedUsers = [currentUser.uid, ...filteredSharingWithIds];
 
+      // Get the current date and time
+      const currentDate = new Date();
+
+      // Calculate the due date (e.g., adding 7 days to the current date)
+      const dueDate = new Date();
+      dueDate.setDate(currentDate.getDate() + 7); // Adding 7 days
+
+      // Include dueDate in the todoToAdd object
       const todoToAdd = {
         name: newTodoName,
         description: newTodoDescription,
@@ -118,8 +131,10 @@ function TodoCreation() {
         sharedUsers: sharedUsers,
         userId: currentUser.uid,
         createdBy: createdBy,
+        dueDate: dueDate,
       };
 
+      // Add the todoToAdd object to the "todos" collection in Firestore
       await addDoc(collection(db, "todos"), todoToAdd);
       setNewTodoName("");
       setNewTodoDescription("");
@@ -186,6 +201,16 @@ function TodoCreation() {
               placeholder="Enter amount of points"
               value={newTodoPoints}
               onChange={(event) => setNewTodoPoints(event.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="todoDueDateInput">
+            <Form.Label>Due Date (Optional):</Form.Label>
+            <DatePicker
+              selected={dueDate}
+              onChange={(date) => setDueDate(date)}
+              className="form-control"
+              dateFormat="yyyy-MM-dd"
+              placeholderText="Select due date"
             />
           </Form.Group>
           <Form.Group controlId="assigneeDropdown">

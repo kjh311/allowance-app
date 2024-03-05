@@ -1,26 +1,75 @@
-// ChildLoginPage.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  doc,
+  collection,
+  setDoc,
+  getDoc,
+  query,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
 
 function ChildLoginPage() {
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [loginPin, setLoginPin] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchChildCount = async () => {
+      try {
+        console.log("Reading children count from database...");
+        const q = query(collection(db, "children"));
+        const childrenSnapshot = await getDocs(q);
+        console.log(q);
+        console.log(childrenSnapshot);
+        // setChildCount(childrenSnapshot.size); // Get the size of the snapshot
+      } catch (error) {
+        console.error("Error fetching children:", error.message);
+      }
+    };
+
+    // if (currentUser) {
+    //   fetchChildCount();
+
+    //   const unsubscribe = onSnapshot(collection(db, "children"), () => {
+    //     fetchChildCount();
+    //   });
+
+    //   return () => unsubscribe();
+    // }
+    fetchChildCount();
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // Fetch the hashed password from Firestore based on the child's ID
-      const childId = "uniqueChildId"; // You can replace this with actual logic to determine the child's ID
-      const childDoc = await db.collection("children").doc(childId).get();
-      const correctPassword = childDoc.data().password; // Assuming you have a "password" field in your child document
-      // Compare the entered password with the correct password
-      if (password === correctPassword) {
-        // Passwords match, redirect to the child page
-        navigate(`/child/${childId}`);
+      // Fetch the child document from Firestore based on the entered name
+      const childrenRef = db.collection("children");
+
+      // const querySnapshot = await childrenRef.where("name", "==", name).get();
+      // console.log(querySnapshot);
+      const querySnapshot = await childrenRef
+        .where("name", "==", name)
+        .get()
+        .catch((error) => {
+          console.error("Error querying Firestore:", error);
+          alert(
+            "An error occurred while fetching data. Please try again later."
+          );
+          return;
+        });
+
+      // Check if loginPin matches
+      const childDoc = querySnapshot.docs[0]; // Assuming unique names
+      const correctLoginPin = childDoc.data().loginPin;
+
+      if (loginPin === correctLoginPin) {
+        // Login successful, redirect to the child page
+        navigate(`/child/${childDoc.id}`);
       } else {
-        // Incorrect password, display an error message
-        alert("Incorrect password. Please try again.");
+        // Incorrect loginPin
+        alert("Incorrect login pin. Please try again.");
       }
     } catch (error) {
       console.error("Error logging in:", error);
@@ -34,15 +83,27 @@ function ChildLoginPage() {
         <h2 className="text-2xl font-semibold mb-4">Child Login</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label htmlFor="password" className="block text-gray-700">
-              Password:
+            <label htmlFor="name" className="block text-gray-700">
+              Name:
+            </label>
+            <input
+              type="text"
+              id="name"
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="loginPin" className="block text-gray-700">
+              Login Pin:
             </label>
             <input
               type="password"
-              id="password"
+              id="loginPin"
               className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={loginPin}
+              onChange={(e) => setLoginPin(e.target.value)}
             />
           </div>
           <button
