@@ -113,14 +113,7 @@ function TodoCreation() {
 
       const sharedUsers = [currentUser.uid, ...filteredSharingWithIds];
 
-      // Get the current date and time
-      const currentDate = new Date();
-
-      // Calculate the due date (e.g., adding 7 days to the current date)
-      const dueDate = new Date();
-      dueDate.setDate(currentDate.getDate() + 7); // Adding 7 days
-
-      // Include dueDate in the todoToAdd object
+      // Include formattedDueDate in the todoToAdd object if dueDate is selected
       const todoToAdd = {
         name: newTodoName,
         description: newTodoDescription,
@@ -131,8 +124,13 @@ function TodoCreation() {
         sharedUsers: sharedUsers,
         userId: currentUser.uid,
         createdBy: createdBy,
-        dueDate: dueDate,
       };
+
+      // If dueDate is selected, include it in the todoToAdd object
+      if (dueDate) {
+        const formattedDueDate = dueDate.toISOString().split("T")[0];
+        todoToAdd.dueDate = formattedDueDate;
+      }
 
       // Add the todoToAdd object to the "todos" collection in Firestore
       await addDoc(collection(db, "todos"), todoToAdd);
@@ -140,6 +138,7 @@ function TodoCreation() {
       setNewTodoDescription("");
       setNewTodoMoney("");
       setNewTodoPoints("");
+      setDueDate(null); // Reset dueDate after adding the todo
       console.log("Todo created successfully");
     } catch (error) {
       console.error("Error creating todo:", error);

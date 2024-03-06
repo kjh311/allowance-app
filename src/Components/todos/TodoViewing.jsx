@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "./todo.scss";
 import {
   collection,
   onSnapshot,
@@ -16,9 +15,13 @@ import { Button, Container, Row, Col } from "react-bootstrap";
 import { useAuth } from "../../contexts/authContext";
 import { db } from "../../firebase/firebase";
 import "./todo.scss";
+import DatePicker from "react-datepicker";
+import "./Calendar.scss";
 
 function TodoViewing() {
   const [todos, setTodos] = useState([]);
+  const [dueDate, setDueDate] = useState(new Date());
+
   const [children, setChildren] = useState([]);
   const [sharingWithIds, setSharingWithIds] = useState([]);
   const [sharingWithChildren, setSharingWithChildren] = useState([]);
@@ -124,7 +127,8 @@ function TodoViewing() {
     money,
     points,
     assignedTo,
-    completed
+    completed,
+    dueDate
   ) => {
     setEditingTodoId(id);
     setEditedTodoName(name);
@@ -133,6 +137,7 @@ function TodoViewing() {
     setEditedTodoPoints(points);
     setSelectedChildId(assignedTo);
     setCompleted(completed);
+    setDueDate(dueDate ? new Date(dueDate) : new Date());
   };
 
   const cancelEditing = () => {
@@ -190,6 +195,10 @@ function TodoViewing() {
         }
       }
 
+      // Format the dueDate
+      const formattedDueDate =
+        dueDate !== null ? dueDate.toISOString().split("T")[0] : null;
+
       await updateDoc(todoRef, {
         name: editedTodoName,
         description: editedTodoDescription,
@@ -198,6 +207,7 @@ function TodoViewing() {
         assignedTo: assignedTo,
         completed: completed,
         sharedUsers: todoData.sharedUsers,
+        dueDate: formattedDueDate, // Update the dueDate here
       });
 
       console.log(`Todo with ID ${editingTodoId} updated successfully`);
@@ -310,6 +320,39 @@ function TodoViewing() {
                 />
               </div>
               <div>
+                <p>Due Date:</p>
+                <div>
+                  <p>Due Date:</p>
+                  {dueDate ? (
+                    <div>
+                      <DatePicker
+                        selected={dueDate}
+                        onChange={(date) => setDueDate(date)}
+                        className="input-style w-100"
+                      />
+                      <label>
+                        <input
+                          className="radio-button"
+                          type="radio"
+                          value=""
+                          onChange={() => setDueDate(null)}
+                        />
+                        Remove Due Date
+                      </label>
+                    </div>
+                  ) : (
+                    <div>
+                      <DatePicker
+                        selected={dueDate}
+                        onChange={(date) => setDueDate(date)}
+                        className="input-style w-100"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div>
                 <p>Completed:</p>
                 <select
                   value={completed}
@@ -378,7 +421,7 @@ function TodoViewing() {
                   </div>
 
                   {todo.description ? (
-                    <Col>
+                    <Col md={6} lg={4} xl={3}>
                       <p className="text-center">
                         <span className="todo-card-p">Description:</span>
                         {<br />} {todo.description}
@@ -387,7 +430,7 @@ function TodoViewing() {
                   ) : null}
 
                   {todo.money ? (
-                    <Col>
+                    <Col md={6} lg={4} xl={3}>
                       <p className="text-center">
                         <span className="todo-card-p">Money:</span>
                         {<br />} ${todo.money}
@@ -396,7 +439,7 @@ function TodoViewing() {
                   ) : null}
 
                   {todo.points ? (
-                    <Col>
+                    <Col md={6} lg={4} xl={3}>
                       <p className="text-center">
                         <span className="todo-card-p">Points:</span>
                         {<br />} {todo.points}
@@ -404,19 +447,33 @@ function TodoViewing() {
                     </Col>
                   ) : null}
 
-                  <Col>
+                  <Col md={6} lg={4} xl={3}>
+                    <p className="text-center">
+                      <span className="todo-card-p">Due Date:</span>
+                      <br />
+                      {todo.dueDate
+                        ? new Date(todo.dueDate).toLocaleString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          })
+                        : "No Due Date"}
+                    </p>
+                  </Col>
+
+                  <Col md={6} lg={4} xl={3}>
                     <p className="text-center">
                       <span className="todo-card-p">Completed:</span>
                       {<br />} {todo.completed ? "Yes" : "No"}
                     </p>{" "}
                   </Col>
-                  <Col>
+                  <Col md={6} lg={4} xl={3}>
                     <p className="text-center">
                       <span className="todo-card-p">Assigned To:</span>
                       {<br />} {getChildName(todo.assignedTo)}
                     </p>
                   </Col>
-                  <Col>
+                  <Col md={6} lg={4} xl={3}>
                     <p className="text-center">
                       <span className="todo-card-p">Created By:</span>
                       {<br />} {todo.createdBy}
@@ -435,7 +492,8 @@ function TodoViewing() {
                       todo.money,
                       todo.points,
                       todo.assignedTo,
-                      todo.completed
+                      todo.completed,
+                      todo.dueDate
                     )
                   }
                   variant="primary"
