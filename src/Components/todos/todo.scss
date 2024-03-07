@@ -1,4 +1,6 @@
-
+.red-background{
+  background-color: #f96666;
+}
   
   
   .custom-button {
@@ -89,4 +91,14 @@ input{
   .radio-button{
     margin-left: 20px;
     margin-right: 5px;
+  }
+
+  .checkmark-icon-div{
+    position: relative;
+  }
+
+  .checkmark-icon{
+    position: absolute;
+    right: 0;
+    font-size: 2em;
   }

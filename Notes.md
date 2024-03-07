@@ -1,5 +1,27 @@
-CORE:
+TODO:
+-login functionality for kids where they can only see their own page. They can see what chores are assigned to them and which they can pick up for extra cash
+-a child's version of the app where they can hit 'complete' for each chore and a notification will be sent to the adult for review. Or it will turn a different color for review.
+-A list of chores under the user's profile that they need to review
+-chores can be bumped up based on due date and may change color to indicate importance.
+-Chores will automatically be bumped up the chain based on their urgency or due date.
+-Set reaccuring allowance to auto add to the child's total
+-set reaccuring chores
+-Fix sharing data for user that accepted the invitation, make sure if they hit delete there's a warning prompt, and it deletes sharingWith and sharedUsers from the DB.
+-if picture doesn't load, don't show anything for child or user
 
+-Get rid of consoles.
+-comment code and refine.
+-do a nice Readme.
+
+-
+
+DONE:
+-each chore monetary value can be adjusted
+-password reset, forgot password
+-photo for each child
+-chores can be moved to another child
+-The child's app version will show all available chores and their monetary value and they can pick which they want to do and those will be assigned to them.
+-chores for adults, add list of chores and adults can pick which they'd like to accomplish
 -login and signup functionality
 -Create CRUD functionality for users to have children under them
 -allow multiple users to access the same children
@@ -7,18 +29,6 @@ CORE:
 -crud for chores to be assigned to different children
 -each chore will have a point / monetary value associated with it
 -once complete that chore will be removed from the chore list and the money will be added to the child's total.
-
-ICEBOX:
--each chore monetary value can be adjusted
--password reset, forgot password
--photo for each child
--chores can be moved to another child
--a child's version of the app where they can hit 'complete' for each chore and a notification will be sent to the adult for review. Or it will turn a different color for review.
--The child's app version will show all available chores and their monetary value and they can pick which they want to do and those will be assigned to them.
--chores can be bumped up based on due date and may change color to indicate importance.
--Chores will automatically be bumped up the chain based on their urgency or due date.
--chores for adults, add list of chores and adults can pick which they'd like to accomplish
--Set reaccuring allowance to auto add to the child's total
 
 NOTES:
 FIREBASE CONSOLE: https://console.firebase.google.com/u/0/

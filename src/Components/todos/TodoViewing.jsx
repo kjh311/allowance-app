@@ -11,6 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { IoIosCheckmarkCircle } from "react-icons/io";
 import { Button, Container, Row, Col } from "react-bootstrap";
 import { useAuth } from "../../contexts/authContext";
 import { db } from "../../firebase/firebase";
@@ -19,9 +20,9 @@ import DatePicker from "react-datepicker";
 import "./Calendar.scss";
 
 function TodoViewing() {
+  const today = new Date();
   const [todos, setTodos] = useState([]);
   const [dueDate, setDueDate] = useState(new Date());
-
   const [children, setChildren] = useState([]);
   const [sharingWithIds, setSharingWithIds] = useState([]);
   const [sharingWithChildren, setSharingWithChildren] = useState([]);
@@ -34,6 +35,55 @@ function TodoViewing() {
   const [completed, setCompleted] = useState(false);
   const { currentUser } = useAuth();
   const [loading, setLoading] = useState(true);
+
+  // Sort todos based on dueDate and completed status
+  const sortedTodos = [...todos]
+    .sort((a, b) => {
+      // Convert dueDate strings to Date objects
+      const dateA = new Date(a.dueDate);
+      const dateB = new Date(b.dueDate);
+
+      // Compare due dates
+      if (dateA < dateB) return -1;
+      if (dateA > dateB) return 1;
+
+      // If due dates are equal, prioritize completed todos at the bottom
+      if (a.completed && !b.completed) return 1;
+      if (!a.completed && b.completed) return -1;
+
+      // If both have the same due date and completion status, maintain their order
+      return 0;
+    })
+    .sort((a, b) => {
+      // Ensure completed todos are always placed at the bottom
+      if (a.completed && !b.completed) return 1;
+      if (!a.completed && b.completed) return -1;
+      return 0;
+    });
+
+  const isOverdue = (dueDate) => {
+    const now = new Date();
+    const due = new Date(dueDate);
+    return due < now;
+  };
+
+  const isDueSoon = (dueDate) => {
+    const now = new Date();
+    const due = new Date(dueDate);
+    const oneWeek = 7 * 24 * 60 * 60 * 1000;
+    return due < new Date(now.getTime() + oneWeek) && due > now;
+  };
+
+  const isDueInAMonth = (dueDate) => {
+    const now = new Date();
+    const due = new Date(dueDate);
+    const oneWeek = 7 * 24 * 60 * 60 * 1000;
+    const oneMonth = 30 * 24 * 60 * 60 * 1000;
+    return (
+      due < new Date(now.getTime() + oneMonth) &&
+      due > new Date(now.getTime() + oneWeek)
+    );
+  };
 
   useEffect(() => {
     const fetchSharingWithIds = async () => {
@@ -274,12 +324,23 @@ function TodoViewing() {
 
   return (
     <div className="todo-list-container bg-white rounded-lg shadow-lg">
-      {todos.map((todo) => (
+      {sortedTodos.map((todo) => (
         <div
           key={todo.id}
-          className={`todo-item border border-gray-300 p-4 mb-4 rounded-md ${
-            todo.completed ? "bg-green-100" : ""
-          }`}
+          className={`todo-item border border-gray-300 p-4 mb-4 rounded-md 
+         ${todo.completed ? "bg-green-100" : ""}
+         ${
+           todo.completed ? "" : isOverdue(todo.dueDate) ? "red-background" : ""
+         }
+         ${todo.completed ? "" : isDueSoon(todo.dueDate) ? "bg-orange-100" : ""}
+         ${
+           todo.completed
+             ? ""
+             : isDueInAMonth(todo.dueDate)
+             ? "bg-yellow-100"
+             : ""
+         }
+       `}
         >
           {editingTodoId === todo.id ? (
             <>
@@ -416,6 +477,11 @@ function TodoViewing() {
             <>
               <Container>
                 <Row>
+                  <div className="checkmark-icon-div">
+                    {todo.completed ? (
+                      <IoIosCheckmarkCircle className="checkmark-icon" />
+                    ) : null}
+                  </div>
                   <div className="text-center">
                     <h3 className="text-center todo-name">{todo.name}</h3>
                   </div>
