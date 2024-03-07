@@ -186,9 +186,8 @@ function TodoViewing() {
     setEditedTodoMoney(money);
     setEditedTodoPoints(points);
     setSelectedChildId(assignedTo);
-    setCompleted(completed);
-    // Set the dueDate to null if it's undefined or null
-    setDueDate(dueDate ? new Date(dueDate) : null);
+    // Check if dueDate exists or is not false, if not, set to null
+    setDueDate(dueDate !== false ? new Date(dueDate) : null);
   };
 
   const cancelEditing = () => {
@@ -394,7 +393,7 @@ function TodoViewing() {
               <div>
                 <div>
                   <p>Due Date:</p>
-                  {dueDate ? (
+                  {todo.dueDate !== null && ( // Check if todo.dueDate is not null
                     <div>
                       <DatePicker
                         selected={dueDate}
@@ -411,10 +410,11 @@ function TodoViewing() {
                         Remove Due Date
                       </label>
                     </div>
-                  ) : (
+                  )}
+                  {todo.dueDate === null && ( // Check if todo.dueDate is null
                     <div>
                       <DatePicker
-                        selected={dueDate}
+                        selected={null} // Pass null as selected value
                         onChange={(date) => setDueDate(date)}
                         className="input-style w-100"
                       />
@@ -423,7 +423,7 @@ function TodoViewing() {
                 </div>
               </div>
 
-              <div>
+              {/* <div>
                 <p>Completed:</p>
                 <select
                   value={completed}
@@ -433,7 +433,7 @@ function TodoViewing() {
                   <option value="true">Yes</option>
                   <option value="false">No</option>
                 </select>
-              </div>
+              </div> */}
               <div>
                 <p>Assigned to:</p>
                 <select
@@ -588,7 +588,7 @@ function TodoViewing() {
                       todo.points,
                       todo.assignedTo,
                       todo.completed,
-                      todo.dueDate
+                      todo.dueDate || null // Pass null if todo.dueDate is false or undefined
                     )
                   }
                   variant="primary"
@@ -602,6 +602,32 @@ function TodoViewing() {
                   variant="danger"
                 >
                   <FaTrash />
+                </Button>
+                <Button
+                  className=" "
+                  onClick={async () => {
+                    const confirmation = window.confirm(
+                      "Mark this todo as done?"
+                    );
+                    if (confirmation) {
+                      try {
+                        await updateDoc(doc(db, "todos", todo.id), {
+                          completed: true,
+                        });
+                        console.log(
+                          `Todo with ID ${todo.id} marked as completed`
+                        );
+                      } catch (error) {
+                        console.error(
+                          `Error marking todo with ID ${todo.id} as completed:`,
+                          error
+                        );
+                      }
+                    }
+                  }}
+                  variant="success"
+                >
+                  Mark as Done
                 </Button>
               </div>
             </>
