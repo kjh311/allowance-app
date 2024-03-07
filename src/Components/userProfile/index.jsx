@@ -33,7 +33,7 @@ const UserProfile = () => {
   }, []);
 
   return (
-    <Container className="mt-5 mb-5">
+    <Container className="mt-5 mb-5 ">
       <ShareDataInvitation />
       <Row className="justify-content-center">
         <Col md={10} lg={8} xl={12}>

@@ -323,7 +323,7 @@ function TodoViewing() {
   }
 
   return (
-    <div className="todo-list-container  madimi-one-regular  rounded-lg shadow-lg">
+    <div className="todo-list-container   rounded-lg shadow-lg">
       {sortedTodos.map((todo) => (
         <div
           key={todo.id}

@@ -8,7 +8,7 @@ TODO:
 -set reaccuring chores
 -Fix sharing data for user that accepted the invitation, make sure if they hit delete there's a warning prompt, and it deletes sharingWith and sharedUsers from the DB.
 -if picture doesn't load, don't show anything for child or user
-
+-Allow image uploads for kids and users?
 -Get rid of consoles.
 -comment code and refine.
 -do a nice Readme.

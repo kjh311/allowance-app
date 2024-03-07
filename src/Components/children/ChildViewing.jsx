@@ -191,21 +191,24 @@ function ChildViewing() {
                     }
                     className="mb-2 border border-gray-300 rounded-md px-3 py-2"
                   />
-                  <Button
-                    variant="success"
-                    onClick={() => submitEdit(child.id)}
-                    className="mb-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded"
-                  >
-                    <FaEdit className="mr-2" />
-                    Submit
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    onClick={cancelEdit}
-                    className="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded"
-                  >
-                    Cancel
-                  </Button>
+                  <div className="flex items-center mb-2">
+                    <Button
+                      variant="success"
+                      onClick={() => submitEdit(child.id)}
+                      className="child-viewing-submit-btn mr-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded flex items-center"
+                    >
+                      <FaEdit className="mr-2 submit-react-icon" />
+                      Submit
+                    </Button>
+
+                    <Button
+                      variant="secondary"
+                      onClick={cancelEdit}
+                      className="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
                 </Form>
               ) : (
                 <div className="flex">

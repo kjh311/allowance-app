@@ -19,7 +19,7 @@ import "./Styles/font.scss";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App  madimi-one-regular">
       <AuthProvider>
         <Router>
           {" "}
