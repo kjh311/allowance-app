@@ -603,32 +603,61 @@ function TodoViewing() {
                 >
                   <FaTrash />
                 </Button>
-                <Button
-                  className=" "
-                  onClick={async () => {
-                    const confirmation = window.confirm(
-                      "Mark this todo as done?"
-                    );
-                    if (confirmation) {
-                      try {
-                        await updateDoc(doc(db, "todos", todo.id), {
-                          completed: true,
-                        });
-                        console.log(
-                          `Todo with ID ${todo.id} marked as completed`
-                        );
-                      } catch (error) {
-                        console.error(
-                          `Error marking todo with ID ${todo.id} as completed:`,
-                          error
-                        );
+                {todo.completed ? (
+                  <Button
+                    className=" "
+                    onClick={async () => {
+                      const confirmation = window.confirm(
+                        "Mark this todo as Incomplete?"
+                      );
+                      if (confirmation) {
+                        try {
+                          await updateDoc(doc(db, "todos", todo.id), {
+                            completed: false,
+                          });
+                          console.log(
+                            `Todo with ID ${todo.id} marked as incomplete`
+                          );
+                        } catch (error) {
+                          console.error(
+                            `Error marking todo with ID ${todo.id} as incomplete:`,
+                            error
+                          );
+                        }
                       }
-                    }
-                  }}
-                  variant="success"
-                >
-                  Mark as Done
-                </Button>
+                    }}
+                    variant="warning" // Change the variant to warning for "Mark as Incomplete" button
+                  >
+                    Mark as Incomplete
+                  </Button>
+                ) : (
+                  <Button
+                    className=" "
+                    onClick={async () => {
+                      const confirmation = window.confirm(
+                        "Mark this todo as done?"
+                      );
+                      if (confirmation) {
+                        try {
+                          await updateDoc(doc(db, "todos", todo.id), {
+                            completed: true,
+                          });
+                          console.log(
+                            `Todo with ID ${todo.id} marked as completed`
+                          );
+                        } catch (error) {
+                          console.error(
+                            `Error marking todo with ID ${todo.id} as completed:`,
+                            error
+                          );
+                        }
+                      }
+                    }}
+                    variant="success"
+                  >
+                    Mark as Done
+                  </Button>
+                )}
               </div>
             </>
           )}
