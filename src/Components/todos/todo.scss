@@ -1,6 +1,10 @@
 .red-background{
   background-color: #f96666;
 }
+
+.orange-background{
+  background-color: #ffa632;
+}
   
   
   .custom-button {
@@ -53,6 +57,10 @@ input{
     padding: 10px;
     margin-bottom: 10px;
     // background-color: #c9c9c9;
+  }
+
+  .todo-list-container{
+    // background-color: #efeded;
   }
 
   .input-style, .form-input{
@@ -117,4 +125,13 @@ input{
     border-radius: 5px;
     border: 2px solid black;
     margin-top: -16px;
+  }
+
+  .todo-item div p{
+    margin-top: 15px;
+    margin-bottom: 0.1rem;
+  }
+
+  .edit-delete-div{
+    margin-top: 30px !important;
   }

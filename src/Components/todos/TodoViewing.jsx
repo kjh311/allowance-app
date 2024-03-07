@@ -323,7 +323,7 @@ function TodoViewing() {
   }
 
   return (
-    <div className="todo-list-container bg-white rounded-lg shadow-lg">
+    <div className="todo-list-container  madimi-one-regular  rounded-lg shadow-lg">
       {sortedTodos.map((todo) => (
         <div
           key={todo.id}
@@ -332,7 +332,13 @@ function TodoViewing() {
          ${
            todo.completed ? "" : isOverdue(todo.dueDate) ? "red-background" : ""
          }
-         ${todo.completed ? "" : isDueSoon(todo.dueDate) ? "bg-orange-100" : ""}
+         ${
+           todo.completed
+             ? ""
+             : isDueSoon(todo.dueDate)
+             ? "orange-background"
+             : ""
+         }
          ${
            todo.completed
              ? ""
@@ -381,7 +387,6 @@ function TodoViewing() {
                 />
               </div>
               <div>
-                <p>Due Date:</p>
                 <div>
                   <p>Due Date:</p>
                   {dueDate ? (
@@ -498,7 +503,7 @@ function TodoViewing() {
                     ) : null}
                   </div>
                   <div className="text-center">
-                    <h3 className="text-center todo-name">{todo.name}</h3>
+                    <h3 className="text-center todo-name">"{todo.name}"</h3>
                   </div>
 
                   {todo.description ? (
@@ -562,9 +567,9 @@ function TodoViewing() {
                   </Col>
                 </Row>
               </Container>
-              <div className="space-x-4 text-center">
+              <div className="space-x-4 text-center edit-delete-div">
                 <Button
-                  className=" "
+                  className="  justify-content-center"
                   onClick={() =>
                     startEditing(
                       todo.id,
@@ -579,14 +584,15 @@ function TodoViewing() {
                   }
                   variant="primary"
                 >
-                  <FaEdit className="mr-2" />
+                  <FaEdit />
                 </Button>
+
                 <Button
                   className=" "
                   onClick={() => deleteTodo(todo.id)}
                   variant="danger"
                 >
-                  <FaTrash className="mr-2" />
+                  <FaTrash />
                 </Button>
               </div>
             </>

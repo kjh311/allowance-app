@@ -15,6 +15,7 @@ import ChildPage from "./components/children/ChildPage";
 import Children from "./components/children";
 import Profile from "./components/userProfile";
 import { db } from "./firebase/firebase";
+import "./Styles/font.scss";
 
 function App() {
   return (
