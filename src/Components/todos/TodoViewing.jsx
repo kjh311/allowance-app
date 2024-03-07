@@ -35,6 +35,7 @@ function TodoViewing() {
   const [completed, setCompleted] = useState(false);
   const { currentUser } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [selectedDueDate, setSelectedDueDate] = useState(dueDate); // Correct declaration
 
   // Sort todos based on dueDate and completed status
   const sortedTodos = [...todos]
@@ -150,11 +151,13 @@ function TodoViewing() {
       }
     );
 
+    setSelectedDueDate(dueDate);
+
     return () => {
       unsubscribeTodos();
       unsubscribeChildren();
     };
-  }, [currentUser]);
+  }, [currentUser, dueDate]);
 
   const deleteTodo = async (id) => {
     try {
@@ -186,8 +189,7 @@ function TodoViewing() {
     setEditedTodoMoney(money);
     setEditedTodoPoints(points);
     setSelectedChildId(assignedTo);
-    // Check if dueDate exists or is not false, if not, set to null
-    setDueDate(dueDate !== false ? new Date(dueDate) : null);
+    setSelectedDueDate(dueDate !== null ? new Date(dueDate) : null); // Update selectedDueDate
   };
 
   const cancelEditing = () => {
@@ -247,7 +249,9 @@ function TodoViewing() {
 
       // Format the dueDate
       const formattedDueDate =
-        dueDate !== null ? dueDate.toISOString().split("T")[0] : null;
+        selectedDueDate !== null
+          ? selectedDueDate.toISOString().split("T")[0]
+          : null;
 
       await updateDoc(todoRef, {
         name: editedTodoName,
@@ -257,7 +261,7 @@ function TodoViewing() {
         assignedTo: assignedTo,
         completed: completed,
         sharedUsers: todoData.sharedUsers,
-        dueDate: formattedDueDate, // Update the dueDate here
+        dueDate: formattedDueDate, // Update the dueDate directly
       });
 
       console.log(`Todo with ID ${editingTodoId} updated successfully`);
@@ -317,6 +321,8 @@ function TodoViewing() {
   // if (loading) {
   //   return <div className="text-center loading-message ">LOADING...</div>;
   // }
+
+  console.log("Todos:", todos);
 
   if (todos.length === 0) {
     return <div>No Todos</div>;
@@ -393,11 +399,11 @@ function TodoViewing() {
               <div>
                 <div>
                   <p>Due Date:</p>
-                  {todo.dueDate !== null && ( // Check if todo.dueDate is not null
+                  {todo.dueDate !== null && (
                     <div>
                       <DatePicker
-                        selected={dueDate}
-                        onChange={(date) => setDueDate(date)}
+                        selected={selectedDueDate}
+                        onChange={(date) => setSelectedDueDate(date)}
                         className="input-style w-100"
                       />
                       <label>
@@ -405,17 +411,18 @@ function TodoViewing() {
                           className="radio-button"
                           type="radio"
                           value=""
-                          onChange={() => setDueDate(null)}
+                          onChange={() => setSelectedDueDate(null)} // Ensure selectedDueDate is set to null
                         />
                         Remove Due Date
                       </label>
                     </div>
                   )}
+
                   {todo.dueDate === null && ( // Check if todo.dueDate is null
                     <div>
                       <DatePicker
-                        selected={null} // Pass null as selected value
-                        onChange={(date) => setDueDate(date)}
+                        selected={selectedDueDate}
+                        onChange={(date) => setSelectedDueDate(date)}
                         className="input-style w-100"
                       />
                     </div>
@@ -547,12 +554,19 @@ function TodoViewing() {
                       <span className="todo-card-p">Due Date:</span>
                       <br />
                       {todo.dueDate
-                        ? new Date(todo.dueDate).toLocaleString("en-US", {
+                        ? new Date(
+                            todo.dueDate + "T00:00:00-06:00"
+                          ).toLocaleDateString("en-US", {
+                            year: "numeric",
                             month: "long",
                             day: "numeric",
-                            year: "numeric",
                           })
                         : "No Due Date"}
+                    </p>
+                    <p className="text-center">
+                      <span className="todo-card-p">Points:</span>
+                      <br />
+                      {todo.points || "No Points"}
                     </p>
                   </Col>
 
