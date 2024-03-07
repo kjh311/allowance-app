@@ -191,7 +191,7 @@ function ChildViewing() {
                     }
                     className="mb-2 border border-gray-300 rounded-md px-3 py-2"
                   />
-                  <div className="flex items-center mb-2">
+                  <div className="flex items-center mb-2 submit-btn-div">
                     <Button
                       variant="success"
                       onClick={() => submitEdit(child.id)}

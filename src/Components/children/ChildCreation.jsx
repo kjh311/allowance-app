@@ -93,10 +93,18 @@ function ChildCreation() {
   return (
     <Accordion className="bg-white rounded-lg shadow-lg">
       <Accordion.Item eventKey="0">
-        <Accordion.Header onClick={toggleAccordion}>
-          {accordionExpanded ? <FaMinusCircle /> : <FaPlusCircle />}{" "}
+        <Accordion.Header
+          onClick={toggleAccordion}
+          className="d-flex align-items-center justify-content-center"
+        >
+          {accordionExpanded ? (
+            <FaMinusCircle className="mr-2" />
+          ) : (
+            <FaPlusCircle className="mr-2" />
+          )}{" "}
           <span className="create-new-child">Create New Child</span>
         </Accordion.Header>
+
         <Accordion.Body>
           <Form>
             <Form.Group controlId="childNameInput">

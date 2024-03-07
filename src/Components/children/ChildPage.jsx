@@ -96,7 +96,7 @@ function ChildPage() {
               <div className="flex justify-center lg:pt-4 pt-8 pb-0">
                 <div className="p-3 text-center">
                   <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
-                    ${child.money}
+                    ${child.money.toFixed(2)}
                   </span>
                   <span className="text-sm text-slate-400">Money</span>
                 </div>

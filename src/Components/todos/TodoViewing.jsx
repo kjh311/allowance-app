@@ -39,9 +39,9 @@ function TodoViewing() {
   // Sort todos based on dueDate and completed status
   const sortedTodos = [...todos]
     .sort((a, b) => {
-      // Convert dueDate strings to Date objects
-      const dateA = new Date(a.dueDate);
-      const dateB = new Date(b.dueDate);
+      // Compare due dates, treating null or undefined as the maximum value
+      const dateA = a.dueDate ? new Date(a.dueDate) : new Date("9999-12-31");
+      const dateB = b.dueDate ? new Date(b.dueDate) : new Date("9999-12-31");
 
       // Compare due dates
       if (dateA < dateB) return -1;
@@ -187,7 +187,8 @@ function TodoViewing() {
     setEditedTodoPoints(points);
     setSelectedChildId(assignedTo);
     setCompleted(completed);
-    setDueDate(dueDate ? new Date(dueDate) : new Date());
+    // Set the dueDate to null if it's undefined or null
+    setDueDate(dueDate ? new Date(dueDate) : null);
   };
 
   const cancelEditing = () => {
@@ -328,25 +329,29 @@ function TodoViewing() {
         <div
           key={todo.id}
           className={`todo-item border border-gray-300 p-4 mb-4 rounded-md 
-         ${todo.completed ? "bg-green-100" : ""}
-         ${
-           todo.completed ? "" : isOverdue(todo.dueDate) ? "red-background" : ""
-         }
-         ${
-           todo.completed
-             ? ""
-             : isDueSoon(todo.dueDate)
-             ? "orange-background"
-             : ""
-         }
-         ${
-           todo.completed
-             ? ""
-             : isDueInAMonth(todo.dueDate)
-             ? "bg-yellow-100"
-             : ""
-         }
-       `}
+    ${todo.completed ? "bg-green-100" : ""}
+    ${
+      todo.completed
+        ? ""
+        : todo.dueDate && isOverdue(todo.dueDate)
+        ? "red-background"
+        : ""
+    }
+    ${
+      todo.completed
+        ? ""
+        : todo.dueDate && isDueSoon(todo.dueDate)
+        ? "orange-background"
+        : ""
+    }
+    ${
+      todo.completed
+        ? ""
+        : todo.dueDate && isDueInAMonth(todo.dueDate)
+        ? "bg-yellow-100"
+        : ""
+    }
+  `}
         >
           {editingTodoId === todo.id ? (
             <>
@@ -488,20 +493,24 @@ function TodoViewing() {
                     ) : null}
                   </div>
                   <div className="due-status-div">
-                    {isOverdue(todo.dueDate) && !todo.completed ? (
+                    {todo.dueDate &&
+                    !todo.completed &&
+                    isOverdue(todo.dueDate) ? (
                       <strong>"OVERDUE!!"</strong>
                     ) : null}
-
-                    {isDueInAMonth(todo.dueDate) &&
+                    {todo.dueDate &&
                     !todo.completed &&
+                    isDueInAMonth(todo.dueDate) &&
                     !isDueSoon(todo.dueDate) ? (
                       <strong>Due this Month</strong>
                     ) : null}
-
-                    {isDueSoon(todo.dueDate) && !todo.completed ? (
+                    {todo.dueDate &&
+                    !todo.completed &&
+                    isDueSoon(todo.dueDate) ? (
                       <strong>Due this Week!</strong>
                     ) : null}
                   </div>
+
                   <div className="text-center">
                     <h3 className="text-center todo-name">"{todo.name}"</h3>
                   </div>
@@ -519,7 +528,7 @@ function TodoViewing() {
                     <Col md={6} lg={4} xl={3}>
                       <p className="text-center">
                         <span className="todo-card-p">Money:</span>
-                        {<br />} ${todo.money}
+                        {<br />} ${todo.money.toFixed(2)}
                       </p>
                     </Col>
                   ) : null}
