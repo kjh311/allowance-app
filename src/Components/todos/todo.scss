@@ -101,4 +101,20 @@ input{
     position: absolute;
     right: 0;
     font-size: 2em;
+    margin-top: -11px;
+  }
+
+  .todo-viewing-container{
+    position: relative;
+  }
+
+  .due-status-div strong{
+    position: absolute;
+    right: -15px;
+    text-decoration: underline;
+    padding: 5px;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 2px solid black;
+    margin-top: -16px;
   }

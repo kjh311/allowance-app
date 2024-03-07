@@ -475,11 +475,26 @@ function TodoViewing() {
             </>
           ) : (
             <>
-              <Container>
+              <Container className="todo-viewing-container">
                 <Row>
                   <div className="checkmark-icon-div">
                     {todo.completed ? (
                       <IoIosCheckmarkCircle className="checkmark-icon" />
+                    ) : null}
+                  </div>
+                  <div className="due-status-div">
+                    {isOverdue(todo.dueDate) && !todo.completed ? (
+                      <strong>"OVERDUE!!"</strong>
+                    ) : null}
+
+                    {isDueInAMonth(todo.dueDate) &&
+                    !todo.completed &&
+                    !isDueSoon(todo.dueDate) ? (
+                      <strong>Due this Month</strong>
+                    ) : null}
+
+                    {isDueSoon(todo.dueDate) && !todo.completed ? (
+                      <strong>Due this Week!</strong>
                     ) : null}
                   </div>
                   <div className="text-center">
