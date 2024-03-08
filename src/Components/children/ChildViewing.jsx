@@ -26,6 +26,7 @@ function ChildViewing() {
   const [editChildOwed, setEditChildOwed] = useState("");
   const [editChildPoints, setEditChildPoints] = useState("");
   const [editChildPhotoURL, setEditChildPhotoURL] = useState("");
+  const [editChildWeeklyAllowance, setEditChildWeeklyAllowance] = useState(""); // State for weekly allowance
   const [decryptedPasswords, setDecryptedPasswords] = useState({});
 
   useEffect(() => {
@@ -57,12 +58,13 @@ function ChildViewing() {
     return () => unsubscribe();
   }, [currentUser]);
 
-  const editChild = (id, name, money, points, photoURL) => {
+  const editChild = (id, name, money, points, photoURL, weeklyAllowance) => {
     setEditingChildId(id);
     setEditChildName(name);
     setEditChildOwed(money);
     setEditChildPoints(points);
-    setEditChildPhotoURL(photoURL); // Set initial value for photo URL
+    setEditChildPhotoURL(photoURL);
+    setEditChildWeeklyAllowance(weeklyAllowance); // Set initial value for weekly allowance
   };
 
   const cancelEdit = () => {
@@ -76,7 +78,8 @@ function ChildViewing() {
         name: editChildName,
         money: parseFloat(editChildOwed),
         points: parseInt(editChildPoints),
-        photoURL: editChildPhotoURL, // Update photo URL
+        photoURL: editChildPhotoURL,
+        weeklyAllowance: parseFloat(editChildWeeklyAllowance), // Update weekly allowance
       });
       console.log(`Child with ID ${id} updated successfully`);
       setEditingChildId(null);
@@ -123,7 +126,7 @@ function ChildViewing() {
                   <Row>
                     <Col className="text-center">
                       <p className="text-gray-600">
-                        Owed: <br />${child.money}
+                        Owed: <br />${child.money.toFixed(2)}
                       </p>
                     </Col>
                     <Col className="text-center">
@@ -132,6 +135,15 @@ function ChildViewing() {
                         {child.points}
                       </p>
                     </Col>
+                    {child.weeklyAllowance ? (
+                      <Col className="text-center">
+                        <p className="text-gray-600">
+                          Weekly Allowance: <br />$
+                          {child.weeklyAllowance.toFixed(2)}
+                        </p>
+                      </Col>
+                    ) : null}
+
                     <Col className="text-center">
                       <p className="text-gray-600">
                         Todos: <br />
@@ -181,6 +193,16 @@ function ChildViewing() {
                     onChange={(event) => setEditChildPoints(event.target.value)}
                     className="mb-2 border border-gray-300 rounded-md px-3 py-2"
                   />
+                  <Form.Label className="mb-2">Weekly Allowance:</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Enter weekly allowance"
+                    value={editChildWeeklyAllowance}
+                    onChange={(event) =>
+                      setEditChildWeeklyAllowance(event.target.value)
+                    }
+                    className="mb-2 border border-gray-300 rounded-md px-3 py-2"
+                  />
                   <Form.Label className="mb-2">Photo URL:</Form.Label>
                   <Form.Control
                     type="text"
@@ -220,7 +242,8 @@ function ChildViewing() {
                         child.name,
                         child.money,
                         child.points,
-                        child.photoURL
+                        child.photoURL,
+                        child.weeklyAllowance
                       )
                     }
                     className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded mr-2"

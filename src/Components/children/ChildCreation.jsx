@@ -13,6 +13,7 @@ function ChildCreation() {
   const [newChildMoney, setNewChildMoney] = useState("");
   const [newChildPoints, setNewChildPoints] = useState("");
   const [photoURL, setPhotoURL] = useState("");
+  const [weeklyAllowance, setWeeklyAllowance] = useState(""); // New state for weekly allowance
   const [accordionExpanded, setAccordionExpanded] = useState(false);
 
   const toggleAccordion = () => {
@@ -32,6 +33,7 @@ function ChildCreation() {
         name: newChildName,
         money: money,
         points: points,
+        weeklyAllowance: parseFloat(weeklyAllowance), // Save weekly allowance
         userId: currentUser.uid,
         createdBy: createdBy,
         photoURL: photoURL,
@@ -51,6 +53,7 @@ function ChildCreation() {
       setNewChildMoney("");
       setNewChildPoints("");
       setPhotoURL("");
+      setWeeklyAllowance(""); // Reset weekly allowance after creating child
 
       console.log("Child created successfully");
 
@@ -77,6 +80,14 @@ function ChildCreation() {
     if (/^\d*$/.test(value)) {
       // Only allow digits
       setNewChildPoints(value);
+    }
+  };
+
+  const handleWeeklyAllowanceChange = (event) => {
+    const value = event.target.value;
+    if (/^\d*\.?\d*$/.test(value)) {
+      // Only allow digits and decimals
+      setWeeklyAllowance(value);
     }
   };
 
@@ -114,6 +125,7 @@ function ChildCreation() {
                 placeholder="Enter child's name"
                 value={newChildName}
                 onChange={(event) => setNewChildName(event.target.value)}
+                required
               />
             </Form.Group>
             <Form.Group controlId="childPhotoURLInput">
@@ -126,21 +138,32 @@ function ChildCreation() {
               />
             </Form.Group>
             <Form.Group controlId="childMoneyInput">
-              <Form.Label>Money:</Form.Label>
+              <Form.Label>Money (Optional):</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter amount of money"
+                placeholder="Enter amount of money that the child is owed"
                 value={newChildMoney}
                 onChange={handleMoneyChange}
               />
             </Form.Group>
             <Form.Group controlId="childPointsInput">
-              <Form.Label>Points:</Form.Label>
+              <Form.Label>Points (Optional):</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter points"
+                placeholder="Enter points the child has earned"
                 value={newChildPoints}
                 onChange={handlePointsChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="childWeeklyAllowanceInput">
+              {" "}
+              {/* New form group for weekly allowance */}
+              <Form.Label>Weekly Allowance (Optional):</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter weekly allowance"
+                value={weeklyAllowance}
+                onChange={handleWeeklyAllowanceChange}
               />
             </Form.Group>
             <Button
