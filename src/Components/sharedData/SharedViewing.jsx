@@ -269,7 +269,7 @@ function SharedViewing() {
     return () => unsubscribe();
   }, []);
 
-  const handleDeleteSharedData = async (id, index) => {
+  const handleDeleteSharedData = async (id) => {
     const confirmed = window.confirm("Stop sharing data with this user?");
     if (confirmed) {
       try {
@@ -300,10 +300,15 @@ function SharedViewing() {
             sharingWith: arrayRemove(otherUserId),
           });
 
-          // Remove sharedData id from sharedUsers field in other user's document
+          // Remove currentUser's id from other user's sharingWith field
           await updateDoc(doc(db, "users", otherUserId), {
-            sharedUsers: arrayRemove(id),
+            sharingWith: arrayRemove(currentUser.uid),
           });
+
+          // Remove sharedData id from sharedUsers field in other user's document
+          // await updateDoc(doc(db, "users", otherUserId), {
+          //   sharedUsers: arrayRemove(id),
+          // });
 
           // Finally, delete sharedData document
           await deleteDoc(doc(db, "sharedData", id));
