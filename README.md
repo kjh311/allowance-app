@@ -59,8 +59,9 @@ To get started with the Allowance App, follow these steps:
 
 3. **Set Up Firebase**: Set up a Firebase project and configure Firebase Authentication and Firestore. Update the Firebase configuration in the project.
 
-//Firebase Rules:
+\*\*Firebase Rules:
 
+```bash
 rules_version = '2';
 service cloud.firestore {
 match /databases/{database}/documents {
@@ -94,6 +95,8 @@ allow read, write: if request.auth != null;
 
 }
 }
+
+```
 
 4. **Run the App**: Start the development server and run the app locally.
 
