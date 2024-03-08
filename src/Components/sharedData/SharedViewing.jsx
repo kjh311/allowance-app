@@ -232,9 +232,20 @@
 
 import React, { useState, useEffect } from "react";
 import { db } from "../../firebase/firebase";
-import { collection, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  doc,
+  getDoc,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  arrayRemove,
+} from "firebase/firestore";
 import { useAuth } from "../../contexts/authContext";
-import { Table } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
 import { FaCheckCircle, FaEdit, FaTrash } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
 
@@ -257,6 +268,53 @@ function SharedViewing() {
 
     return () => unsubscribe();
   }, []);
+
+  const handleDeleteSharedData = async (id, index) => {
+    const confirmed = window.confirm("Stop sharing data with this user?");
+    if (confirmed) {
+      try {
+        // Find the sharedData document
+        const sharedDoc = await getDoc(doc(db, "sharedData", id));
+        const sharedData = sharedDoc.data();
+
+        // Determine whether the other user's email is in the "email" or "senderEmail" field
+        const otherUserEmail =
+          sharedData.email === currentUser.email
+            ? sharedData.senderEmail
+            : sharedData.email;
+
+        // Find the other user's id in the users collection
+        const userQuery = query(
+          collection(db, "users"),
+          where("email", "==", otherUserEmail)
+        );
+        const userSnapshot = await getDocs(userQuery);
+        let otherUserId = null;
+        userSnapshot.forEach((doc) => {
+          otherUserId = doc.id;
+        });
+
+        if (otherUserId) {
+          // Remove otherUserId from currentUser's sharingWith field
+          await updateDoc(doc(db, "users", currentUser.uid), {
+            sharingWith: arrayRemove(otherUserId),
+          });
+
+          // Remove sharedData id from sharedUsers field in other user's document
+          await updateDoc(doc(db, "users", otherUserId), {
+            sharedUsers: arrayRemove(id),
+          });
+
+          // Finally, delete sharedData document
+          await deleteDoc(doc(db, "sharedData", id));
+        } else {
+          console.log("Other user not found");
+        }
+      } catch (error) {
+        console.error("Error deleting shared data:", error);
+      }
+    }
+  };
 
   const getStatusIcon = (data) => {
     if (data.asked && data.shareAllow) {
@@ -292,7 +350,14 @@ function SharedViewing() {
                   : data.email}
               </td>
               <td>{getStatusIcon(data)}</td>
-              <td>Actions</td>
+              <td>
+                <Button
+                  variant="danger"
+                  onClick={() => handleDeleteSharedData(data.id, index)}
+                >
+                  <FaTrash />
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>
