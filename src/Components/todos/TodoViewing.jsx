@@ -528,12 +528,12 @@ function TodoViewing() {
                   </div>
 
                   {todo.description ? (
-                    <Col md={6} lg={4} xl={3}>
+                    <div md={6} lg={4} xl={3}>
                       <p className="text-center">
                         <span className="todo-card-p">Description:</span>
                         {<br />} {todo.description}
                       </p>
-                    </Col>
+                    </div>
                   ) : null}
 
                   {todo.money ? (
@@ -566,20 +566,14 @@ function TodoViewing() {
                           })
                         : "No Due Date"}
                     </p>
-
-                    <p className="text-center">
-                      <span className="todo-card-p">Points:</span>
-                      <br />
-                      {todo.points || "No Points"}
-                    </p>
                   </Col>
 
-                  <Col md={6} lg={4} xl={3}>
+                  {/* <Col md={6} lg={4} xl={3}>
                     <p className="text-center">
                       <span className="todo-card-p">Completed:</span>
                       {<br />} {todo.completed ? "Yes" : "No"}
                     </p>{" "}
-                  </Col>
+                  </Col> */}
                   <Col md={6} lg={4} xl={3}>
                     <p className="text-center">
                       <span className="todo-card-p">Assigned To:</span>
