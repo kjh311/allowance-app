@@ -1,6 +1,6 @@
 # Allowance App
 
-The Allowance App is a web application designed to help parents and children manage weekly allowances, chores, and rewards more effectively. This README.md file provides an overview of the features available in the app.
+The Allowance App is a web application designed to help parents and children manage weekly allowances, chores, and rewards more effectively.
 
 ## Features
 
@@ -13,6 +13,8 @@ The Allowance App is a web application designed to help parents and children man
 3. **Reward System**: Parents can define rewards for completed chores and other achievements, motivating children to be more responsible.
 
 4. **View Child Progress**: Parents can monitor their children's progress, including completed chores, earned allowances, and redeemed rewards.
+
+5. **Share Data Between Users**: Users can collaberate, share, and edit, and assign each other chores.
 
 ### Child Dashboard
 
@@ -59,7 +61,7 @@ To get started with the Allowance App, follow these steps:
 
 3. **Set Up Firebase**: Set up a Firebase project and configure Firebase Authentication and Firestore. Update the Firebase configuration in the project.
 
-\*\*Firebase Rules:
+**Firebase Rules**:
 
 ```bash
 rules_version = '2';
