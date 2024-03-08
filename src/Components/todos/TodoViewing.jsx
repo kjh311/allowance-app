@@ -35,7 +35,7 @@ function TodoViewing() {
   const [completed, setCompleted] = useState(false);
   const { currentUser } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [selectedDueDate, setSelectedDueDate] = useState(dueDate); // Correct declaration
+  const [selectedDueDate, setSelectedDueDate] = useState(null);
 
   // Sort todos based on dueDate and completed status
   const sortedTodos = [...todos]
@@ -189,7 +189,8 @@ function TodoViewing() {
     setEditedTodoMoney(money);
     setEditedTodoPoints(points);
     setSelectedChildId(assignedTo);
-    setSelectedDueDate(dueDate !== null ? new Date(dueDate) : null); // Update selectedDueDate
+    // Update selectedDueDate based on the dueDate of the todo item being edited
+    setSelectedDueDate(dueDate ? new Date(dueDate) : null);
   };
 
   const cancelEditing = () => {
@@ -248,10 +249,14 @@ function TodoViewing() {
       }
 
       // Format the dueDate
-      const formattedDueDate =
-        selectedDueDate !== null
-          ? selectedDueDate.toISOString().split("T")[0]
-          : null;
+      // Format the dueDate
+      const formattedDueDate = selectedDueDate
+        ? selectedDueDate.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        : null;
 
       await updateDoc(todoRef, {
         name: editedTodoName,
@@ -554,15 +559,14 @@ function TodoViewing() {
                       <span className="todo-card-p">Due Date:</span>
                       <br />
                       {todo.dueDate
-                        ? new Date(
-                            todo.dueDate + "T00:00:00-06:00"
-                          ).toLocaleDateString("en-US", {
+                        ? new Date(todo.dueDate).toLocaleDateString("en-US", {
                             year: "numeric",
                             month: "long",
                             day: "numeric",
                           })
                         : "No Due Date"}
                     </p>
+
                     <p className="text-center">
                       <span className="todo-card-p">Points:</span>
                       <br />

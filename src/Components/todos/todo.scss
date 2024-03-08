@@ -22,6 +22,14 @@
 input{
     background-color: #fff !important;
   }
+
+  .form-label {
+    margin-bottom: -2.5rem;
+}
+
+.form-control{
+  margin-bottom: 10px;
+}
   
   /* Primary (blue) button */
  .btn-primary {
@@ -35,6 +43,10 @@ input{
     background-color: #dc3545 !important;
     border-color: #dc3545 !important;
     color: #fff;
+  }
+
+  .btn-danger:hover{
+    background-color: #a51824 !important;
   }
   
   /* Success (green) button */
@@ -135,3 +147,4 @@ input{
   .edit-delete-div{
     margin-top: 30px !important;
   }
+

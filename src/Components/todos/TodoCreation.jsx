@@ -128,7 +128,12 @@ function TodoCreation() {
 
       // If dueDate is selected, include it in the todoToAdd object
       if (dueDate) {
-        const formattedDueDate = dueDate.toISOString().split("T")[0];
+        // Format due date as a readable string
+        const formattedDueDate = dueDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
         todoToAdd.dueDate = formattedDueDate;
       }
 
@@ -176,7 +181,7 @@ function TodoCreation() {
             />
           </Form.Group>
           <Form.Group controlId="todoDescriptionInput">
-            <Form.Label>Description:</Form.Label>
+            <Form.Label>Description (optional):</Form.Label>
             <Form.Control
               type="text"
               placeholder="Enter description"
@@ -185,7 +190,7 @@ function TodoCreation() {
             />
           </Form.Group>
           <Form.Group controlId="todoMoneyInput">
-            <Form.Label>Amount of Money:</Form.Label>
+            <Form.Label>Amount of Money (optional):</Form.Label>
             <Form.Control
               type="number"
               placeholder="Enter amount of money"
@@ -194,7 +199,7 @@ function TodoCreation() {
             />
           </Form.Group>
           <Form.Group controlId="todoPointsInput">
-            <Form.Label>Amount of Points:</Form.Label>
+            <Form.Label>Amount of Points (optional):</Form.Label>
             <Form.Control
               type="number"
               placeholder="Enter amount of points"
