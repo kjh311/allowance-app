@@ -59,7 +59,7 @@ To get started with the Allowance App, follow these steps:
 
 3. **Set Up Firebase**: Set up a Firebase project and configure Firebase Authentication and Firestore. Update the Firebase configuration in the project.
 
-Firebase Rules:
+//Firebase Rules:
 
 rules_version = '2';
 service cloud.firestore {
