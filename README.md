@@ -47,7 +47,7 @@ To get started with the Allowance App, follow these steps:
 1. **Clone the Repository**: Clone the repository to your local machine using Git.
 
    ```bash
-   git clone https://github.com/username/allowance-app.git
+   git clone https://github.com/kjh311/allowance-app.git
    ```
 
 2. **Install Dependencies**: Navigate to the project directory and install the required dependencies using npm or yarn.
@@ -59,6 +59,42 @@ To get started with the Allowance App, follow these steps:
 
 3. **Set Up Firebase**: Set up a Firebase project and configure Firebase Authentication and Firestore. Update the Firebase configuration in the project.
 
+Firebase Rules:
+
+rules_version = '2';
+service cloud.firestore {
+match /databases/{database}/documents {
+// Allow read/write access to all documents for authenticated users
+match /{document=\*\*} {
+allow read, write: if request.auth != null;
+}
+
+    // Allow read/write access to the "children" collection for authenticated users,
+    // but only for documents corresponding to their own user ID or if the child is shared with them.
+    match /children/{childId} {
+      allow read, write: if request.auth != null &&
+        (request.auth.uid == resource.data.userId ||
+        request.auth.uid in resource.data.sharingWith);
+    }
+
+    // Allow read/write access to the "todos" collection for authenticated users
+    match /todos/{todoId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Allow read/write access to the "users" collection for authenticated users
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Allow read access to the "sharedData" collection for authenticated users
+    match /sharedData/{sharedId} {
+      allow read: if request.auth != null && resource.data.shareAllow == true;
+    }
+
+}
+}
+
 4. **Run the App**: Start the development server and run the app locally.
 
    ```bash
@@ -66,7 +102,3 @@ To get started with the Allowance App, follow these steps:
    ```
 
 5. **Access the App**: Open your web browser and navigate to the local development server URL (usually http://localhost:3000) to access the Allowance App.
-
-## Contributing
-
-Contributions to the Allowance App are welcome! If you find any bugs, have feature requests, or would like to contribute enhancements, please feel free to open an issue or submit a pull request.
