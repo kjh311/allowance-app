@@ -1,19 +1,30 @@
 TODO:
+
+CHILDREN
 -login functionality for kids where they can only see their own page. They can see what chores are assigned to them and which they can pick up for extra cash
 -a child's version of the app where they can hit 'complete' for each chore and a notification will be sent to the adult for review. Or it will turn a different color for review.
--A list of chores under the user's profile that they need to review
--Set reaccuring allowance to auto add to the child's total
--set reaccuring chores
--Fix sharing data for user that accepted the invitation, make sure if they hit delete there's a warning prompt, and it deletes sharingWith and sharedUsers from the DB.
--if picture doesn't load, don't show anything for child or user
+-Set reaccuring allowance to auto add to the child's total, need to check how long it's been since a user logged in and update the weekly allowance by the number of saturdays since login.  
 -Allow image uploads for kids and users?
+-note that displays when a child or todo is created
+-Weekly Allowance when creating if blank should be 0, not NaN
+
+TODOS
+-set reaccuring chores
+-if user is signed up under email and not google make sure they can select themselves in the create/view todos
+
+USER PAGE
+-A list of chores under the user's profile that they need to review
+-displayName when signing up under email may be reserved for google names
+-some users get displayed twice under SharedViewing
+-invitations get viewed for users who weren't sent one
+-sharing data gets deleted for the wrong users
+
+MISC
+
 -Mobile friendly
 -Get rid of consoles.
 -comment code and refine.
 -do a nice Readme.
-
--
--
 
 DONE:
 -each chore monetary value can be adjusted

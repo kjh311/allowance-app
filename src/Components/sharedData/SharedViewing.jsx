@@ -7,14 +7,15 @@ import {
   getDoc,
   query,
   where,
-  getDocs,
   deleteDoc,
+  getDocs,
   updateDoc,
   arrayRemove,
 } from "firebase/firestore";
 import { useAuth } from "../../contexts/authContext";
 import { Table, Button } from "react-bootstrap";
-import { FaTrash } from "react-icons/fa";
+import { FaCheckCircle, FaEdit, FaTrash } from "react-icons/fa";
+import { IoIosCloseCircle } from "react-icons/io";
 
 function SharedViewing() {
   const { currentUser } = useAuth();
@@ -37,7 +38,7 @@ function SharedViewing() {
   }, []);
 
   const handleDeleteSharedData = async (id) => {
-    const confirmed = window.confirm("Stop sharing data with this user?");
+    const confirmed = confirm("Stop sharing data with this user?");
     if (confirmed) {
       try {
         // Find the sharedData document
@@ -152,6 +153,16 @@ function SharedViewing() {
     }
   };
 
+  const getStatusIcon = (data) => {
+    if (data.asked && data.shareAllow) {
+      return <FaCheckCircle className="text-green-500 check-mark" />;
+    } else if (data.asked && !data.shareAllow) {
+      return <IoIosCloseCircle className="text-red-500" />;
+    } else {
+      return "Pending";
+    }
+  };
+
   return (
     <div>
       <h2 className="text-lg font-semibold mb-4">
@@ -162,6 +173,7 @@ function SharedViewing() {
           <tr>
             <th>#</th>
             <th>Email</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -174,6 +186,7 @@ function SharedViewing() {
                   ? data.senderEmail
                   : data.email}
               </td>
+              <td>{getStatusIcon(data)}</td>
               <td>
                 <Button
                   variant="danger"

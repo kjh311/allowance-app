@@ -28,6 +28,7 @@ function TodoCreation() {
   const [sharingWithUsers, setSharingWithUsers] = useState([]);
   const [accordionExpanded, setAccordionExpanded] = useState(false);
   const { currentUser } = useAuth();
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -145,6 +146,10 @@ function TodoCreation() {
       setNewTodoPoints("");
       setDueDate(null); // Reset dueDate after adding the todo
       console.log("Todo created successfully");
+      setSuccessMessage("Todo Created Successfully!");
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000);
     } catch (error) {
       console.error("Error creating todo:", error);
     }
@@ -258,6 +263,9 @@ function TodoCreation() {
           >
             Add Todo
           </Button>
+          {successMessage && (
+            <div className="text-success text-center">{successMessage}</div>
+          )}
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>

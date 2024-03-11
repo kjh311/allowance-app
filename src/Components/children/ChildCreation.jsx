@@ -15,6 +15,7 @@ function ChildCreation() {
   const [photoURL, setPhotoURL] = useState("");
   const [weeklyAllowance, setWeeklyAllowance] = useState(""); // New state for weekly allowance
   const [accordionExpanded, setAccordionExpanded] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const toggleAccordion = () => {
     setAccordionExpanded(!accordionExpanded);
@@ -62,6 +63,10 @@ function ChildCreation() {
       if (window.todoCreationUpdateChildren) {
         window.todoCreationUpdateChildren();
       }
+      setSuccessMessage("Child Created Successfully!");
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000);
     } catch (error) {
       console.error("Error creating child:", error);
     }
@@ -174,6 +179,9 @@ function ChildCreation() {
               Create Child
             </Button>
           </Form>
+          {successMessage && (
+            <div className="text-success text-center">{successMessage}</div>
+          )}
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>

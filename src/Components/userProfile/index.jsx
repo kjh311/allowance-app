@@ -16,7 +16,10 @@ import "./user.scss";
 const UserProfile = () => {
   const { currentUser } = useAuth();
   const [childrenOptions, setChildrenOptions] = useState([]);
-  console.log("displayName: " + " " + currentUser.displayName);
+  console.log(
+    "emailDisplayName: " + " " + currentUser.emailDisplayName,
+    currentUser
+  );
   // console.log("id: " + " " + currentUser.uid);
   // console.log("email: " + " " + currentUser.email);
 
