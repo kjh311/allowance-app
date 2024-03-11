@@ -8,14 +8,13 @@ import {
   query,
   where,
   getDocs,
-  updateDoc,
   deleteDoc,
+  updateDoc,
   arrayRemove,
 } from "firebase/firestore";
 import { useAuth } from "../../contexts/authContext";
 import { Table, Button } from "react-bootstrap";
-import { FaCheckCircle, FaEdit, FaTrash } from "react-icons/fa";
-import { IoIosCloseCircle } from "react-icons/io";
+import { FaTrash } from "react-icons/fa";
 
 function SharedViewing() {
   const { currentUser } = useAuth();
@@ -120,21 +119,36 @@ function SharedViewing() {
           });
         });
 
+        // Loop through todos collection to remove other user's id from sharedUsers field
+        const todosQueryCurrentUser = query(
+          collection(db, "todos"),
+          where("userId", "==", currentUserId)
+        );
+        const todosSnapshotCurrentUser = await getDocs(todosQueryCurrentUser);
+        todosSnapshotCurrentUser.forEach(async (todoDoc) => {
+          const todoData = todoDoc.data();
+          await updateDoc(doc(db, "todos", todoDoc.id), {
+            sharedUsers: arrayRemove(otherUserId),
+          });
+        });
+
+        const todosQueryOtherUser = query(
+          collection(db, "todos"),
+          where("userId", "==", otherUserId)
+        );
+        const todosSnapshotOtherUser = await getDocs(todosQueryOtherUser);
+        todosSnapshotOtherUser.forEach(async (todoDoc) => {
+          const todoData = todoDoc.data();
+          await updateDoc(doc(db, "todos", todoDoc.id), {
+            sharedUsers: arrayRemove(currentUserId),
+          });
+        });
+
         // Finally, delete sharedData document
         await deleteDoc(doc(db, "sharedData", id));
       } catch (error) {
         console.error("Error deleting shared data:", error);
       }
-    }
-  };
-
-  const getStatusIcon = (data) => {
-    if (data.asked && data.shareAllow) {
-      return <FaCheckCircle className="text-green-500 check-mark" />;
-    } else if (data.asked && !data.shareAllow) {
-      return <IoIosCloseCircle className="text-red-500" />;
-    } else {
-      return "Pending";
     }
   };
 
@@ -148,7 +162,6 @@ function SharedViewing() {
           <tr>
             <th>#</th>
             <th>Email</th>
-            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -161,11 +174,10 @@ function SharedViewing() {
                   ? data.senderEmail
                   : data.email}
               </td>
-              <td>{getStatusIcon(data)}</td>
               <td>
                 <Button
                   variant="danger"
-                  onClick={() => handleDeleteSharedData(data.id, index)}
+                  onClick={() => handleDeleteSharedData(data.id)}
                 >
                   <FaTrash />
                 </Button>
