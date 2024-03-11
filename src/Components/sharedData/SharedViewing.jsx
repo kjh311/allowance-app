@@ -94,15 +94,29 @@ function SharedViewing() {
         });
 
         // Loop through children collection to remove other user's id from sharedUsers field
-        const childrenQuery = query(
+        const childrenQueryCurrentUser = query(
           collection(db, "children"),
-          where("userId", "==", currentUser.uid)
+          where("userId", "==", currentUserId)
         );
-        const childrenSnapshot = await getDocs(childrenQuery);
-        childrenSnapshot.forEach(async (childDoc) => {
+        const childrenSnapshotCurrentUser = await getDocs(
+          childrenQueryCurrentUser
+        );
+        childrenSnapshotCurrentUser.forEach(async (childDoc) => {
           const childData = childDoc.data();
           await updateDoc(doc(db, "children", childDoc.id), {
             sharedUsers: arrayRemove(otherUserId),
+          });
+        });
+
+        const childrenQueryOtherUser = query(
+          collection(db, "children"),
+          where("userId", "==", otherUserId)
+        );
+        const childrenSnapshotOtherUser = await getDocs(childrenQueryOtherUser);
+        childrenSnapshotOtherUser.forEach(async (childDoc) => {
+          const childData = childDoc.data();
+          await updateDoc(doc(db, "children", childDoc.id), {
+            sharedUsers: arrayRemove(currentUserId),
           });
         });
 
