@@ -5,7 +5,6 @@ CHILDREN
 -a child's version of the app where they can hit 'complete' for each chore and a notification will be sent to the adult for review. Or it will turn a different color for review.
 -Set reaccuring allowance to auto add to the child's total, need to check how long it's been since a user logged in and update the weekly allowance by the number of saturdays since login.  
 -Allow image uploads for kids and users?
--note that displays when a child or todo is created
 -Weekly Allowance when creating if blank should be 0, not NaN
 
 TODOS
@@ -20,13 +19,13 @@ USER PAGE
 -sharing data gets deleted for the wrong users
 
 MISC
-
 -Mobile friendly
 -Get rid of consoles.
 -comment code and refine.
 -do a nice Readme.
 
 DONE:
+-note that displays when a child or todo is created
 -each chore monetary value can be adjusted
 -Chores will automatically be bumped up the chain based on their urgency or due date.
 -chores can be bumped up based on due date and may change color to indicate importance.

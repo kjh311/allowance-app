@@ -25,6 +25,9 @@ function ChildCreation() {
     try {
       const money = newChildMoney === "" ? 0 : parseFloat(newChildMoney);
       const points = newChildPoints === "" ? 0 : parseInt(newChildPoints);
+      const weeklyAllowanceValue =
+        weeklyAllowance === "" ? 0 : parseFloat(weeklyAllowance); // Handle blank weekly allowance
+
       const createdBy = currentUser.displayName || currentUser.email;
 
       const pin = generateRandomPin(6);
@@ -34,7 +37,7 @@ function ChildCreation() {
         name: newChildName,
         money: money,
         points: points,
-        weeklyAllowance: parseFloat(weeklyAllowance), // Save weekly allowance
+        weeklyAllowance: weeklyAllowanceValue, // Use the processed value
         userId: currentUser.uid,
         createdBy: createdBy,
         photoURL: photoURL,
