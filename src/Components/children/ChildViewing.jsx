@@ -110,7 +110,7 @@ function ChildViewing() {
     <>
       {children.map((child) => (
         <Col md={12} lg={10} xl={6} key={child.id}>
-          <div className="bg-white rounded-lg shadow-lg mb-6 p-4">
+          <div className="bg-white rounded-lg shadow-lg mb-6 p-4 grey-border">
             <div className="flex flex-col justify-center items-center">
               <h2 className="text-xl font-semibold mb-2">{child.name}</h2>
               {child.photoURL && (

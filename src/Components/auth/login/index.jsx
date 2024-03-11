@@ -66,8 +66,8 @@ const Login = () => {
 
   // JSX rendering of the login form
   return (
-    <div>
-      <main className="w-full h-screen flex self-center place-content-center place-items-center">
+    <div className="w-5/6 self-center place-content-center place-items-center">
+      <main className=" h-screen flex self-center place-content-center place-items-center login-main-div">
         <div className="w-96 text-gray-600 space-y-5 p-4 shadow-xl border rounded-xl">
           <div className="text-center">
             <div className="mt-2">
@@ -136,7 +136,7 @@ const Login = () => {
           <PasswordResetForm />
 
           {/* Email verification form */}
-          <EmailVerificationForm />
+          {/* <EmailVerificationForm /> */}
 
           {/* Google Sign In button */}
           <div className="flex flex-row text-center w-full">
@@ -193,6 +193,12 @@ const Login = () => {
           </button>
         </div>
       </main>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   );
 };

@@ -46,7 +46,7 @@ function ChildTodoList({ childId }) {
       {todos.length === 0 ? (
         <p className="text-gray-600">No todos assigned to this child.</p>
       ) : (
-        <ul>
+        <ul className="child-todos-ul">
           {todos.map((todo) => (
             <li
               key={todo.id}

@@ -128,16 +128,37 @@ input{
     position: relative;
   }
 
+  .due-status-div{
+    // width: 100% !important;
+  }
+
+  /* Add this CSS to align the strong tags to the right */
+// .text-right {
+//   text-align: right;
+// }
+
+
+
+
+
+
   .due-status-div strong{
-    position: absolute;
-    right: -15px;
+    // position: absolute;
+    
+    // right: -15px;
     text-decoration: underline;
     padding: 5px;
     background-color: #fff;
     border-radius: 5px;
     border: 2px solid black;
-    margin-top: -16px;
+    // margin-top: -16px;
   }
+
+  .due-status-wrapper{
+    padding-bottom: 15px;
+  }
+
+  
 
   .todo-item div p{
     margin-top: 15px;
@@ -199,3 +220,10 @@ input{
   75% { opacity: 1; }
   50% { opacity: 1; }
 }
+
+@media (max-width: 375px) {
+  .incomplete-button{
+    margin-top: 10px;
+    margin-right: 10px !important;
+  }
+  }

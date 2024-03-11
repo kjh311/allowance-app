@@ -52,4 +52,27 @@
     border-color: #6c757d;
     color: #fff;
   }
+
+  .login-main-div{
+    margin-top: 20px;
+  }
+
+  .grey-border{
+    border: 1px solid #c9c9c9;
+  }
+
+//   @media (max-width: 800px) {
+//   .login-main-div{
+//     margin-top: 100px;
+//   }
+// }
+
+
+  @media (max-width: 375px) {
+    .welcome-home-title{
+      font-size: 1.5em;
+    }
+   
+    }
+ 
   

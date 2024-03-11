@@ -54,7 +54,7 @@ const UserProfile = () => {
             <div className="flex justify-center mt-4 space-x-5"></div>
           </div> */}
           <div className="d-flex justify-content-center ">
-            <div className="bg-white rounded-lg shadow-lg border-gray-300 shadow-xl rounded-lg text-gray-900 w-100">
+            <div className="bg-white rounded-lg shadow-lg grey-border shadow-xl rounded-lg text-gray-900 w-100">
               <div className="rounded-t-lg h-32 overflow-hidden ">
                 <img
                   className="object-cover object-top w-full "
@@ -143,7 +143,10 @@ const UserProfile = () => {
           <UserTodosList currentUser={currentUser} />
         </Col>
         <Col md={10} lg={8} xl={6}>
-          <div id="share-div" className="bg-white rounded-lg shadow-lg">
+          <div
+            id="share-div"
+            className="bg-white rounded-lg shadow-lg grey-border"
+          >
             <div>
               <SharedData />
             </div>

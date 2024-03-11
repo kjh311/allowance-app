@@ -504,22 +504,28 @@ function TodoViewing() {
                       <IoIosCheckmarkCircle className="checkmark-icon" />
                     ) : null}
                   </div>
-                  <div className="due-status-div">
+                  <div className="due-status-div text-right">
                     {todo.dueDate &&
                     !todo.completed &&
                     isOverdue(todo.dueDate) ? (
-                      <strong>"OVERDUE!!"</strong>
+                      <div className="due-status-wrapper">
+                        <strong>OVERDUE!!</strong>
+                      </div>
                     ) : null}
                     {todo.dueDate &&
                     !todo.completed &&
                     isDueInAMonth(todo.dueDate) &&
                     !isDueSoon(todo.dueDate) ? (
-                      <strong>Due this Month</strong>
+                      <div className="due-status-wrapper">
+                        <strong>Due this Month</strong>
+                      </div>
                     ) : null}
                     {todo.dueDate &&
                     !todo.completed &&
                     isDueSoon(todo.dueDate) ? (
-                      <strong>Due this Week!</strong>
+                      <div className="due-status-wrapper">
+                        <strong>Due this Week!</strong>
+                      </div>
                     ) : null}
                   </div>
 
@@ -617,7 +623,7 @@ function TodoViewing() {
                 </Button>
                 {todo.completed ? (
                   <Button
-                    className=" "
+                    className="incomplete-button"
                     onClick={async () => {
                       const confirmation = window.confirm(
                         "Mark this todo as Incomplete?"

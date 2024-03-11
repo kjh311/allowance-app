@@ -11,9 +11,11 @@ import "./Header.scss";
 const Header = () => {
   const { currentUser } = useAuth();
   const location = useLocation();
+  const [expanded, setExpanded] = useState(false);
 
-  // const [activeLink, setActiveLink] = useState(location.pathname);
-  // console.log(activeLink);
+  const toggleNavbar = () => {
+    setExpanded(!expanded);
+  };
 
   const renderDisplayName = () => {
     if (currentUser && currentUser.displayName) {
@@ -38,24 +40,44 @@ const Header = () => {
   const userLoggedIn = currentUser !== null;
 
   return (
-    <Navbar expand="lg" className="fixed-top navbar" bg="primary">
+    <Navbar
+      expand="lg"
+      className="fixed-top navbar"
+      bg="primary"
+      expanded={expanded}
+    >
       <Container>
-        <Navbar.Brand className="brand">
-          {/* <img src="../../../public/images/money-icon.png" /> */}
-          Allowance App
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Brand className="brand">Allowance App</Navbar.Brand>
+        <Navbar.Toggle
+          aria-controls="basic-navbar-nav"
+          onClick={toggleNavbar}
+        />
         <Navbar.Collapse id="basic-navbar-nav" className="">
           <Nav className="ms-auto">
             {userLoggedIn ? (
               <>
-                <Nav.Link className="link" as={NavLink} to="/profile">
+                <Nav.Link
+                  onClick={toggleNavbar}
+                  className="link"
+                  as={NavLink}
+                  to="/profile"
+                >
                   {renderDisplayName()}
                 </Nav.Link>
-                <Nav.Link className="link" as={NavLink} to="/todos">
+                <Nav.Link
+                  onClick={toggleNavbar}
+                  className="link"
+                  as={NavLink}
+                  to="/todos"
+                >
                   ToDos
                 </Nav.Link>
-                <Nav.Link className="link" as={NavLink} to="/children">
+                <Nav.Link
+                  onClick={toggleNavbar}
+                  className="link"
+                  as={NavLink}
+                  to="/children"
+                >
                   Children
                 </Nav.Link>
                 <Nav.Link
@@ -69,6 +91,7 @@ const Header = () => {
               <>
                 {location.pathname !== "/login" && (
                   <Nav.Link
+                    onClick={toggleNavbar}
                     as={NavLink}
                     to="/login"
                     className="d-flex align-items-center link"
@@ -78,6 +101,7 @@ const Header = () => {
                 )}
                 {!userLoggedIn && location.pathname !== "/childLogin" && (
                   <Nav.Link
+                    onClick={toggleNavbar}
                     as={NavLink}
                     to="/childLogin"
                     className="d-flex align-items-center link"
@@ -87,7 +111,12 @@ const Header = () => {
                   </Nav.Link>
                 )}
                 {location.pathname !== "/register" && (
-                  <Nav.Link className="link" as={NavLink} to="/register">
+                  <Nav.Link
+                    onClick={toggleNavbar}
+                    className="link"
+                    as={NavLink}
+                    to="/register"
+                  >
                     Register New Account
                   </Nav.Link>
                 )}

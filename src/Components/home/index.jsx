@@ -6,7 +6,7 @@ const Home = () => {
     <div className="text-center mt-5">
       <br />
       <br />
-      <h1>Welcome to the Allowance App</h1>
+      <h1 className="welcome-home-title">Welcome to the Allowance App</h1>
       <p>Please login or register to continue.</p>
       <div className="mt-3">
         <Link to="/login" className="btn btn-primary mr-2">

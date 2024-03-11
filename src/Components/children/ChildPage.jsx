@@ -70,7 +70,7 @@ function ChildPage() {
       <br />
       <br />
       <br />
-      <Card className="relative max-w-md mx-auto md:max-w-2xl mt-6 min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-xl mt-16">
+      <Card className="relative max-w-md mx-auto md:max-w-2xl mt-6 min-w-0 break-words bg-white w-5/6 mb-6 shadow-lg rounded-xl mt-16">
         <div className="px-6">
           <div className="flex flex-wrap justify-center">
             <div className="w-full flex justify-center">
@@ -119,7 +119,7 @@ function ChildPage() {
 
           <div className="mt-6 py-6 border-t border-slate-200 text-center">
             <div className="flex flex-wrap justify-center">
-              <div className="w-full px-4">
+              <div className="w-full ">
                 {/* <p className="font-light leading-relaxed text-slate-600 mb-4">
                   An artist of considerable range, Mike is the name taken by
                   Melbourne-raised, Brooklyn-based Nick Murphy writes, performs

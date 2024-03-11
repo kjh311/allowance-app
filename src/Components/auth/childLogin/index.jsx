@@ -79,7 +79,7 @@ function ChildLoginPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center">
-      <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-md">
+      <div className="max-w-md w-5/6 p-6 bg-white rounded-lg shadow-md grey-border">
         <h2 className="text-2xl font-semibold mb-4">Child Login</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
@@ -89,7 +89,7 @@ function ChildLoginPage() {
             <input
               type="text"
               id="name"
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="mt-1 grey-border shadow-lg block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -101,7 +101,7 @@ function ChildLoginPage() {
             <input
               type="password"
               id="loginPin"
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="mt-1 grey-border shadow-lg block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               value={loginPin}
               onChange={(e) => setLoginPin(e.target.value)}
             />

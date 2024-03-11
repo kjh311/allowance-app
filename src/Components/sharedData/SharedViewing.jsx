@@ -16,6 +16,7 @@ import { useAuth } from "../../contexts/authContext";
 import { Table, Button } from "react-bootstrap";
 import { FaCheckCircle, FaEdit, FaTrash } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
+// import "./SharedViewing.css"; // Import CSS file for custom styling
 
 function SharedViewing() {
   const { currentUser } = useAuth();
@@ -168,37 +169,39 @@ function SharedViewing() {
       <h2 className="text-lg font-semibold mb-4">
         Those who are allowed to share your data:
       </h2>
-      <Table responsive striped bordered hover>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sharedData.map((data, index) => (
-            <tr key={data.id}>
-              <td>{index + 1}</td>
-              <td>
-                {currentUser.email === data.email
-                  ? data.senderEmail
-                  : data.email}
-              </td>
-              <td>{getStatusIcon(data)}</td>
-              <td>
-                <Button
-                  variant="danger"
-                  onClick={() => handleDeleteSharedData(data.id)}
-                >
-                  <FaTrash />
-                </Button>
-              </td>
+      <div className="shared-data-table-container">
+        <Table striped bordered hover responsive>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {sharedData.map((data, index) => (
+              <tr key={data.id}>
+                <td>{index + 1}</td>
+                <td>
+                  {currentUser.email === data.email
+                    ? data.senderEmail
+                    : data.email}
+                </td>
+                <td>{getStatusIcon(data)}</td>
+                <td>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDeleteSharedData(data.id)}
+                  >
+                    <FaTrash />
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </div>
     </div>
   );
 }

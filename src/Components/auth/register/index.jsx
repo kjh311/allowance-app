@@ -62,7 +62,9 @@ const Register = () => {
   };
 
   return (
-    <>
+    <div className="w-5/6 self-center place-content-center place-items-center">
+      <br />
+      <br />
       {userLoggedIn && <Navigate to={"/profile"} replace={true} />}
 
       <main className="w-full h-screen flex self-center place-content-center place-items-center">
@@ -159,17 +161,23 @@ const Register = () => {
 
             <div className="text-sm text-center mt-4">
               Or register with Google
-              <button
-                onClick={signInWithGoogle}
-                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg mt-2"
-              >
-                Sign Up with Google
-              </button>
+              <div>
+                <button
+                  onClick={signInWithGoogle}
+                  className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg mt-2"
+                >
+                  Sign Up with Google
+                </button>
+              </div>
             </div>
           </form>
         </div>
       </main>
-    </>
+      <br />
+      <br />
+      <br />
+      <br />
+    </div>
   );
 };
 

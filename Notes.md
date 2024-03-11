@@ -14,15 +14,24 @@ TODOS
 USER PAGE
 -A list of chores under the user's profile that they need to review
 -displayName when signing up under email may be reserved for google names
+
+SHARING DATA
 -some users get displayed twice under SharedViewing
 -invitations get viewed for users who weren't sent one
 -sharing data gets deleted for the wrong users
+-error deleting sharing data
+-error accepting and declining invitations
+
+MOBILE
+-header dropdown doesn't contract on clicking a link
+-table in sharedViewing needs to wrap on mobile
 
 MISC
 -Mobile friendly
 -Get rid of consoles.
 -comment code and refine.
 -do a nice Readme.
+-Redesign Login and Register pages
 
 DONE:
 -note that displays when a child or todo is created
