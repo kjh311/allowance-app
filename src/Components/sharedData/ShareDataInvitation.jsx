@@ -141,10 +141,18 @@ function ShareDataInvitation() {
               You have an invitation to share data with:{" "}
               {invitationData.senderEmail}
             </p>
-            <Button variant="success" onClick={handleAcceptInvitation}>
+            <Button
+              className="mx-2"
+              variant="success"
+              onClick={handleAcceptInvitation}
+            >
               Accept
             </Button>
-            <Button variant="danger" onClick={handleDeclineInvitation}>
+            <Button
+              className="mx-2"
+              variant="danger"
+              onClick={handleDeclineInvitation}
+            >
               Decline
             </Button>
           </div>

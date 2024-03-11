@@ -48,17 +48,13 @@ const UserProfile = () => {
                 {currentUser.displayName}
               </h3>
             </div>
-            <div className="flex justify-center mt-4 space-x-5">
-           
-            
-         
-            </div>
+            <div className="flex justify-center mt-4 space-x-5"></div>
           </div> */}
           <div className="d-flex justify-content-center ">
             <div className="bg-white rounded-lg shadow-lg border-gray-300 shadow-xl rounded-lg text-gray-900 w-100">
-              <div className="rounded-t-lg h-32 overflow-hidden">
+              <div className="rounded-t-lg h-32 overflow-hidden ">
                 <img
-                  className="object-cover object-top w-full"
+                  className="object-cover object-top w-full "
                   src="https://picsum.photos/1200/300
                   "
                   alt="Mountain"
@@ -74,7 +70,20 @@ const UserProfile = () => {
                     />
                   ) : null}
                 </div>
-              ) : null}
+              ) : (
+                <div
+                  className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden user-image-div"
+                  style={{
+                    backgroundImage:
+                      "url(" +
+                      "https://static-00.iconduck.com/assets.00/user-icon-1024x1024-dtzturco.png" +
+                      ")",
+                    backgroundPosition: "center",
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                ></div>
+              )}
               <div className="text-center mt-2">
                 {currentUser.displayName ? (
                   <h2 className="font-semibold">{currentUser.displayName}</h2>
