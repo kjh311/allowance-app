@@ -157,3 +157,45 @@ input{
     border: 2px solid #3c81f6 !important;
 }
 
+.fade-in {
+  -webkit-animation: fadeinout 3s linear forwards; /* Safari and Chrome */
+  -moz-animation: fadeinout 3s linear forwards; /* Firefox */
+  -o-animation: fadeinout 3s linear forwards; /* Opera */
+  -ms-animation: fadeinout 3s linear forwards; /* Internet Explorer */
+  animation: fadeinout 3s linear forwards; /* Standard syntax */
+}
+
+@-webkit-keyframes fadeinout {
+  0%, 100% { opacity: 0; }
+  25% { opacity: 1; }
+  75% { opacity: 1; }
+  50% { opacity: 1; }
+}
+
+@-moz-keyframes fadeinout {
+  0%, 100% { opacity: 0; }
+  25% { opacity: 1; }
+  75% { opacity: 1; }
+  50% { opacity: 1; }
+}
+
+@-o-keyframes fadeinout {
+  0%, 100% { opacity: 0; }
+  25% { opacity: 1; }
+  75% { opacity: 1; }
+  50% { opacity: 1; }
+}
+
+@-ms-keyframes fadeinout {
+  0%, 100% { opacity: 0; }
+  25% { opacity: 1; }
+  75% { opacity: 1; }
+  50% { opacity: 1; }
+}
+
+@keyframes fadeinout {
+  0%, 100% { opacity: 0; }
+  25% { opacity: 1; }
+  75% { opacity: 1; }
+  50% { opacity: 1; }
+}

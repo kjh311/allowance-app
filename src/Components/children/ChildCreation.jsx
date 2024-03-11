@@ -183,7 +183,9 @@ function ChildCreation() {
             </Button>
           </Form>
           {successMessage && (
-            <div className="text-success text-center">{successMessage}</div>
+            <div className="text-success text-center fade-in">
+              {successMessage}
+            </div>
           )}
         </Accordion.Body>
       </Accordion.Item>

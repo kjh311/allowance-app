@@ -31,6 +31,9 @@ function ShareDataForm() {
         senderEmail: currentUser.email, // Add sender's email
       });
       setMessage("Email added successfully!");
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
       setError("");
       setEmail("");
     } catch (error) {
@@ -44,7 +47,11 @@ function ShareDataForm() {
     <div>
       <h2 className="text-center">Share Data</h2>
       {error && <Alert variant="danger">{error}</Alert>}
-      {message && <Alert variant="success">{message}</Alert>}
+      {message && (
+        <Alert className="fade-in" variant="success">
+          {message}
+        </Alert>
+      )}
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
