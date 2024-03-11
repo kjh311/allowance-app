@@ -18,6 +18,7 @@ import { useAuth } from "../../contexts/authContext";
 import "./Child.scss";
 
 function ChildViewing() {
+  const [imageError, setImageError] = useState(false);
   const [loading, setLoading] = useState(true);
   const { currentUser } = useAuth();
   const [children, setChildren] = useState([]);
@@ -28,6 +29,10 @@ function ChildViewing() {
   const [editChildPhotoURL, setEditChildPhotoURL] = useState("");
   const [editChildWeeklyAllowance, setEditChildWeeklyAllowance] = useState(""); // State for weekly allowance
   const [decryptedPasswords, setDecryptedPasswords] = useState({});
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
 
   useEffect(() => {
     console.log("Reading children data from database...");
@@ -113,31 +118,74 @@ function ChildViewing() {
           <div className="bg-white rounded-lg shadow-lg mb-6 p-4 grey-border">
             <div className="flex flex-col justify-center items-center">
               <h2 className="text-xl font-semibold mb-2">{child.name}</h2>
-              {child.photoURL && (
+
+              {/* {imageError ? (
+                <img
+                  className="rounded-full w-36"
+                  src="https://icons.veryicon.com/png/o/miscellaneous/font_awesome/child-10.png"
+                  alt="403 Error"
+                />
+              ) : child.photoURL ? (
                 <img
                   src={child.photoURL}
-                  alt="child avatar"
                   className="rounded-full w-36"
+                  alt="Profile"
+                  onError={handleImageError}
+                />
+              ) : (
+                <img
+                  className="rounded-full w-36"
+                  src="https://icons.veryicon.com/png/o/miscellaneous/font_awesome/child-10.png"
+                  alt="403 Error"
+                />
+              )} */}
+              {child.photoURL ? (
+                <div
+                  className="child-viewing-photo-div rounded-full w-36 h-36"
+                  style={{
+                    backgroundImage:
+                      "url(" +
+                      "https://icons.veryicon.com/png/o/miscellaneous/font_awesome/child-10.png" +
+                      ")",
+                    backgroundPosition: "center",
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                >
+                  <img
+                    src={child.photoURL}
+                    className="rounded-full w-36 "
+                    onError={(event) => {
+                      event.target.style.visibility = "hidden";
+                    }}
+                  />
+                </div>
+              ) : (
+                <img
+                  className="rounded-full w-36 h-36"
+                  src="https://icons.veryicon.com/png/o/miscellaneous/font_awesome/child-10.png"
+                  alt="403 Error"
                 />
               )}
+              {/* </div> */}
               <div>
                 <br />
                 <Container>
                   <Row>
                     <Col className="text-center">
-                      <p className="text-gray-600">
+                      <p className="text-gray-600 child-item">
                         Owed: <br />${child.money.toFixed(2)}
                       </p>
                     </Col>
                     <Col className="text-center">
-                      <p className="text-gray-600">
+                      <p className="text-gray-600 child-item">
                         Points: <br />
                         {child.points}
                       </p>
                     </Col>
                     {child.weeklyAllowance ? (
                       <Col className="text-center">
-                        <p className="text-gray-600">
+                        <p className="text-gray-600 child-item">
                           Weekly Allowance: <br />$
                           {child.weeklyAllowance.toFixed(2)}
                         </p>
@@ -145,13 +193,13 @@ function ChildViewing() {
                     ) : null}
 
                     <Col className="text-center">
-                      <p className="text-gray-600">
+                      <p className="text-gray-600 child-item">
                         Todos: <br />
                         {child.todosCount}
                       </p>
                     </Col>
                     <Col className="text-center">
-                      <p className="text-gray-600">
+                      <p className="text-gray-600 child-item">
                         Login Pin: <br />
                         {decryptedPasswords[child.id]}
                       </p>

@@ -70,6 +70,9 @@ const UserProfile = () => {
                       className="object-cover object-center h-32"
                       src={currentUser.photoURL}
                       alt="user"
+                      onError={(event) => {
+                        event.target.style.visibility = "hidden";
+                      }}
                     />
                   ) : null}
                 </div>

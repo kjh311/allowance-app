@@ -8,10 +8,15 @@ import ChildTodoList from "../children/ChildTodoList.jsx";
 import { Card } from "react-bootstrap";
 
 function ChildPage() {
+  const [imageError, setImageError] = useState(false);
   const { id } = useParams();
   const [child, setChild] = useState(null);
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
 
   useEffect(() => {
     const fetchChildData = async () => {
@@ -75,11 +80,24 @@ function ChildPage() {
           <div className="flex flex-wrap justify-center">
             <div className="w-full flex justify-center">
               <div className="relative">
-                {child.photoURL && (
+                {imageError ? (
+                  <img
+                    className="shadow-xl rounded-full align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
+                    src="https://icons.veryicon.com/png/o/miscellaneous/font_awesome/child-10.png"
+                    alt="403 Error"
+                  />
+                ) : child.photoURL ? (
                   <img
                     src={child.photoURL}
                     className="shadow-xl rounded-full align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
                     alt="Profile"
+                    onError={handleImageError}
+                  />
+                ) : (
+                  <img
+                    className="shadow-xl rounded-full align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
+                    src="https://icons.veryicon.com/png/o/miscellaneous/font_awesome/child-10.png"
+                    alt="403 Error"
                   />
                 )}
               </div>
@@ -95,20 +113,20 @@ function ChildPage() {
               </div>
               <div className="flex justify-center lg:pt-4 pt-8 pb-0">
                 <div className="p-3 text-center">
-                  <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
+                  <span className="text-xl child-item font-bold block uppercase tracking-wide text-slate-700">
                     ${child.money.toFixed(2)}
                   </span>
                   <span className="text-sm text-slate-400">Money</span>
                 </div>
                 <div className="p-3 text-center">
-                  <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
+                  <span className="text-xl child-item font-bold block uppercase tracking-wide text-slate-700">
                     {child.points}
                   </span>
                   <span className="text-sm text-slate-400">Points</span>
                 </div>
 
                 <div className="p-3 text-center">
-                  <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
+                  <span className="text-xl child-item font-bold block uppercase tracking-wide text-slate-700">
                     {child.loginPin}
                   </span>
                   <span className="text-sm text-slate-400">Login Pin</span>
