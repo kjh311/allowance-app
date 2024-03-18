@@ -18,7 +18,6 @@ import { useAuth } from "../../contexts/authContext";
 import "./Child.scss";
 
 function ChildViewing() {
-  const [imageError, setImageError] = useState(false);
   const [loading, setLoading] = useState(true);
   const { currentUser } = useAuth();
   const [children, setChildren] = useState([]);
@@ -29,10 +28,6 @@ function ChildViewing() {
   const [editChildPhotoURL, setEditChildPhotoURL] = useState("");
   const [editChildWeeklyAllowance, setEditChildWeeklyAllowance] = useState(""); // State for weekly allowance
   const [decryptedPasswords, setDecryptedPasswords] = useState({});
-
-  const handleImageError = () => {
-    setImageError(true);
-  };
 
   useEffect(() => {
     console.log("Reading children data from database...");
@@ -119,26 +114,6 @@ function ChildViewing() {
             <div className="flex flex-col justify-center items-center">
               <h2 className="text-xl font-semibold mb-2">{child.name}</h2>
 
-              {/* {imageError ? (
-                <img
-                  className="rounded-full w-36"
-                  src="https://icons.veryicon.com/png/o/miscellaneous/font_awesome/child-10.png"
-                  alt="403 Error"
-                />
-              ) : child.photoURL ? (
-                <img
-                  src={child.photoURL}
-                  className="rounded-full w-36"
-                  alt="Profile"
-                  onError={handleImageError}
-                />
-              ) : (
-                <img
-                  className="rounded-full w-36"
-                  src="https://icons.veryicon.com/png/o/miscellaneous/font_awesome/child-10.png"
-                  alt="403 Error"
-                />
-              )} */}
               {child.photoURL ? (
                 <div
                   className="child-viewing-photo-div rounded-full w-36 h-36"
@@ -154,7 +129,7 @@ function ChildViewing() {
                 >
                   <img
                     src={child.photoURL}
-                    className="rounded-full w-36 "
+                    className="rounded-full w-36 child-pic"
                     onError={(event) => {
                       event.target.style.visibility = "hidden";
                     }}
@@ -170,6 +145,8 @@ function ChildViewing() {
               {/* </div> */}
               <div>
                 <br />
+                <br />
+
                 <Container>
                   <Row>
                     <Col className="text-center">

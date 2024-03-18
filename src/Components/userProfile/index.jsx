@@ -64,7 +64,18 @@ const UserProfile = () => {
                 />
               </div>
               {currentUser.photoURL ? (
-                <div className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
+                <div
+                  className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden"
+                  style={{
+                    backgroundImage:
+                      "url(" +
+                      "https://static-00.iconduck.com/assets.00/user-icon-1024x1024-dtzturco.png" +
+                      ")",
+                    backgroundPosition: "center",
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                >
                   {currentUser.photoURL ? (
                     <img
                       className="object-cover object-center h-32"

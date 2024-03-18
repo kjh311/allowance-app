@@ -5,10 +5,12 @@ CHILDREN
 -a child's version of the app where they can hit 'complete' for each chore and a notification will be sent to the adult for review. Or it will turn a different color for review.
 -Set reaccuring allowance to auto add to the child's total, need to check how long it's been since a user logged in and update the weekly allowance by the number of saturdays since login.  
 -Allow image uploads for kids and users?
+-when no photo exists link to photos in public images, not on internet
 
 TODOS
 -set reaccuring chores
 -if user is signed up under email and not google make sure they can select themselves in the create/view todos
+-redo user and children todos to be more like todoViewing
 
 USER PAGE
 -A list of chores under the user's profile that they need to review
