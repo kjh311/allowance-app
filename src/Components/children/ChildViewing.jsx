@@ -142,27 +142,26 @@ function ChildViewing() {
                   alt="403 Error"
                 />
               )}
-              {/* </div> */}
               <div>
                 <br />
                 <br />
 
                 <Container>
                   <Row>
-                    <Col className="text-center">
-                      <p className="text-gray-600 child-item">
+                    <Col className="text-center ">
+                      <p className="text-gray-600 child-item grey-border">
                         Owed: <br />${child.money.toFixed(2)}
                       </p>
                     </Col>
                     <Col className="text-center">
-                      <p className="text-gray-600 child-item">
+                      <p className="text-gray-600 child-item grey-border">
                         Points: <br />
                         {child.points}
                       </p>
                     </Col>
                     {child.weeklyAllowance ? (
                       <Col className="text-center">
-                        <p className="text-gray-600 child-item">
+                        <p className="text-gray-600 child-item grey-border">
                           Weekly Allowance: <br />$
                           {child.weeklyAllowance.toFixed(2)}
                         </p>
@@ -170,13 +169,13 @@ function ChildViewing() {
                     ) : null}
 
                     <Col className="text-center">
-                      <p className="text-gray-600 child-item">
+                      <p className="text-gray-600 child-item grey-border">
                         Todos: <br />
                         {child.todosCount}
                       </p>
                     </Col>
                     <Col className="text-center">
-                      <p className="text-gray-600 child-item">
+                      <p className="text-gray-600 child-item grey-border">
                         Login Pin: <br />
                         {decryptedPasswords[child.id]}
                       </p>

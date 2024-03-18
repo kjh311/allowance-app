@@ -82,20 +82,20 @@ function ChildPage() {
               <div className="relative">
                 {imageError ? (
                   <img
-                    className="shadow-xl rounded-full align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
+                    className="shadow-xl rounded-full align-middle grey-border bg-white absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
                     src="https://icons.veryicon.com/png/o/miscellaneous/font_awesome/child-10.png"
                     alt="403 Error"
                   />
                 ) : child.photoURL ? (
                   <img
                     src={child.photoURL}
-                    className="shadow-xl rounded-full align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
+                    className="shadow-xl rounded-full align-middle grey-border bg-white absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
                     alt="Profile"
                     onError={handleImageError}
                   />
                 ) : (
                   <img
-                    className="shadow-xl rounded-full align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
+                    className="shadow-xl rounded-full align-middle grey-border bg-white absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
                     src="https://icons.veryicon.com/png/o/miscellaneous/font_awesome/child-10.png"
                     alt="403 Error"
                   />
