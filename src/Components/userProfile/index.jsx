@@ -9,6 +9,8 @@ import SharedData from "../sharedData/SharedDataForm.jsx";
 import SharedViewing from "../sharedData/SharedViewing.jsx";
 import ShareDataInvitation from "../sharedData/ShareDataInvitation.jsx";
 import { collection, where, onSnapshot } from "firebase/firestore";
+import Accordion from "react-bootstrap/Accordion";
+import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
 
 import { db } from "../../firebase/firebase";
 import "./user.scss";
@@ -16,12 +18,17 @@ import "./user.scss";
 const UserProfile = () => {
   const { currentUser } = useAuth();
   const [childrenOptions, setChildrenOptions] = useState([]);
+  const [accordionExpanded, setAccordionExpanded] = useState(false);
   console.log(
     "emailDisplayName: " + " " + currentUser.emailDisplayName,
     currentUser
   );
   // console.log("id: " + " " + currentUser.uid);
   // console.log("email: " + " " + currentUser.email);
+
+  const toggleAccordion = () => {
+    setAccordionExpanded(!accordionExpanded);
+  };
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "children"), (snapshot) => {
@@ -163,18 +170,27 @@ const UserProfile = () => {
           <UserTodosList currentUser={currentUser} />
         </Col>
         <Col md={10} lg={8} xl={6}>
-          <div
-            id="share-div"
-            className="bg-white rounded-lg shadow-lg grey-border"
-          >
-            <div>
-              <SharedData />
-            </div>
-            <br />
-            <div>
-              <SharedViewing />
-            </div>
-          </div>
+          <Accordion className="bg-white rounded-lg shadow-lg">
+            <Accordion.Item eventKey="0">
+              <Accordion.Header
+                onClick={toggleAccordion}
+                className="d-flex align-items-center justify-content-center"
+              >
+                {accordionExpanded ? (
+                  <FaMinusCircle className="mr-2" />
+                ) : (
+                  <FaPlusCircle className="mr-2" />
+                )}{" "}
+                <span className="create-new-child">
+                  Share Your Data with other Users
+                </span>
+              </Accordion.Header>
+              <Accordion.Body>
+                <SharedData />
+                <SharedViewing />
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
         </Col>
       </Row>
       <br />
