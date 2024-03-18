@@ -108,6 +108,7 @@ function TodoViewing() {
           return {
             id: userId,
             displayName: userData.displayName,
+            email: userData.email,
             children: childrenData,
           };
         });
@@ -281,11 +282,13 @@ function TodoViewing() {
 
   const getChildName = (childId) => {
     if (childId === currentUser.uid) {
-      return currentUser.displayName || "Current User";
+      return currentUser.displayName || currentUser.email || "Current User";
     } else {
       const sharedUser = sharingWithIds.find((user) => user.id === childId);
       if (sharedUser) {
-        return sharedUser.displayName || "Sharing With User";
+        return (
+          sharedUser.displayName || sharedUser.email || "Sharing With User"
+        );
       } else {
         const child = children.find((child) => child.id === childId);
         return child ? child.name : "Unassigned";
@@ -472,16 +475,20 @@ function TodoViewing() {
                   <optgroup label="Current User:">
                     {currentUser && (
                       <option key={currentUser.uid} value={currentUser.uid}>
-                        {currentUser.displayName || "Current User"}
+                        {currentUser.displayName ||
+                          currentUser.email ||
+                          "Current User"}
                       </option>
                     )}
                   </optgroup>
-                  <optgroup label="Sharing With:">
-                    {sharingWithIds.map((shareduser) => (
-                      <option key={shareduser.id} value={shareduser.id}>
-                        {shareduser.displayName}
+                  <optgroup label="Current User:">
+                    {currentUser && (
+                      <option key={currentUser.uid} value={currentUser.uid}>
+                        {currentUser.displayName ||
+                          currentUser.email ||
+                          "Current User"}
                       </option>
-                    ))}
+                    )}
                   </optgroup>
                 </select>
               </div>

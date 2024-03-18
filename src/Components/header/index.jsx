@@ -20,6 +20,8 @@ const Header = () => {
   const renderDisplayName = () => {
     if (currentUser && currentUser.displayName) {
       return currentUser.displayName;
+    } else if (currentUser && currentUser.emailDisplayName) {
+      return currentUser.emailDisplayName;
     } else if (currentUser && currentUser.email) {
       return currentUser.email;
     } else {

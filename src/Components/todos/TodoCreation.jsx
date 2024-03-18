@@ -230,29 +230,34 @@ function TodoCreation() {
               onChange={handleDropdownChange}
             >
               <option value="">Unassigned</option>
-              <optgroup label="Children">
-                {children
-                  .filter((child) => child && child.name) // Filter out children without a valid name
-                  .map((child) => (
-                    <option key={child.id} value={child.id}>
-                      {child.name}
-                    </option>
-                  ))}
-              </optgroup>
+              {children.length > 0 ? (
+                <optgroup label="Children">
+                  {children
+                    .filter((child) => child && child.name) // Filter out children without a valid name
+                    .map((child) => (
+                      <option key={child.id} value={child.id}>
+                        {child.name}
+                      </option>
+                    ))}
+                </optgroup>
+              ) : null}
+
               <optgroup label="Current User">
                 {currentUser && (
                   <option key={currentUser.uid} value={currentUser.uid}>
-                    {currentUser.displayName}
+                    {currentUser.displayName || currentUser.email}
                   </option>
                 )}
               </optgroup>
-              <optgroup label="Sharing With">
-                {sharingWithUsers.map((user) => (
-                  <option key={user.id} value={user.id}>
-                    {user.displayName || user.email}
-                  </option>
-                ))}
-              </optgroup>
+              {currentUser.sharingWith && currentUser.sharingWith.length > 0 ? (
+                <optgroup label="Sharing With">
+                  {sharingWithUsers.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.displayName || user.email}
+                    </option>
+                  ))}
+                </optgroup>
+              ) : null}
             </Form.Control>
           </Form.Group>
           <Button

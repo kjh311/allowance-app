@@ -137,7 +137,10 @@ function ChildCreation() {
               />
             </Form.Group>
             <Form.Group controlId="childPhotoURLInput">
-              <Form.Label>Photo URL (optional):</Form.Label>
+              <Form.Label>
+                Photo URL: {<br />}(Optional. You can upload a photo to
+                imgur.com and copy the image address)
+              </Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter child's photo URL"

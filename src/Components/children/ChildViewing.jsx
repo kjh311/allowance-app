@@ -129,7 +129,7 @@ function ChildViewing() {
                 >
                   <img
                     src={child.photoURL}
-                    className="rounded-full w-36 child-pic"
+                    className="rounded-full w-36 child-pic grey-border"
                     onError={(event) => {
                       event.target.style.visibility = "hidden";
                     }}

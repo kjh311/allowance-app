@@ -31,6 +31,7 @@ const UserProfile = () => {
       }));
       setChildrenOptions(childrenData);
     });
+    console.log(currentUser);
 
     return () => unsubscribe();
   }, []);
@@ -61,6 +62,9 @@ const UserProfile = () => {
                   src="https://picsum.photos/1200/300
                   "
                   alt="Mountain"
+                  onError={(event) => {
+                    event.target.style.visibility = "hidden";
+                  }}
                 />
               </div>
               {currentUser.photoURL ? (
@@ -102,8 +106,10 @@ const UserProfile = () => {
                 ></div>
               )}
               <div className="text-center mt-2">
-                {currentUser.displayName ? (
-                  <h2 className="font-semibold">{currentUser.displayName}</h2>
+                {currentUser.emailDisplayName ? (
+                  <h2 className="font-semibold">
+                    {currentUser.emailDisplayName}
+                  </h2>
                 ) : (
                   <h2 className="font-semibold">{currentUser.email}</h2>
                 )}
