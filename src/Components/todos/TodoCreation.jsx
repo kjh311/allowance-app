@@ -31,6 +31,7 @@ function TodoCreation() {
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
+    // console.log(currentUser.sharingWith);
     const fetchData = async () => {
       try {
         if (!currentUser) return;
@@ -242,22 +243,18 @@ function TodoCreation() {
                 </optgroup>
               ) : null}
 
-              <optgroup label="Current User">
+              <optgroup label="Users">
                 {currentUser && (
                   <option key={currentUser.uid} value={currentUser.uid}>
                     {currentUser.displayName || currentUser.email}
                   </option>
                 )}
+                {sharingWithUsers.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.displayName || user.email}
+                  </option>
+                ))}
               </optgroup>
-              {currentUser.sharingWith && currentUser.sharingWith.length > 0 ? (
-                <optgroup label="Sharing With">
-                  {sharingWithUsers.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.displayName || user.email}
-                    </option>
-                  ))}
-                </optgroup>
-              ) : null}
             </Form.Control>
           </Form.Group>
           <Button
