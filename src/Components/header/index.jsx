@@ -101,7 +101,7 @@ const Header = () => {
                     <span>Login</span> <CiLogin className="ml-2" />
                   </Nav.Link>
                 )}
-                {!userLoggedIn && location.pathname !== "/childLogin" && (
+                {/* {!userLoggedIn && location.pathname !== "/childLogin" && (
                   <Nav.Link
                     onClick={toggleNavbar}
                     as={NavLink}
@@ -111,7 +111,7 @@ const Header = () => {
                     <span>Child Login</span>
                     <FaChild className="ml-2" />
                   </Nav.Link>
-                )}
+                )} */}
                 {location.pathname !== "/register" && (
                   <Nav.Link
                     onClick={toggleNavbar}

@@ -41,18 +41,19 @@ function ChildCounter() {
 
   return (
     <div
-      style={{
-        border: "1px solid #ccc",
-        borderRadius: "10px",
-        padding: "20px",
-        width: "fit-content",
-        margin: "auto",
-        margin: "20px",
-
-        textAlign: "center", // Center the text horizontally
-      }}
+      style={
+        {
+          // border: "1px solid #ccc",
+          // borderRadius: "10px",
+          // padding: "20px",
+          // width: "fit-content",
+          // margin: "auto",
+          // margin: "20px",
+          // textAlign: "center", // Center the text horizontally
+        }
+      }
     >
-      <h2>Total Number of Children:</h2>
+      {/* <h2>Total Number of Children:</h2> */}
       <div
         style={{
           fontSize: "36px", // Adjust the font size as needed

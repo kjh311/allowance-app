@@ -71,16 +71,16 @@ function TodoCounter() {
 
   return (
     <div
-      style={{
-        border: "1px solid #ccc",
-        borderRadius: "10px",
-        padding: "20px",
-        width: "fit-content",
-        margin: "auto",
-        marginTop: "20px",
-        textAlign: "center", // Center the text horizontally
-        // color: "#fff", // Set the text color to white
-      }}
+    // style={{
+    //   border: "1px solid #ccc",
+    //   borderRadius: "10px",
+    //   padding: "20px",
+    //   width: "fit-content",
+    //   margin: "auto",
+    //   marginTop: "20px",
+    //   textAlign: "center", // Center the text horizontally
+    //   // color: "#fff", // Set the text color to white
+    // }}
     >
       {/* <h2>Total Number of Todos:</h2> */}
       <div

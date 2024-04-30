@@ -150,7 +150,7 @@ function ChildViewing() {
                   <Row>
                     <Col className="text-center ">
                       <p className="text-gray-600 child-item grey-border">
-                        Owed: <br />${child.money.toFixed(2)}
+                        Money: <br />${child.money.toFixed(2)}
                       </p>
                     </Col>
                     <Col className="text-center">
@@ -174,12 +174,12 @@ function ChildViewing() {
                         {child.todosCount}
                       </p>
                     </Col>
-                    <Col className="text-center">
+                    {/* <Col className="text-center">
                       <p className="text-gray-600 child-item grey-border">
                         Login Pin: <br />
                         {decryptedPasswords[child.id]}
                       </p>
-                    </Col>
+                    </Col> */}
                   </Row>
                 </Container>
               </div>

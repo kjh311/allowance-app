@@ -13,7 +13,7 @@ function ChildCreation() {
   const [newChildMoney, setNewChildMoney] = useState("");
   const [newChildPoints, setNewChildPoints] = useState("");
   const [photoURL, setPhotoURL] = useState("");
-  const [weeklyAllowance, setWeeklyAllowance] = useState(""); // New state for weekly allowance
+  // const [weeklyAllowance, setWeeklyAllowance] = useState(""); // New state for weekly allowance
   const [accordionExpanded, setAccordionExpanded] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -25,8 +25,8 @@ function ChildCreation() {
     try {
       const money = newChildMoney === "" ? 0 : parseFloat(newChildMoney);
       const points = newChildPoints === "" ? 0 : parseInt(newChildPoints);
-      const weeklyAllowanceValue =
-        weeklyAllowance === "" ? 0 : parseFloat(weeklyAllowance); // Handle blank weekly allowance
+      // const weeklyAllowanceValue =
+      //   weeklyAllowance === "" ? 0 : parseFloat(weeklyAllowance); // Handle blank weekly allowance
 
       const createdBy = currentUser.displayName || currentUser.email;
 
@@ -37,7 +37,7 @@ function ChildCreation() {
         name: newChildName,
         money: money,
         points: points,
-        weeklyAllowance: weeklyAllowanceValue, // Use the processed value
+        // weeklyAllowance: weeklyAllowanceValue, // Use the processed value
         userId: currentUser.uid,
         createdBy: createdBy,
         photoURL: photoURL,
@@ -57,7 +57,7 @@ function ChildCreation() {
       setNewChildMoney("");
       setNewChildPoints("");
       setPhotoURL("");
-      setWeeklyAllowance(""); // Reset weekly allowance after creating child
+      // setWeeklyAllowance(""); // Reset weekly allowance after creating child
 
       console.log("Child created successfully");
 
@@ -91,13 +91,13 @@ function ChildCreation() {
     }
   };
 
-  const handleWeeklyAllowanceChange = (event) => {
-    const value = event.target.value;
-    if (/^\d*\.?\d*$/.test(value)) {
-      // Only allow digits and decimals
-      setWeeklyAllowance(value);
-    }
-  };
+  // const handleWeeklyAllowanceChange = (event) => {
+  //   const value = event.target.value;
+  //   if (/^\d*\.?\d*$/.test(value)) {
+  //     // Only allow digits and decimals
+  //     setWeeklyAllowance(value);
+  //   }
+  // };
 
   function generateRandomPin(length) {
     const digits = "0123456789";
@@ -166,17 +166,7 @@ function ChildCreation() {
                 onChange={handlePointsChange}
               />
             </Form.Group>
-            <Form.Group controlId="childWeeklyAllowanceInput">
-              {" "}
-              {/* New form group for weekly allowance */}
-              <Form.Label>Weekly Allowance (Optional):</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter weekly allowance"
-                value={weeklyAllowance}
-                onChange={handleWeeklyAllowanceChange}
-              />
-            </Form.Group>
+
             <Button
               variant="primary"
               onClick={createChild}

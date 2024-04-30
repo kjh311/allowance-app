@@ -4,7 +4,8 @@ import { Container, Row, Col } from "react-bootstrap";
 import ChildCreation from "../children/ChildCreation.jsx";
 import UserTodosList from "../todos/UserTodosList.jsx";
 import TodoCreation from "../todos/TodoCreation.jsx";
-// import TodoCounter from "../todos/TodoCounter";
+import TodoCounter from "../todos/TodoCounter";
+import ChildCounter from "../children/ChildCounter";
 import SharedData from "../sharedData/SharedDataForm.jsx";
 import SharedViewing from "../sharedData/SharedViewing.jsx";
 import ShareDataInvitation from "../sharedData/ShareDataInvitation.jsx";
@@ -127,7 +128,7 @@ const UserProfile = () => {
                 <li className="flex flex-col items-center justify-around">
                   <div className="p-3 text-center">
                     <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
-                      {/* <TodoCounter /> */}
+                      <TodoCounter />
                     </span>
                     <span className="text-sm text-slate-400">Todos</span>
                   </div>
@@ -135,17 +136,10 @@ const UserProfile = () => {
                 <li className="flex flex-col items-center justify-between">
                   <div className="p-3 text-center">
                     <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
-                      {/* <TodoCounter /> */}
+                      <ChildCounter />
                     </span>
-                    <span className="text-sm text-slate-400">Todos</span>
-                  </div>
-                </li>
-                <li className="flex flex-col items-center justify-around">
-                  <div className="p-3 text-center">
-                    <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
-                      {/* <TodoCounter /> */}
-                    </span>
-                    <span className="text-sm text-slate-400">Todos</span>
+                    {/* <a href="/children" /> */}
+                    <span className="text-sm text-slate-400">Children</span>
                   </div>
                 </li>
               </ul>
@@ -169,7 +163,7 @@ const UserProfile = () => {
           {/* <TodoCounter /> */}
           <UserTodosList currentUser={currentUser} />
         </Col>
-        <Col md={10} lg={8} xl={6}>
+        {/* <Col md={10} lg={8} xl={6}>
           <Accordion className="bg-white rounded-lg shadow-lg">
             <Accordion.Item eventKey="0">
               <Accordion.Header
@@ -191,7 +185,7 @@ const UserProfile = () => {
               </Accordion.Body>
             </Accordion.Item>
           </Accordion>
-        </Col>
+        </Col> */}
       </Row>
       <br />
       <br />

@@ -125,12 +125,12 @@ function ChildPage() {
                   <span className="text-sm text-slate-400">Points</span>
                 </div>
 
-                <div className="p-3 text-center">
+                {/* <div className="p-3 text-center">
                   <span className="text-xl child-item font-bold block uppercase tracking-wide text-slate-700">
                     {child.loginPin}
                   </span>
                   <span className="text-sm text-slate-400">Login Pin</span>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

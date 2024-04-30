@@ -1,5 +1,12 @@
 TODO:
 
+MVP:
+Under user page, todos should be similar to todo page, with colored due dates
+Same as under child page
+when $ or points are added to a todo item and it's marked as completed, the money and points don't go to the child
+weird animation of navbar buttons on click
+create a home page when not logged in that tells about the app and has a register and login button
+
 CHILDREN
 -login functionality for kids where they can only see their own page. They can see what chores are assigned to them and which they can pick up for extra cash
 -a child's version of the app where they can hit 'complete' for each chore and a notification will be sent to the adult for review. Or it will turn a different color for review.
