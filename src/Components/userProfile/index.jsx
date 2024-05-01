@@ -24,8 +24,8 @@ const UserProfile = () => {
     "emailDisplayName: " + " " + currentUser.emailDisplayName,
     currentUser
   );
-  // console.log("id: " + " " + currentUser.uid);
-  // console.log("email: " + " " + currentUser.email);
+  //
+  //
 
   const toggleAccordion = () => {
     setAccordionExpanded(!accordionExpanded);
@@ -39,7 +39,6 @@ const UserProfile = () => {
       }));
       setChildrenOptions(childrenData);
     });
-    console.log(currentUser);
 
     return () => unsubscribe();
   }, []);

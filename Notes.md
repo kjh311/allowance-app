@@ -6,6 +6,7 @@ Same as under child page
 when $ or points are added to a todo item and it's marked as completed, the money and points don't go to the child
 weird animation of navbar buttons on click
 create a home page when not logged in that tells about the app and has a register and login button
+-todo Counter updates when a new todo for the current user is added, not only on reload
 
 CHILDREN
 -login functionality for kids where they can only see their own page. They can see what chores are assigned to them and which they can pick up for extra cash
