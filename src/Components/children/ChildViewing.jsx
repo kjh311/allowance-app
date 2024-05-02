@@ -217,7 +217,7 @@ function ChildViewing() {
                     onChange={(event) => setEditChildPoints(event.target.value)}
                     className="mb-2 border border-gray-300 rounded-md px-3 py-2"
                   />
-                  <Form.Label className="mb-2">Weekly Allowance:</Form.Label>
+                  {/* <Form.Label className="mb-2">Weekly Allowance:</Form.Label>
                   <Form.Control
                     type="number"
                     placeholder="Enter weekly allowance"
@@ -226,7 +226,7 @@ function ChildViewing() {
                       setEditChildWeeklyAllowance(event.target.value)
                     }
                     className="mb-2 border border-gray-300 rounded-md px-3 py-2"
-                  />
+                  /> */}
                   <Form.Label className="mb-2">Photo URL:</Form.Label>
                   <Form.Control
                     type="text"
