@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useAuth } from "../../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 import ChildTodoList from "../children/ChildTodoList.jsx";
+import UserTodosList from "../todos/UserTodosList.jsx";
 import { Card } from "react-bootstrap";
 
 function ChildPage() {
@@ -144,6 +145,7 @@ function ChildPage() {
                   and records all of his own music, giving it a warm.
                 </p> */}
                 <ChildTodoList childId={id} jsx="true" />
+                {/* <UserTodosList /> */}
               </div>
             </div>
           </div>

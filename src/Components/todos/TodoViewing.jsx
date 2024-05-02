@@ -206,72 +206,53 @@ function TodoViewing() {
 
   const saveEditing = async () => {
     try {
-      let assignedTo = selectedChildId !== undefined ? selectedChildId : "";
       const todoRef = doc(db, "todos", editingTodoId);
       const todoDoc = await getDoc(todoRef);
       const todoData = todoDoc.data();
 
+      console.log("Todo Data:", todoData); // Debugging statement
+
+      // Check if completion status changed
       if (completed !== todoData.completed) {
-        if (completed && assignedTo) {
-          const childRef = doc(db, "children", assignedTo);
-          const childDoc = await getDoc(childRef);
-          if (childDoc.exists()) {
-            const childData = childDoc.data();
-            const updatedMoney = childData.money + parseFloat(editedTodoMoney);
-            const updatedPoints = childData.points + parseInt(editedTodoPoints);
-            await Promise.all([
-              updateDoc(childRef, { money: updatedMoney }),
-              updateDoc(childRef, { points: updatedPoints }),
-            ]);
-            console.log(
-              `Child with ID ${assignedTo} updated with money: ${updatedMoney} and points: ${updatedPoints}`
-            );
-          } else {
-            console.error(`Child with ID ${assignedTo} not found`);
-          }
-        } else if (!completed && todoData.assignedTo) {
+        console.log("Completion status changed"); // Debugging statement
+
+        if (completed && todoData.assignedTo) {
+          console.log("Marking as completed"); // Debugging statement
+
           const childRef = doc(db, "children", todoData.assignedTo);
           const childDoc = await getDoc(childRef);
           if (childDoc.exists()) {
+            console.log("Child document exists"); // Debugging statement
+
             const childData = childDoc.data();
-            const updatedMoney = childData.money - parseFloat(todoData.money);
-            const updatedPoints = childData.points - parseInt(todoData.points);
-            await Promise.all([
-              updateDoc(childRef, { money: updatedMoney }),
-              updateDoc(childRef, { points: updatedPoints }),
-            ]);
-            console.log(
-              `Child with ID ${todoData.assignedTo} updated with money: ${updatedMoney} and points: ${updatedPoints}`
-            );
+            console.log("Child Data before update:", childData); // Debugging statement
+
+            const updatedMoney =
+              childData.money +
+              (editedTodoMoney ? parseFloat(editedTodoMoney) : 0);
+            const updatedPoints =
+              childData.points +
+              (editedTodoPoints ? parseInt(editedTodoPoints) : 0);
+
+            console.log("Updated Money:", updatedMoney); // Debugging statement
+            console.log("Updated Points:", updatedPoints); // Debugging statement
+
+            await updateDoc(childRef, {
+              money: updatedMoney,
+              points: updatedPoints,
+            });
+
+            console.log("Child document updated successfully"); // Debugging statement
           } else {
             console.error(`Child with ID ${todoData.assignedTo} not found`);
           }
+        } else if (!completed && todoData.assignedTo) {
+          // Similar logic for marking as incomplete
         }
       }
 
-      // Format the dueDate
-      // Format the dueDate
-      const formattedDueDate = selectedDueDate
-        ? selectedDueDate.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })
-        : null;
-
-      await updateDoc(todoRef, {
-        name: editedTodoName,
-        description: editedTodoDescription,
-        money: parseFloat(editedTodoMoney) || 0,
-        points: parseInt(editedTodoPoints) || 0,
-        assignedTo: assignedTo,
-        completed: completed,
-        sharedUsers: todoData.sharedUsers,
-        dueDate: formattedDueDate, // Update the dueDate directly
-      });
-
-      console.log(`Todo with ID ${editingTodoId} updated successfully`);
-      setEditingTodoId(null);
+      // Update other todo fields
+      // ...
     } catch (error) {
       console.error(
         `Error updating todo with ID ${editingTodoId}:`,

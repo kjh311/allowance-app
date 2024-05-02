@@ -3,8 +3,8 @@ import {
   collection,
   where,
   query,
-  getDocs,
   onSnapshot,
+  getDocs,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/authContext";
@@ -25,6 +25,13 @@ function TodoCounter() {
         );
         const userTodosSnapshot = await getDocs(userTodosQuery);
         setUserTodosCount(userTodosSnapshot.size);
+
+        // Add an onSnapshot listener to update userTodosCount
+        const unsubscribeUserTodos = onSnapshot(userTodosQuery, (snapshot) => {
+          setUserTodosCount(snapshot.size);
+        });
+
+        return () => unsubscribeUserTodos();
       } catch (error) {
         console.error("Error fetching user todos:", error.message);
       }
@@ -58,11 +65,11 @@ function TodoCounter() {
       fetchUserTodos();
       fetchChildrenIds();
 
-      const unsubscribe = onSnapshot(collection(db, "children"), () => {
+      const unsubscribeChildren = onSnapshot(collection(db, "children"), () => {
         fetchChildrenIds();
       });
 
-      return () => unsubscribe();
+      return () => unsubscribeChildren();
     }
   }, [currentUser, childrenIds]);
 
@@ -71,27 +78,13 @@ function TodoCounter() {
 
   return (
     <div
-    // style={{
-    //   border: "1px solid #ccc",
-    //   borderRadius: "10px",
-    //   padding: "20px",
-    //   width: "fit-content",
-    //   margin: "auto",
-    //   marginTop: "20px",
-    //   textAlign: "center", // Center the text horizontally
-    //   // color: "#fff", // Set the text color to white
-    // }}
+      style={{
+        fontSize: "36px", // Adjust the font size as needed
+        fontWeight: "bold", // Make the number bold
+        marginTop: "10px", // Add margin to create space between the header and the number
+      }}
     >
-      {/* <h2>Total Number of Todos:</h2> */}
-      <div
-        style={{
-          fontSize: "36px", // Adjust the font size as needed
-          fontWeight: "bold", // Make the number bold
-          marginTop: "10px", // Add margin to create space between the header and the number
-        }}
-      >
-        {totalTodosCount}
-      </div>
+      {totalTodosCount}
     </div>
   );
 }

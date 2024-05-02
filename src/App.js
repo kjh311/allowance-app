@@ -29,13 +29,13 @@ function App() {
             <Routes>
               {" "}
               {/* Define your routes inside Routes */}
-              <Route path="/" element={<Profile />} />
+              <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/childLogin" element={<ChildLoginPage />} />
               <Route path="/register" element={<Register />} />
               <Route path="/home" element={<Home />} />
               <Route path="/todos" element={<ToDos />} />
-              <Route path="/profile" element={<UserProfile />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/child/:id" element={<ChildPage />} />
               <Route path="/children" element={<Children />} />
             </Routes>

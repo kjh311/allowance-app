@@ -19,7 +19,7 @@ import "./todo.scss";
 import DatePicker from "react-datepicker";
 import "./Calendar.scss";
 
-function TodoViewing() {
+function UserTodosList() {
   const today = new Date();
   const [todos, setTodos] = useState([]);
   const [dueDate, setDueDate] = useState(new Date());
@@ -693,4 +693,4 @@ function TodoViewing() {
   );
 }
 
-export default TodoViewing;
+export default UserTodosList;
