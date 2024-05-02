@@ -6,6 +6,7 @@ import {
   doSignInWithGoogle,
 } from "../../../firebase/auth"; // Import Google sign-in function
 import { addUserToFirestore } from "../../../firebase/auth";
+import "./register.scss";
 
 // Register component
 const Register = () => {
@@ -62,12 +63,12 @@ const Register = () => {
   };
 
   return (
-    <div className="w-5/6 self-center place-content-center place-items-center">
+    <div className="w-5/6  self-center place-content-center place-items-center">
       <br />
       <br />
       {userLoggedIn && <Navigate to={"/profile"} replace={true} />}
 
-      <main className="w-full h-screen flex self-center place-content-center place-items-center">
+      <main className="w-full register  flex self-center place-content-center place-items-center">
         <div className="w-96 text-gray-600 space-y-5 p-4 shadow-xl border rounded-xl">
           <div className="text-center mb-6">
             <div className="mt-2">

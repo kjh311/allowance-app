@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "./home.scss";
 
 const Home = () => {
   return (
@@ -12,7 +13,7 @@ const Home = () => {
         Manage your children's allowances and tasks with ease using our
         Allowance App.
       </h4>
-      <h4>
+      <h4 className="app-description">
         {" "}
         Track money, assign tasks, and teach financial responsibility in a fun
         way.

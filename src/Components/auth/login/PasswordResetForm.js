@@ -30,7 +30,8 @@ const PasswordResetForm = () => {
   return (
     <div>
       {/* Heading for the password reset section */}
-      <h2>Reset Password</h2>
+      <h2 className="text-center">Reset Password</h2>
+
       {/* Conditional rendering based on the resetSent state */}
       {resetSent ? (
         // Displaying a message if the reset email has been sent
@@ -40,6 +41,7 @@ const PasswordResetForm = () => {
         <form onSubmit={handleReset}>
           {/* Input field to enter the email address */}
           <input
+            className="text-center"
             type="email"
             placeholder="Enter your email"
             value={email}
@@ -47,7 +49,9 @@ const PasswordResetForm = () => {
             required
           />
           {/* Button to submit the password reset request */}
-          <button type="submit">Reset Password</button>
+          <button className="text-center" type="submit">
+            Reset Password
+          </button>
         </form>
       )}
     </div>

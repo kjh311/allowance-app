@@ -7,6 +7,7 @@ import {
 import { useAuth } from "../../../contexts/authContext";
 import PasswordResetForm from "./PasswordResetForm";
 import EmailVerificationForm from "./EmailVerificationForm";
+import "./login.scss";
 
 // Login component
 const Login = () => {
@@ -67,7 +68,7 @@ const Login = () => {
   // JSX rendering of the login form
   return (
     <div className="w-5/6 self-center place-content-center place-items-center">
-      <main className=" h-screen flex self-center place-content-center place-items-center login-main-div">
+      <main className="login flex self-center place-content-center place-items-center login-main-div">
         <div className="w-96 text-gray-600 space-y-5 p-4 shadow-xl border rounded-xl">
           <div className="text-center">
             <div className="mt-2">
@@ -132,18 +133,13 @@ const Login = () => {
             </Link>
           </p>
 
-          {/* Password reset form */}
-          <PasswordResetForm />
-
-          {/* Email verification form */}
-          {/* <EmailVerificationForm /> */}
-
           {/* Google Sign In button */}
           <div className="flex flex-row text-center w-full">
             <div className="border-b-2 mb-2.5 mr-2 w-full"></div>
             <div className="text-sm font-bold w-fit">OR</div>
             <div className="border-b-2 mb-2.5 ml-2 w-full"></div>
           </div>
+
           <button
             disabled={isSigningIn}
             onClick={(e) => {
@@ -191,6 +187,12 @@ const Login = () => {
             {/* Sign in with Google button text */}
             {isSigningIn ? "Signing In..." : "Continue with Google"}
           </button>
+
+          {/* Password reset form */}
+          <PasswordResetForm />
+
+          {/* Email verification form */}
+          {/* <EmailVerificationForm /> */}
         </div>
       </main>
       <br />
