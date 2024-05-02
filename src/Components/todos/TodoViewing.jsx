@@ -618,12 +618,34 @@ function TodoViewing() {
                       );
                       if (confirmation) {
                         try {
+                          // Update the todo's completed status
                           await updateDoc(doc(db, "todos", todo.id), {
                             completed: false,
                           });
-                          console.log(
-                            `Todo with ID ${todo.id} marked as incomplete`
+
+                          // Update the child's money and points
+                          const childDocRef = doc(
+                            db,
+                            "children",
+                            todo.assignedTo
                           );
+                          const childDoc = await getDoc(childDocRef);
+                          if (childDoc.exists()) {
+                            const childData = childDoc.data();
+                            const updatedMoney = childData.money - todo.money;
+                            const updatedPoints =
+                              childData.points - todo.points;
+
+                            await updateDoc(childDocRef, {
+                              money: updatedMoney >= 0 ? updatedMoney : 0, // Ensure money is not negative
+                              points: updatedPoints >= 0 ? updatedPoints : 0, // Ensure points are not negative
+                            });
+                            console.log(
+                              `Todo with ID ${todo.id} marked as incomplete. Child's money and points updated.`
+                            );
+                          } else {
+                            console.error("Child document does not exist.");
+                          }
                         } catch (error) {
                           console.error(
                             `Error marking todo with ID ${todo.id} as incomplete:`,
@@ -632,28 +654,50 @@ function TodoViewing() {
                         }
                       }
                     }}
-                    variant="warning" // Change the variant to warning for "Mark as Incomplete" button
+                    variant="warning"
                   >
                     Mark as Incomplete
                   </Button>
                 ) : (
                   <Button
-                    className=" "
+                    className=""
                     onClick={async () => {
                       const confirmation = window.confirm(
                         "Mark this todo as done?"
                       );
                       if (confirmation) {
                         try {
+                          // Update the todo's completed status
                           await updateDoc(doc(db, "todos", todo.id), {
                             completed: true,
                           });
-                          console.log(
-                            `Todo with ID ${todo.id} marked as completed`
+
+                          // Update the child's money and points
+                          const childDocRef = doc(
+                            db,
+                            "children",
+                            todo.assignedTo
                           );
+                          const childDoc = await getDoc(childDocRef);
+                          if (childDoc.exists()) {
+                            const childData = childDoc.data();
+                            const updatedMoney = childData.money + todo.money;
+                            const updatedPoints =
+                              childData.points + todo.points;
+
+                            await updateDoc(childDocRef, {
+                              money: updatedMoney,
+                              points: updatedPoints,
+                            });
+                            console.log(
+                              `Todo with ID ${todo.id} marked as done. Child's money and points updated.`
+                            );
+                          } else {
+                            console.error("Child document does not exist.");
+                          }
                         } catch (error) {
                           console.error(
-                            `Error marking todo with ID ${todo.id} as completed:`,
+                            `Error marking todo with ID ${todo.id} as done:`,
                             error
                           );
                         }
