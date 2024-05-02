@@ -17,6 +17,10 @@ const Header = () => {
     setExpanded(!expanded);
   };
 
+  const collapseNavbar = () => {
+    setExpanded(false);
+  };
+
   const renderDisplayName = () => {
     if (currentUser && currentUser.displayName) {
       return currentUser.displayName;
@@ -59,7 +63,7 @@ const Header = () => {
             {userLoggedIn ? (
               <>
                 <Nav.Link
-                  onClick={toggleNavbar}
+                  onClick={collapseNavbar}
                   className="link"
                   as={NavLink}
                   to="/profile"
@@ -67,7 +71,7 @@ const Header = () => {
                   {renderDisplayName()}
                 </Nav.Link>
                 <Nav.Link
-                  onClick={toggleNavbar}
+                  onClick={collapseNavbar}
                   className="link"
                   as={NavLink}
                   to="/todos"
@@ -75,7 +79,7 @@ const Header = () => {
                   ToDos
                 </Nav.Link>
                 <Nav.Link
-                  onClick={toggleNavbar}
+                  onClick={collapseNavbar}
                   className="link"
                   as={NavLink}
                   to="/children"
@@ -93,7 +97,7 @@ const Header = () => {
               <>
                 {location.pathname !== "/login" && (
                   <Nav.Link
-                    onClick={toggleNavbar}
+                    onClick={collapseNavbar}
                     as={NavLink}
                     to="/login"
                     className="d-flex align-items-center link"
@@ -101,20 +105,9 @@ const Header = () => {
                     <span>Login</span> <CiLogin className="ml-2" />
                   </Nav.Link>
                 )}
-                {/* {!userLoggedIn && location.pathname !== "/childLogin" && (
-                  <Nav.Link
-                    onClick={toggleNavbar}
-                    as={NavLink}
-                    to="/childLogin"
-                    className="d-flex align-items-center link"
-                  >
-                    <span>Child Login</span>
-                    <FaChild className="ml-2" />
-                  </Nav.Link>
-                )} */}
                 {location.pathname !== "/register" && (
                   <Nav.Link
-                    onClick={toggleNavbar}
+                    onClick={collapseNavbar}
                     className="link"
                     as={NavLink}
                     to="/register"
