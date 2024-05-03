@@ -30,7 +30,7 @@ function ChildViewing() {
   const [decryptedPasswords, setDecryptedPasswords] = useState({});
 
   useEffect(() => {
-    console.log("Reading children data from database...");
+    // console.log("Reading children data from database...");
     const childrenCollectionRef = collection(db, "children");
     const q = query(
       childrenCollectionRef,
@@ -81,10 +81,13 @@ function ChildViewing() {
         photoURL: editChildPhotoURL,
         weeklyAllowance: parseFloat(editChildWeeklyAllowance), // Update weekly allowance
       });
-      console.log(`Child with ID ${id} updated successfully`);
+      console.log(`Child with ID ${id} updated successfully (childViewing)`);
       setEditingChildId(null);
     } catch (error) {
-      console.error(`Error updating child with ID ${id}:`, error);
+      console.error(
+        `Error updating child with ID ${id}: (childViewing)`,
+        error
+      );
     }
   };
 
@@ -95,10 +98,13 @@ function ChildViewing() {
       );
       if (confirmation) {
         await deleteDoc(doc(db, "children", id));
-        console.log(`Child with ID ${id} deleted successfully`);
+        console.log(`Child with ID ${id} deleted successfully (childViewing)`);
       }
     } catch (error) {
-      console.error(`Error deleting Child with ID ${id}:`, error.message);
+      console.error(
+        `Error deleting Child with ID ${id}: (childViewing)`,
+        error.message
+      );
     }
   };
 

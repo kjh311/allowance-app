@@ -210,49 +210,47 @@ function TodoViewing() {
       const todoDoc = await getDoc(todoRef);
       const todoData = todoDoc.data();
 
-      console.log("Todo Data:", todoData); // Debugging statement
-
       // Check if completion status changed
       if (completed !== todoData.completed) {
-        console.log("Completion status changed"); // Debugging statement
-
-        if (completed && todoData.assignedTo) {
-          console.log("Marking as completed"); // Debugging statement
-
+        if (completed) {
+          // Marking as completed
           const childRef = doc(db, "children", todoData.assignedTo);
           const childDoc = await getDoc(childRef);
           if (childDoc.exists()) {
-            console.log("Child document exists"); // Debugging statement
-
             const childData = childDoc.data();
-            console.log("Child Data before update:", childData); // Debugging statement
-
-            const updatedMoney =
-              childData.money +
-              (editedTodoMoney ? parseFloat(editedTodoMoney) : 0);
-            const updatedPoints =
-              childData.points +
-              (editedTodoPoints ? parseInt(editedTodoPoints) : 0);
-
-            console.log("Updated Money:", updatedMoney); // Debugging statement
-            console.log("Updated Points:", updatedPoints); // Debugging statement
+            const updatedMoney = childData.money + (todoData.money || 0);
+            const updatedPoints = childData.points + (todoData.points || 0);
 
             await updateDoc(childRef, {
               money: updatedMoney,
               points: updatedPoints,
             });
-
-            console.log("Child document updated successfully"); // Debugging statement
           } else {
             console.error(`Child with ID ${todoData.assignedTo} not found`);
           }
-        } else if (!completed && todoData.assignedTo) {
-          // Similar logic for marking as incomplete
+        } else {
+          // Marking as incomplete
+          const childRef = doc(db, "children", todoData.assignedTo);
+          const childDoc = await getDoc(childRef);
+          if (childDoc.exists()) {
+            const childData = childDoc.data();
+            const updatedMoney = childData.money - (todoData.money || 0);
+            const updatedPoints = childData.points - (todoData.points || 0);
+
+            await updateDoc(childRef, {
+              money: Math.max(updatedMoney, 0), // Ensure money is not negative
+              points: Math.max(updatedPoints, 0), // Ensure points are not negative
+            });
+          } else {
+            console.error(`Child with ID ${todoData.assignedTo} not found`);
+          }
         }
       }
 
       // Update other todo fields
       // ...
+
+      console.log("Todo updated successfully");
     } catch (error) {
       console.error(
         `Error updating todo with ID ${editingTodoId}:`,
@@ -311,7 +309,7 @@ function TodoViewing() {
   //   return <div className="text-center loading-message ">LOADING...</div>;
   // }
 
-  console.log("Todos:", todos);
+  // console.log("Todos:", todos);
 
   if (todos.length === 0) {
     return <div>No Todos</div>;

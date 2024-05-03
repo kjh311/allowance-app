@@ -12,13 +12,10 @@ import { useAuth } from "../../contexts/authContext";
 function TodoCounter() {
   const { currentUser } = useAuth();
   const [userTodosCount, setUserTodosCount] = useState(0);
-  const [childrenTodosCount, setChildrenTodosCount] = useState(0);
-  const [childrenIds, setChildrenIds] = useState([]);
 
   useEffect(() => {
     const fetchUserTodos = async () => {
       try {
-        console.log("Reading user todos count from database...");
         const userTodosQuery = query(
           collection(db, "todos"),
           where("assignedTo", "==", currentUser.uid)
@@ -33,48 +30,17 @@ function TodoCounter() {
 
         return () => unsubscribeUserTodos();
       } catch (error) {
-        console.error("Error fetching user todos:", error.message);
-      }
-    };
-
-    const fetchChildrenIds = async () => {
-      try {
-        const childrenQuerySnapshot = await getDocs(
-          collection(db, "children").where("userId", "==", currentUser.uid)
+        console.error(
+          "Error fetching user todos (todoCounter):",
+          error.message
         );
-        const ids = childrenQuerySnapshot.docs.map((doc) => doc.id);
-        setChildrenIds(ids);
-      } catch (error) {
-        console.error("Error fetching children ids:", error.message);
-      }
-    };
-
-    const fetchChildrenTodos = async () => {
-      try {
-        console.log("Reading children todos count from database...");
-        const childrenQuerySnapshot = await getDocs(
-          query(collection(db, "todos"), where("assignedTo", "in", childrenIds))
-        );
-        setChildrenTodosCount(childrenQuerySnapshot.size);
-      } catch (error) {
-        console.error("Error fetching children todos:", error.message);
       }
     };
 
     if (currentUser) {
       fetchUserTodos();
-      fetchChildrenIds();
-
-      const unsubscribeChildren = onSnapshot(collection(db, "children"), () => {
-        fetchChildrenIds();
-      });
-
-      return () => unsubscribeChildren();
     }
-  }, [currentUser, childrenIds]);
-
-  // Calculate total todos count by adding userTodosCount and childrenTodosCount
-  const totalTodosCount = userTodosCount + childrenTodosCount;
+  }, [currentUser]);
 
   return (
     <div
@@ -84,7 +50,7 @@ function TodoCounter() {
         marginTop: "10px", // Add margin to create space between the header and the number
       }}
     >
-      {totalTodosCount}
+      {userTodosCount}
     </div>
   );
 }

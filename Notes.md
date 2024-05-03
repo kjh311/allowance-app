@@ -5,7 +5,14 @@ MVP:
 <!-- Under user page, todos should be similar to todo page, with colored due dates -->
 
 Same as under child page
-when $ or points are added to a todo item and it's marked as completed, the money and points don't go to the child
+
+Error when saving changes in todoViewing
+
+Clean up errors on each page
+
+get rid of consoles
+
+<!-- when $ or points are added to a todo item and it's marked as completed, the money and points don't go to the child -->
 
 <!-- weird animation of navbar buttons on click -->
 <!-- create a home page when not logged in that tells about the app and has a register and login button -->

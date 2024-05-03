@@ -20,10 +20,10 @@ const UserProfile = () => {
   const { currentUser } = useAuth();
   const [childrenOptions, setChildrenOptions] = useState([]);
   const [accordionExpanded, setAccordionExpanded] = useState(false);
-  console.log(
-    "emailDisplayName: " + " " + currentUser.emailDisplayName,
-    currentUser
-  );
+  // console.log(
+  //   "emailDisplayName: " + " " + currentUser.emailDisplayName,
+  //   currentUser
+  // );
   //
   //
 
@@ -113,10 +113,8 @@ const UserProfile = () => {
                 ></div>
               )}
               <div className="text-center mt-2">
-                {currentUser.emailDisplayName ? (
-                  <h2 className="font-semibold">
-                    {currentUser.emailDisplayName}
-                  </h2>
+                {currentUser.displayName ? (
+                  <h2 className="font-semibold">{currentUser.displayName}</h2>
                 ) : (
                   <h2 className="font-semibold">{currentUser.email}</h2>
                 )}

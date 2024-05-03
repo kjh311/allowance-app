@@ -58,6 +58,10 @@ function ChildTodoList({ childId }) {
               </p>
               <p className="text-gray-700 mb-2">Money: ${todo.money}</p>
               <p className="text-gray-700 mb-2">Points: {todo.points}</p>
+              <p className="text-gray-700 mb-2">
+                Due Date: {todo.dueDate}
+              </p>{" "}
+              {/* Added due date */}
             </li>
           ))}
         </ul>

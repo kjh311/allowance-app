@@ -124,7 +124,10 @@ function UserTodosList() {
         );
         setSharingWithChildren(allChildrenData);
       } catch (error) {
-        console.error("Error fetching sharingWith ids:", error);
+        console.error(
+          "Error fetching sharingWith ids (userTodoList): (userTodoList)",
+          error
+        );
       }
     };
 
@@ -168,10 +171,13 @@ function UserTodosList() {
       );
       if (confirmation) {
         await deleteDoc(doc(db, "todos", id));
-        console.log(`Todo with ID ${id} deleted successfully`);
+        console.log(`Todo with ID ${id} deleted successfully (userTodoList)`);
       }
     } catch (error) {
-      console.error(`Error deleting todo with ID ${id}:`, error.message);
+      console.error(
+        `Error deleting todo with ID ${id}:  (userTodoList)`,
+        error.message
+      );
     }
   };
 
@@ -224,11 +230,14 @@ function UserTodosList() {
               updateDoc(childRef, { money: updatedMoney }),
               updateDoc(childRef, { points: updatedPoints }),
             ]);
-            console.log(
-              `Child with ID ${assignedTo} updated with money: ${updatedMoney} and points: ${updatedPoints}`
-            );
+            console
+              .log
+              // `Child with ID ${assignedTo} updated with money: ${updatedMoney} and points: ${updatedPoints}`
+              ();
           } else {
-            console.error(`Child with ID ${assignedTo} not found`);
+            console.error(
+              `Child with ID ${assignedTo} not found  (userTodoList)`
+            );
           }
         } else if (!completed && todoData.assignedTo) {
           const childRef = doc(db, "children", todoData.assignedTo);
@@ -242,10 +251,12 @@ function UserTodosList() {
               updateDoc(childRef, { points: updatedPoints }),
             ]);
             console.log(
-              `Child with ID ${todoData.assignedTo} updated with money: ${updatedMoney} and points: ${updatedPoints}`
+              `Child with ID ${todoData.assignedTo} updated with money: ${updatedMoney} and points: ${updatedPoints}  (userTodoList)`
             );
           } else {
-            console.error(`Child with ID ${todoData.assignedTo} not found`);
+            console.error(
+              `Child with ID ${todoData.assignedTo} not found (userTodoList)`
+            );
           }
         }
       }
@@ -271,11 +282,13 @@ function UserTodosList() {
         dueDate: formattedDueDate, // Update the dueDate directly
       });
 
-      console.log(`Todo with ID ${editingTodoId} updated successfully`);
+      console.log(
+        `Todo with ID ${editingTodoId} updated successfully (userTodoList)`
+      );
       setEditingTodoId(null);
     } catch (error) {
       console.error(
-        `Error updating todo with ID ${editingTodoId}:`,
+        `Error updating todo with ID ${editingTodoId}: (userTodoList)`,
         error.message
       );
     }
@@ -299,8 +312,8 @@ function UserTodosList() {
 
   const handleDropdownChange = (event) => {
     const selectedChildId = event.target.value;
-    console.log("Selected Child ID:", selectedChildId);
-    console.log("Current User ID:", currentUser.uid);
+    console.log("Selected Child ID: (userTodoList)", selectedChildId);
+    console.log("Current User ID: (userTodoList)", currentUser.uid);
 
     if (!selectedChildId) {
       setSelectedChildId("");
@@ -310,14 +323,14 @@ function UserTodosList() {
       const selectedChild = children.find(
         (child) => child.id === selectedChildId
       );
-      console.log("Selected Child:", selectedChild);
+      console.log("Selected Child: (userTodoList)", selectedChild);
       if (selectedChild && selectedChild.userId === currentUser.uid) {
         setSelectedChildId(selectedChildId);
       } else {
         const sharedUserChild = sharingWithChildren.find(
           (child) => child.id === selectedChildId
         );
-        console.log("Shared User Child:", sharedUserChild);
+        console.log("Shared User Child: (userTodoList)", sharedUserChild);
         if (sharedUserChild) {
           setSelectedChildId(selectedChildId);
         } else {
@@ -331,7 +344,7 @@ function UserTodosList() {
   //   return <div className="text-center loading-message ">LOADING...</div>;
   // }
 
-  console.log("Todos:", todos);
+  // console.log("Todos: (userTodoList)", todos);
 
   if (todos.length === 0) {
     return <div>No Todos</div>;
@@ -642,11 +655,11 @@ function UserTodosList() {
                             completed: false,
                           });
                           console.log(
-                            `Todo with ID ${todo.id} marked as incomplete`
+                            `Todo with ID ${todo.id} marked as incomplete (userTodoList)`
                           );
                         } catch (error) {
                           console.error(
-                            `Error marking todo with ID ${todo.id} as incomplete:`,
+                            `Error marking todo with ID ${todo.id} as incomplete: (userTodoList)`,
                             error
                           );
                         }
@@ -669,11 +682,11 @@ function UserTodosList() {
                             completed: true,
                           });
                           console.log(
-                            `Todo with ID ${todo.id} marked as completed`
+                            `Todo with ID ${todo.id} marked as completed (userTodoList)`
                           );
                         } catch (error) {
                           console.error(
-                            `Error marking todo with ID ${todo.id} as completed:`,
+                            `Error marking todo with ID ${todo.id} as completed: (userTodoList)`,
                             error
                           );
                         }

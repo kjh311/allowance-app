@@ -214,13 +214,13 @@ function TodoCreation() {
             />
           </Form.Group>
           <Form.Group controlId="todoDueDateInput">
-            <Form.Label>Due Date (Optional):</Form.Label>
+            <Form.Label> Due Date (Optional):</Form.Label>
             <DatePicker
               selected={dueDate}
               onChange={(date) => setDueDate(date)}
               className="form-control"
               dateFormat="yyyy-MM-dd"
-              placeholderText="Select due date"
+              placeholderText="&#x25BE; Select due date"
             />
           </Form.Group>
           <Form.Group controlId="assigneeDropdown">
@@ -229,6 +229,7 @@ function TodoCreation() {
               as="select"
               value={selectedAssignee}
               onChange={handleDropdownChange}
+              // placeholderText="&#x25BE; Unassigned"
             >
               <option value="">Unassigned</option>
               {children.length > 0 ? (

@@ -42,22 +42,22 @@ function ChildPage() {
             ) {
               setChild({ id: docSnap.id, ...childData });
             } else {
-              console.log("Unauthorized access to child data:", id);
+              console.log("Unauthorized access to child data: (childPage)", id);
               navigate("/unauthorized");
             }
           } else {
             console.log(
-              "User document not found for current user:",
+              "User document not found for current user: (childPage)",
               currentUser.uid
             );
             navigate("/error");
           }
         } else {
-          console.log("No such document found for ID:", id);
+          console.log("No such document found for ID: (childPage)", id);
           navigate("/notfound");
         }
       } catch (error) {
-        console.error("Error getting child:", error);
+        console.error("Error getting child: (childPage)", error);
       }
     };
 
@@ -65,7 +65,7 @@ function ChildPage() {
   }, [id, currentUser, navigate]);
 
   if (!child) {
-    console.log("Child data not yet loaded...");
+    // console.log("Child data not yet loaded...");
     return <div>Loading...</div>;
   }
 

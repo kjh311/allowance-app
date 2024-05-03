@@ -16,7 +16,7 @@ function ChildCounter() {
   useEffect(() => {
     const fetchChildCount = async () => {
       try {
-        console.log("Reading children count from database...");
+        // console.log("Reading children count from database...");
         const q = query(
           collection(db, "children"),
           where("userId", "==", currentUser.uid)
