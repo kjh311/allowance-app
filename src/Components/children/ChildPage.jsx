@@ -69,6 +69,17 @@ function ChildPage() {
     return <div>Loading...</div>;
   }
 
+  // Format the due date
+  // let formattedDueDate = "";
+  // if (child.dueDate) {
+  //   const dueDateObj = new Date(child.dueDate);
+  //   formattedDueDate = dueDateObj.toLocaleDateString("en-US", {
+  //     year: "numeric",
+  //     month: "long",
+  //     day: "numeric",
+  //   });
+  // }
+
   return (
     <div className="flex justify-center items-center flex-col ">
       <br />
@@ -80,28 +91,7 @@ function ChildPage() {
         <div className="px-6">
           <div className="flex flex-wrap justify-center">
             <div className="w-full flex justify-center">
-              <div className="relative">
-                {imageError ? (
-                  <img
-                    className="shadow-xl rounded-full align-middle grey-border bg-white absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
-                    src="https://icons.veryicon.com/png/o/miscellaneous/font_awesome/child-10.png"
-                    alt="403 Error"
-                  />
-                ) : child.photoURL ? (
-                  <img
-                    src={child.photoURL}
-                    className="shadow-xl rounded-full align-middle grey-border bg-white absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
-                    alt="Profile"
-                    onError={handleImageError}
-                  />
-                ) : (
-                  <img
-                    className="shadow-xl rounded-full align-middle grey-border bg-white absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
-                    src="https://icons.veryicon.com/png/o/miscellaneous/font_awesome/child-10.png"
-                    alt="403 Error"
-                  />
-                )}
-              </div>
+              <div className="relative">{/* Your image code */}</div>
             </div>
             <div className="w-full text-center mt-20">
               <br />
@@ -114,24 +104,8 @@ function ChildPage() {
               </div>
               <div className="flex justify-center lg:pt-4 pt-8 pb-0">
                 <div className="p-3 text-center">
-                  <span className="text-xl child-item font-bold block uppercase tracking-wide text-slate-700">
-                    ${child.money.toFixed(2)}
-                  </span>
-                  <span className="text-sm text-slate-400">Money</span>
+                  {/* Your child information */}
                 </div>
-                <div className="p-3 text-center">
-                  <span className="text-xl child-item font-bold block uppercase tracking-wide text-slate-700">
-                    {child.points}
-                  </span>
-                  <span className="text-sm text-slate-400">Points</span>
-                </div>
-
-                {/* <div className="p-3 text-center">
-                  <span className="text-xl child-item font-bold block uppercase tracking-wide text-slate-700">
-                    {child.loginPin}
-                  </span>
-                  <span className="text-sm text-slate-400">Login Pin</span>
-                </div> */}
               </div>
             </div>
           </div>

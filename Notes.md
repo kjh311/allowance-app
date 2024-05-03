@@ -6,11 +6,15 @@ MVP:
 
 Same as under child page
 
-Error when saving changes in todoViewing
+<!-- Error when saving changes in todoViewing -->
 
 Clean up errors on each page
 
 get rid of consoles
+
+child photo if no photo on childPage
+
+<!-- Due Date for kid's todos -->
 
 <!-- when $ or points are added to a todo item and it's marked as completed, the money and points don't go to the child -->
 

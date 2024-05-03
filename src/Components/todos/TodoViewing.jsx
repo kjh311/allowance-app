@@ -212,45 +212,22 @@ function TodoViewing() {
 
       // Check if completion status changed
       if (completed !== todoData.completed) {
-        if (completed) {
-          // Marking as completed
-          const childRef = doc(db, "children", todoData.assignedTo);
-          const childDoc = await getDoc(childRef);
-          if (childDoc.exists()) {
-            const childData = childDoc.data();
-            const updatedMoney = childData.money + (todoData.money || 0);
-            const updatedPoints = childData.points + (todoData.points || 0);
-
-            await updateDoc(childRef, {
-              money: updatedMoney,
-              points: updatedPoints,
-            });
-          } else {
-            console.error(`Child with ID ${todoData.assignedTo} not found`);
-          }
-        } else {
-          // Marking as incomplete
-          const childRef = doc(db, "children", todoData.assignedTo);
-          const childDoc = await getDoc(childRef);
-          if (childDoc.exists()) {
-            const childData = childDoc.data();
-            const updatedMoney = childData.money - (todoData.money || 0);
-            const updatedPoints = childData.points - (todoData.points || 0);
-
-            await updateDoc(childRef, {
-              money: Math.max(updatedMoney, 0), // Ensure money is not negative
-              points: Math.max(updatedPoints, 0), // Ensure points are not negative
-            });
-          } else {
-            console.error(`Child with ID ${todoData.assignedTo} not found`);
-          }
-        }
+        // Update completion status
+        await updateDoc(todoRef, { completed });
       }
 
       // Update other todo fields
-      // ...
+      await updateDoc(todoRef, {
+        name: editedTodoName,
+        description: editedTodoDescription,
+        money: parseFloat(editedTodoMoney), // Parse to float if necessary
+        points: parseInt(editedTodoPoints), // Parse to integer if necessary
+        dueDate: selectedDueDate ? selectedDueDate.toISOString() : null, // Convert date to ISO string or null
+        assignedTo: selectedChildId,
+      });
 
       console.log("Todo updated successfully");
+      cancelEditing(); // Reset editing state after saving
     } catch (error) {
       console.error(
         `Error updating todo with ID ${editingTodoId}:`,

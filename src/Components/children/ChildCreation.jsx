@@ -30,7 +30,7 @@ function ChildCreation() {
 
       const createdBy = currentUser.displayName || currentUser.email;
 
-      const pin = generateRandomPin(6);
+      // const pin = generateRandomPin(6);
 
       const childToAdd = {
         id: doc(collection(db, "children")).id,
@@ -42,7 +42,7 @@ function ChildCreation() {
         createdBy: createdBy,
         photoURL: photoURL,
         sharedUsers: [currentUser.uid],
-        loginPin: pin,
+        // loginPin: pin,
       };
 
       const currentUserRef = doc(db, "users", currentUser.uid);
@@ -61,7 +61,7 @@ function ChildCreation() {
 
       console.log("Child created successfully");
 
-      console.log("Generated PIN:", pin);
+      // console.log("Generated PIN:", pin);
 
       if (window.todoCreationUpdateChildren) {
         window.todoCreationUpdateChildren();
@@ -99,15 +99,15 @@ function ChildCreation() {
   //   }
   // };
 
-  function generateRandomPin(length) {
-    const digits = "0123456789";
-    let pin = "";
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * digits.length);
-      pin += digits[randomIndex];
-    }
-    return pin;
-  }
+  // function generateRandomPin(length) {
+  //   const digits = "0123456789";
+  //   let pin = "";
+  //   for (let i = 0; i < length; i++) {
+  //     const randomIndex = Math.floor(Math.random() * digits.length);
+  //     pin += digits[randomIndex];
+  //   }
+  //   return pin;
+  // }
 
   return (
     <Accordion className="bg-white rounded-lg shadow-lg">
