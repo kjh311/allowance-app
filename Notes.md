@@ -12,7 +12,9 @@ Clean up errors on each page
 
 get rid of consoles
 
-child photo if no photo on childPage
+fix reads on firebase
+
+<!-- child photo if no photo on childPage -->
 
 <!-- Due Date for kid's todos -->
 
